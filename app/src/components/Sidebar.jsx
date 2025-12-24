@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [expandedModuleId, setExpandedModuleId] = useState(1);
+  const [activeLesson, setActiveLesson] = useState('Introduction');
 
   const modules = [
     {
@@ -20,6 +22,10 @@ export default function Sidebar() {
       lessons: ['Workflow Integration', 'Custom Prompts', 'Best Practices']
     }
   ];
+
+  const toggleModule = (moduleId) => {
+    setExpandedModuleId(expandedModuleId === moduleId ? null : moduleId);
+  };
 
   return (
     <aside className={`bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'} flex flex-col`}>
@@ -50,21 +56,42 @@ export default function Sidebar() {
         {!isCollapsed ? (
           <div className="space-y-2">
             {modules.map((module) => (
-              <div key={module.id} className="mb-4">
-                <div className="font-semibold text-sm text-gray-900 dark:text-white mb-2">
-                  {module.title}
-                </div>
-                <div className="space-y-1 ml-2">
-                  {module.lessons.map((lesson, idx) => (
-                    <a
-                      key={idx}
-                      href="#"
-                      className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                    >
-                      {lesson}
-                    </a>
-                  ))}
-                </div>
+              <div key={module.id} className="mb-2">
+                <button
+                  onClick={() => toggleModule(module.id)}
+                  className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  <span>{module.title}</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${expandedModuleId === module.id ? 'rotate-90' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+                {expandedModuleId === module.id && (
+                  <div className="space-y-1 ml-2 mt-1">
+                    {module.lessons.map((lesson, idx) => (
+                      <a
+                        key={idx}
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setActiveLesson(lesson);
+                        }}
+                        className={`block px-3 py-2 text-sm rounded-lg transition-colors ${
+                          activeLesson === lesson
+                            ? 'bg-primary text-white'
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'
+                        }`}
+                      >
+                        {lesson}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
