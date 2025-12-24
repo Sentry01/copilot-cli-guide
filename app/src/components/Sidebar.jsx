@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useUser } from '../contexts/UserContext';
 
 export default function Sidebar({ onLessonSelect }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -6,6 +7,7 @@ export default function Sidebar({ onLessonSelect }) {
   const [activeLessonId, setActiveLessonId] = useState(3);
   const [modules, setModules] = useState([]);
   const [lessons, setLessons] = useState({});
+  const { completedLessons } = useUser();
 
   useEffect(() => {
     // Fetch modules
@@ -36,6 +38,21 @@ export default function Sidebar({ onLessonSelect }) {
     }
   };
 
+  // Calculate module progress
+  const getModuleProgress = (moduleId) => {
+    const moduleLessons = lessons[moduleId] || [];
+    if (moduleLessons.length === 0) return { completed: 0, total: 0, percentage: 0 };
+    
+    const completed = moduleLessons.filter(lesson => 
+      completedLessons.has(lesson.id)
+    ).length;
+    
+    const total = moduleLessons.length;
+    const percentage = Math.round((completed / total) * 100);
+    
+    return { completed, total, percentage };
+  };
+
   return (
     <aside className={`bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'} flex flex-col`}>
       {/* Logo and toggle */}
@@ -64,41 +81,91 @@ export default function Sidebar({ onLessonSelect }) {
       <nav className="flex-1 overflow-y-auto p-4">
         {!isCollapsed ? (
           <div className="space-y-2">
-            {modules.map((module) => (
-              <div key={module.id} className="mb-2">
-                <button
-                  onClick={() => toggleModule(module.id)}
-                  className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                >
-                  <span>{module.title}</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${expandedModuleId === module.id ? 'rotate-90' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+            {modules.map((module) => {
+              const progress = getModuleProgress(module.id);
+              return (
+                <div key={module.id} className="mb-2">
+                  <button
+                    onClick={() => toggleModule(module.id)}
+                    className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg transition-colors"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-                {expandedModuleId === module.id && lessons[module.id] && (
-                  <div className="space-y-1 ml-2 mt-1">
-                    {lessons[module.id].map((lesson) => (
-                      <button
-                        key={lesson.id}
-                        onClick={() => handleLessonClick(lesson.id)}
-                        className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors ${
-                          activeLessonId === lesson.id
-                            ? 'bg-primary text-white'
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'
-                        }`}
+                    <div className="flex items-center gap-2 flex-1">
+                      <span>{module.title}</span>
+                      {progress.total > 0 && (
+                        <span className="text-xs text-gray-500 dark:text-gray-400 font-normal">
+                          {progress.completed}/{progress.total}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {progress.total > 0 && (
+                        <div className="relative w-10 h-10">
+                          {/* Background circle */}
+                          <svg className="w-10 h-10 transform -rotate-90">
+                            <circle
+                              cx="20"
+                              cy="20"
+                              r="16"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                              fill="none"
+                              className="text-gray-300 dark:text-gray-700"
+                            />
+                            {/* Progress circle */}
+                            <circle
+                              cx="20"
+                              cy="20"
+                              r="16"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                              fill="none"
+                              strokeDasharray={`${2 * Math.PI * 16}`}
+                              strokeDashoffset={`${2 * Math.PI * 16 * (1 - progress.percentage / 100)}`}
+                              className="text-primary transition-all duration-300"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                          {/* Percentage text */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-[10px] font-semibold text-gray-700 dark:text-gray-300">
+                              {progress.percentage}%
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      <svg
+                        className={`w-4 h-4 transition-transform ${expandedModuleId === module.id ? 'rotate-90' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                       >
-                        {lesson.title}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </button>
+                  {expandedModuleId === module.id && lessons[module.id] && (
+                    <div className="space-y-1 ml-2 mt-1">
+                      {lessons[module.id].map((lesson) => (
+                        <button
+                          key={lesson.id}
+                          onClick={() => handleLessonClick(lesson.id)}
+                          className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center justify-between ${
+                            activeLessonId === lesson.id
+                              ? 'bg-primary text-white'
+                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'
+                          }`}
+                        >
+                          <span>{lesson.title}</span>
+                          {completedLessons.has(lesson.id) && (
+                            <span className="text-green-500">✓</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="space-y-4">
