@@ -170,6 +170,7 @@ export default function Terminal({ scenarioId, onCommand }) {
               onClick={copyOutput}
               className="px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
               title="Copy output"
+              aria-label="Copy terminal output to clipboard"
             >
               📋 Copy
             </button>
@@ -177,6 +178,7 @@ export default function Terminal({ scenarioId, onCommand }) {
               onClick={handleClear}
               className="px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
               title="Clear terminal"
+              aria-label="Clear terminal output"
             >
               🗑️ Clear
             </button>
@@ -184,6 +186,7 @@ export default function Terminal({ scenarioId, onCommand }) {
               onClick={handleReset}
               className="px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
               title="Reset terminal"
+              aria-label="Reset terminal to initial state"
             >
               ↻ Reset
             </button>
@@ -191,6 +194,7 @@ export default function Terminal({ scenarioId, onCommand }) {
               onClick={toggleFullscreen}
               className="px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
               title="Toggle fullscreen"
+              aria-label={isFullscreen ? 'Exit fullscreen mode' : 'Enter fullscreen mode'}
             >
               {isFullscreen ? '⊡ Exit' : '⛶ Fullscreen'}
             </button>
@@ -235,7 +239,7 @@ export default function Terminal({ scenarioId, onCommand }) {
 
           {/* Current input line */}
           <form onSubmit={handleSubmit} className="flex items-center">
-            <span className="text-gray-500 mr-2">$</span>
+            <span className="text-gray-500 mr-2" aria-hidden="true">$</span>
             <input
               ref={inputRef}
               type="text"
@@ -245,6 +249,8 @@ export default function Terminal({ scenarioId, onCommand }) {
               className="flex-1 bg-transparent text-green-400 outline-none font-mono caret-green-400"
               spellCheck={false}
               autoComplete="off"
+              aria-label="Terminal command input"
+              placeholder=""
             />
           </form>
         </div>

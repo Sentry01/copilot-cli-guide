@@ -218,12 +218,14 @@ export default function BookmarksView({ onLessonSelect }) {
                     <button
                       onClick={() => saveNote(bookmark.id)}
                       className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+                      aria-label="Save bookmark notes"
                     >
                       Save
                     </button>
                     <button
                       onClick={cancelEdit}
                       className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                      aria-label="Cancel editing notes"
                     >
                       Cancel
                     </button>
@@ -239,6 +241,7 @@ export default function BookmarksView({ onLessonSelect }) {
                       <button
                         onClick={() => startEditingNote(bookmark)}
                         className="ml-4 text-primary hover:text-primary/80 text-sm font-medium"
+                        aria-label="Edit bookmark notes"
                       >
                         Edit
                       </button>
@@ -247,6 +250,7 @@ export default function BookmarksView({ onLessonSelect }) {
                     <button
                       onClick={() => startEditingNote(bookmark)}
                       className="text-sm text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
+                      aria-label="Add notes to bookmark"
                     >
                       + Add notes
                     </button>

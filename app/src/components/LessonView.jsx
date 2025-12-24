@@ -45,6 +45,7 @@ function CodeBlock({ node, inline, className, children, ...props }) {
             onClick={handleCopy}
             className="px-2 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-xs rounded transition-colors opacity-0 group-hover:opacity-100"
             title="Copy code"
+            aria-label="Copy code to clipboard"
           >
             {copied ? '✓ Copied!' : 'Copy'}
           </button>
@@ -287,6 +288,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
             disabled={isBookmarking}
             className="ml-4 p-2 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
             title={isBookmarked ? 'Remove bookmark' : 'Bookmark this lesson'}
+            aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark this lesson'}
           >
             <svg 
               className={`w-6 h-6 ${isBookmarked ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`}
@@ -371,8 +373,9 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
                 ? 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                 : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
             }`}
+            aria-label={prevLesson ? `Go to previous lesson: ${prevLesson.title}` : 'No previous lesson'}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Previous Lesson
@@ -389,8 +392,9 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
                 ? 'bg-green-600 text-white cursor-default' 
                 : 'bg-primary text-white hover:bg-blue-600'
             }`}
+            aria-label={isComplete ? 'Lesson marked as complete' : 'Mark lesson as complete'}
           >
-            {isComplete && <span>✓</span>}
+            {isComplete && <span aria-hidden="true">✓</span>}
             {isComplete ? 'Completed' : isCompleting ? 'Marking...' : 'Mark as Complete'}
           </button>
           <button 
@@ -401,9 +405,10 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
                 ? 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                 : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
             }`}
+            aria-label={nextLesson ? `Go to next lesson: ${nextLesson.title}` : 'No next lesson'}
           >
             Next Lesson
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>

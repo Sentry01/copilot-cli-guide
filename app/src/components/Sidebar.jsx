@@ -155,6 +155,8 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
                   <button
                     onClick={() => toggleModule(module.id)}
                     className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                    aria-label={`${module.title} module, ${progress.completed} of ${progress.total} lessons completed`}
+                    aria-expanded={expandedModuleId === module.id}
                   >
                     <div className="flex items-center gap-2 flex-1">
                       <span>{module.title}</span>
@@ -221,10 +223,12 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
                               ? 'bg-primary text-white'
                               : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'
                           }`}
+                          aria-label={`${lesson.title} lesson${completedLessons.has(lesson.id) ? ', completed' : ''}`}
+                          aria-current={activeLessonId === lesson.id ? 'page' : undefined}
                         >
                           <span>{lesson.title}</span>
                           {completedLessons.has(lesson.id) && (
-                            <span className="text-green-500">✓</span>
+                            <span className="text-green-500" aria-hidden="true">✓</span>
                           )}
                         </button>
                       ))}

@@ -72,17 +72,25 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }) {
       />
       
       {/* Modal */}
-      <div className={`relative w-full max-w-4xl max-h-[85vh] overflow-y-auto rounded-xl shadow-2xl ${
-        isDark ? 'bg-[#161B22]' : 'bg-white'
-      }`}>
+      <div 
+        className={`relative w-full max-w-4xl max-h-[85vh] overflow-y-auto rounded-xl shadow-2xl ${
+          isDark ? 'bg-[#161B22]' : 'bg-white'
+        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="shortcuts-title"
+      >
         {/* Header */}
         <div className={`sticky top-0 px-6 py-4 border-b ${
           isDark ? 'bg-[#161B22] border-gray-700' : 'bg-white border-gray-200'
         }`}>
           <div className="flex items-center justify-between">
-            <h2 className={`text-2xl font-bold ${
-              isDark ? 'text-white' : 'text-gray-900'
-            }`}>
+            <h2 
+              id="shortcuts-title"
+              className={`text-2xl font-bold ${
+                isDark ? 'text-white' : 'text-gray-900'
+              }`}
+            >
               ⌨️ Keyboard Shortcuts
             </h2>
             <button
@@ -92,6 +100,7 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }) {
                   ? 'hover:bg-gray-700 text-gray-400 hover:text-white' 
                   : 'hover:bg-gray-100 text-gray-500 hover:text-gray-900'
               }`}
+              aria-label="Close keyboard shortcuts"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
