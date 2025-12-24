@@ -67,7 +67,7 @@ function CodeBlock({ node, inline, className, children, ...props }) {
   );
 }
 
-export default function LessonView({ lessonId }) {
+export default function LessonView({ lessonId, onNavigateToLesson }) {
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -75,6 +75,9 @@ export default function LessonView({ lessonId }) {
   const [isCompleting, setIsCompleting] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isBookmarking, setIsBookmarking] = useState(false);
+  const [allLessons, setAllLessons] = useState([]);
+  const [prevLesson, setPrevLesson] = useState(null);
+  const [nextLesson, setNextLesson] = useState(null);
 
   const isComplete = lessonId ? isLessonComplete(lessonId) : false;
 
@@ -117,6 +120,36 @@ export default function LessonView({ lessonId }) {
 
   useEffect(() => {
     fetchLesson();
+  }, [lessonId]);
+
+  // Fetch all lessons to determine next/previous
+  useEffect(() => {
+    fetch('http://localhost:3000/api/lessons')
+      .then(res => res.json())
+      .then(data => {
+        // Sort by module_id then order_index
+        const sorted = [...data].sort((a, b) => {
+          if (a.module_id !== b.module_id) return a.module_id - b.module_id;
+          return a.order_index - b.order_index;
+        });
+        setAllLessons(sorted);
+        
+        // Find current lesson index and set prev/next
+        if (lessonId) {
+          const currentIndex = sorted.findIndex(l => l.id === parseInt(lessonId));
+          if (currentIndex > 0) {
+            setPrevLesson(sorted[currentIndex - 1]);
+          } else {
+            setPrevLesson(null);
+          }
+          if (currentIndex < sorted.length - 1 && currentIndex >= 0) {
+            setNextLesson(sorted[currentIndex + 1]);
+          } else {
+            setNextLesson(null);
+          }
+        }
+      })
+      .catch(err => console.error('Error fetching lessons:', err));
   }, [lessonId]);
 
   // Check if lesson is bookmarked
@@ -330,7 +363,15 @@ export default function LessonView({ lessonId }) {
       {/* Lesson footer with navigation */}
       <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
-          <button className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+          <button 
+            onClick={() => prevLesson && onNavigateToLesson && onNavigateToLesson(prevLesson.id)}
+            disabled={!prevLesson}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+              prevLesson 
+                ? 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
+            }`}
+          >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -352,7 +393,15 @@ export default function LessonView({ lessonId }) {
             {isComplete && <span>✓</span>}
             {isComplete ? 'Completed' : isCompleting ? 'Marking...' : 'Mark as Complete'}
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+          <button 
+            onClick={() => nextLesson && onNavigateToLesson && onNavigateToLesson(nextLesson.id)}
+            disabled={!nextLesson}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+              nextLesson 
+                ? 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
+            }`}
+          >
             Next Lesson
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

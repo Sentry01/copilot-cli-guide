@@ -60,7 +60,10 @@ function App() {
           ) : currentView === 'examples' ? (
             <ExamplesView />
           ) : (
-            <LessonView lessonId={currentLessonId} />
+            <LessonView 
+              lessonId={currentLessonId} 
+              onNavigateToLesson={handleLessonSelect}
+            />
           )}
         </MainLayout>
 
