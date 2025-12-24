@@ -377,6 +377,147 @@ app.get('/api/commands', (req, res) => {
   });
 });
 
+// User/Session Management
+
+// Get or create user session
+app.post('/api/user/session', (req, res) => {
+  const { session_id } = req.body;
+  
+  if (!session_id) {
+    return res.status(400).json({ error: 'session_id required' });
+  }
+  
+  // Check if user exists
+  db.get(
+    'SELECT * FROM users WHERE session_id = ?',
+    [session_id],
+    (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      if (user) {
+        // User exists, return it
+        return res.json(user);
+      }
+      
+      // Create new user
+      db.run(
+        'INSERT INTO users (session_id, preferences) VALUES (?, ?)',
+        [session_id, JSON.stringify({})],
+        function(err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          
+          // Return newly created user
+          db.get(
+            'SELECT * FROM users WHERE id = ?',
+            [this.lastID],
+            (err, newUser) => {
+              if (err) {
+                return res.status(500).json({ error: err.message });
+              }
+              res.json(newUser);
+            }
+          );
+        }
+      );
+    }
+  );
+});
+
+// Get user by session ID
+app.get('/api/user/:session_id', (req, res) => {
+  db.get(
+    'SELECT * FROM users WHERE session_id = ?',
+    [req.params.session_id],
+    (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json(user);
+    }
+  );
+});
+
+// Progress Tracking
+
+// Get user's progress
+app.get('/api/progress/:session_id', (req, res) => {
+  db.get(
+    'SELECT id FROM users WHERE session_id = ?',
+    [req.params.session_id],
+    (err, user) => {
+      if (err || !user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      db.all(
+        'SELECT * FROM progress WHERE user_id = ?',
+        [user.id],
+        (err, rows) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json(rows);
+        }
+      );
+    }
+  );
+});
+
+// Mark lesson as complete
+app.post('/api/progress/:session_id/lesson/:lesson_id', (req, res) => {
+  db.get(
+    'SELECT id FROM users WHERE session_id = ?',
+    [req.params.session_id],
+    (err, user) => {
+      if (err || !user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      db.run(
+        'INSERT OR REPLACE INTO progress (user_id, lesson_id) VALUES (?, ?)',
+        [user.id, req.params.lesson_id],
+        function(err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({ success: true, lesson_id: req.params.lesson_id });
+        }
+      );
+    }
+  );
+});
+
+// Remove lesson completion
+app.delete('/api/progress/:session_id/lesson/:lesson_id', (req, res) => {
+  db.get(
+    'SELECT id FROM users WHERE session_id = ?',
+    [req.params.session_id],
+    (err, user) => {
+      if (err || !user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      db.run(
+        'DELETE FROM progress WHERE user_id = ? AND lesson_id = ?',
+        [user.id, req.params.lesson_id],
+        function(err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({ success: true, lesson_id: req.params.lesson_id });
+        }
+      );
+    }
+  );
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running on http://localhost:${PORT}`);

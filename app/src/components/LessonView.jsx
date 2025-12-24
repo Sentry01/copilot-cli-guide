@@ -5,6 +5,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Terminal from './Terminal';
 import Breadcrumbs from './Breadcrumbs';
+import { useUser } from '../contexts/UserContext';
 
 // Code block component with syntax highlighting and copy button
 function CodeBlock({ inline, className, children, ...props }) {
@@ -64,6 +65,10 @@ export default function LessonView({ lessonId }) {
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { markLessonComplete, isLessonComplete } = useUser();
+  const [isCompleting, setIsCompleting] = useState(false);
+
+  const isComplete = lessonId ? isLessonComplete(lessonId) : false;
 
   useEffect(() => {
     if (!lessonId) return;
@@ -219,8 +224,21 @@ export default function LessonView({ lessonId }) {
             </svg>
             Previous Lesson
           </button>
-          <button className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors">
-            Mark as Complete
+          <button 
+            onClick={async () => {
+              setIsCompleting(true);
+              await markLessonComplete(lessonId);
+              setIsCompleting(false);
+            }}
+            disabled={isCompleting || isComplete}
+            className={`px-6 py-2 rounded-lg transition-colors flex items-center gap-2 ${
+              isComplete 
+                ? 'bg-green-600 text-white cursor-default' 
+                : 'bg-primary text-white hover:bg-blue-600'
+            }`}
+          >
+            {isComplete && <span>✓</span>}
+            {isComplete ? 'Completed' : isCompleting ? 'Marking...' : 'Mark as Complete'}
           </button>
           <button className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
             Next Lesson
