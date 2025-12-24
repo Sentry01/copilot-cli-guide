@@ -6,24 +6,68 @@ export default function Terminal({ scenarioId, onCommand }) {
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [typingIndex, setTypingIndex] = useState(-1); // Index of line being typed
+  const [typedText, setTypedText] = useState(''); // Current typed text
   const outputRef = useRef(null);
   const inputRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
 
   // Auto-scroll to bottom when output changes
   useEffect(() => {
     if (outputRef.current) {
       outputRef.current.scrollTop = outputRef.current.scrollHeight;
     }
-  }, [output]);
+  }, [output, typedText]);
 
   // Focus input on mount
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
+  // Typing animation effect
+  useEffect(() => {
+    if (typingIndex === -1 || typingIndex >= output.length) return;
+    
+    const currentLine = output[typingIndex];
+    if (currentLine.type !== 'output') {
+      setTypingIndex(-1);
+      return;
+    }
+
+    const fullText = currentLine.text;
+    if (typedText.length < fullText.length) {
+      typingTimeoutRef.current = setTimeout(() => {
+        setTypedText(fullText.substring(0, typedText.length + 1));
+      }, 20); // 20ms per character for natural typing speed
+    } else {
+      // Typing complete
+      setTypingIndex(-1);
+      setTypedText('');
+    }
+
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    };
+  }, [typingIndex, typedText, output]);
+
+  const skipTyping = () => {
+    if (typingIndex !== -1) {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      setTypingIndex(-1);
+      setTypedText('');
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!input.trim()) return;
+
+    // Skip any ongoing typing animation
+    skipTyping();
 
     // Add command to output
     setOutput(prev => [...prev, { type: 'command', text: input }]);
@@ -36,14 +80,20 @@ export default function Terminal({ scenarioId, onCommand }) {
     if (onCommand) {
       const response = onCommand(input);
       if (response) {
+        const newOutputIndex = output.length + 1; // +1 for the command we just added
         setOutput(prev => [...prev, { type: 'output', text: response }]);
+        setTypingIndex(newOutputIndex);
+        setTypedText('');
       }
     } else {
       // Default response
+      const newOutputIndex = output.length + 1;
       setOutput(prev => [...prev, { 
         type: 'output', 
         text: `Command not recognized: ${input}` 
       }]);
+      setTypingIndex(newOutputIndex);
+      setTypedText('');
     }
 
     setInput('');
@@ -77,10 +127,12 @@ export default function Terminal({ scenarioId, onCommand }) {
   };
 
   const handleClear = () => {
+    skipTyping();
     setOutput([]);
   };
 
   const handleReset = () => {
+    skipTyping();
     setOutput([]);
     setInput('');
     setHistory([]);
@@ -150,7 +202,10 @@ export default function Terminal({ scenarioId, onCommand }) {
           ref={outputRef}
           className="p-4 font-mono text-sm overflow-y-auto"
           style={{ height: isFullscreen ? 'calc(100vh - 120px)' : '320px' }}
-          onClick={() => inputRef.current?.focus()}
+          onClick={() => {
+            skipTyping(); // Skip animation on click
+            inputRef.current?.focus();
+          }}
         >
           {/* Welcome message */}
           {output.length === 0 && (
@@ -168,7 +223,12 @@ export default function Terminal({ scenarioId, onCommand }) {
                   <span className="text-gray-500">$</span> {line.text}
                 </div>
               ) : (
-                <div className="text-gray-300 whitespace-pre-wrap">{line.text}</div>
+                <div className="text-gray-300 whitespace-pre-wrap">
+                  {index === typingIndex ? typedText : line.text}
+                  {index === typingIndex && (
+                    <span className="animate-pulse">▋</span>
+                  )}
+                </div>
               )}
             </div>
           ))}
