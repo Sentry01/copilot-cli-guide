@@ -107,6 +107,21 @@ function ExamplesView() {
             {filteredExamples.length} example{filteredExamples.length !== 1 ? 's' : ''}
           </span>
         </div>
+
+        {/* Clear Filters Button */}
+        {(selectedCategory !== 'all' || selectedDifficulty !== 'all') && (
+          <div className="flex items-end">
+            <button
+              onClick={() => {
+                setSelectedCategory('all');
+                setSelectedDifficulty('all');
+              }}
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              Clear Filters
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Examples Grid */}
