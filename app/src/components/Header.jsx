@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import SearchBar from './SearchBar';
 import SettingsModal from './SettingsModal';
 
-export default function Header({ onLessonSelect, onShowKeyboardShortcuts }) {
+export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onToggleMobileMenu }) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const menuRef = useRef(null);
@@ -21,6 +21,17 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts }) {
   return (
     <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center px-6">
       <div className="flex-1 flex items-center justify-between">
+        {/* Mobile hamburger menu */}
+        <button
+          onClick={onToggleMobileMenu}
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 md:hidden mr-4"
+          aria-label="Toggle mobile menu"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        
         {/* Search bar */}
         <SearchBar onNavigate={onLessonSelect} />
         

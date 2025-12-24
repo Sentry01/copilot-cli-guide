@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 
-export default function Sidebar({ onLessonSelect, onViewChange, currentView }) {
+export default function Sidebar({ onLessonSelect, onViewChange, currentView, isMobileMenuOpen, onCloseMobileMenu }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedModuleId, setExpandedModuleId] = useState(1);
   const [activeLessonId, setActiveLessonId] = useState(3);
@@ -44,6 +44,10 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView }) {
     }
     if (onViewChange) {
       onViewChange('lesson');
+    }
+    // Close mobile menu when selecting a lesson
+    if (onCloseMobileMenu) {
+      onCloseMobileMenu();
     }
   };
 
@@ -89,28 +93,56 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView }) {
   };
 
   return (
-    <aside className={`bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'} flex flex-col`}>
-      {/* Logo and toggle */}
-      <div className="h-16 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4">
-        {!isCollapsed && (
-          <div className="font-bold text-lg text-gray-900 dark:text-white">
-            Copilot CLI
-          </div>
-        )}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
-          aria-label="Toggle sidebar"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            {isCollapsed ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            )}
-          </svg>
-        </button>
-      </div>
+    <>
+      {/* Mobile backdrop */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={onCloseMobileMenu}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <aside className={`
+        bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 
+        transition-all duration-300 flex flex-col
+        ${isCollapsed ? 'w-16' : 'w-64'}
+        
+        /* Mobile: fixed overlay that slides in */
+        md:relative fixed inset-y-0 left-0 z-50
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
+        {/* Logo and toggle */}
+        <div className="h-16 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4">
+          {!isCollapsed && (
+            <div className="font-bold text-lg text-gray-900 dark:text-white">
+              Copilot CLI
+            </div>
+          )}
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hidden md:block"
+            aria-label="Toggle sidebar"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {isCollapsed ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              )}
+            </svg>
+          </button>
+          {/* Mobile close button */}
+          <button
+            onClick={onCloseMobileMenu}
+            className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 md:hidden"
+            aria-label="Close menu"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto p-4">
@@ -269,5 +301,6 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView }) {
         </div>
       )}
     </aside>
+    </>
   );
 }
