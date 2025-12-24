@@ -8,6 +8,7 @@ import Breadcrumbs from './Breadcrumbs';
 import { useUser } from '../contexts/UserContext';
 import { LessonLoadingSkeleton } from './LoadingStates';
 import { delay, LOADING_DELAY } from '../utils/delay';
+import ErrorMessage, { NetworkError } from './ErrorMessage';
 
 // Code block component with syntax highlighting and copy button
 function CodeBlock({ node, inline, className, children, ...props }) {
@@ -77,22 +78,45 @@ export default function LessonView({ lessonId }) {
 
   const isComplete = lessonId ? isLessonComplete(lessonId) : false;
 
-  useEffect(() => {
+  // Fetch lesson data
+  const fetchLesson = async () => {
     if (!lessonId) return;
 
     setLoading(true);
-    Promise.all([
-      fetch(`http://localhost:3000/api/lessons/${lessonId}`).then(res => res.json()),
-      delay(LOADING_DELAY)
-    ])
-      .then(([data]) => {
-        setLesson(data);
-        setLoading(false);
-      })
-      .catch(err => {
+    setError(null);
+    
+    try {
+      const [response] = await Promise.all([
+        fetch(`http://localhost:3000/api/lessons/${lessonId}`),
+        delay(LOADING_DELAY)
+      ]);
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('LESSON_NOT_FOUND');
+        } else if (response.status >= 500) {
+          throw new Error('SERVER_ERROR');
+        } else {
+          throw new Error('FETCH_ERROR');
+        }
+      }
+
+      const data = await response.json();
+      setLesson(data);
+      setError(null);
+    } catch (err) {
+      if (err.name === 'TypeError' || err.message === 'Failed to fetch') {
+        setError('NETWORK_ERROR');
+      } else {
         setError(err.message);
-        setLoading(false);
-      });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLesson();
   }, [lessonId]);
 
   // Check if lesson is bookmarked
@@ -165,10 +189,38 @@ export default function LessonView({ lessonId }) {
   }
 
   if (error) {
+    if (error === 'NETWORK_ERROR') {
+      return <NetworkError onRetry={fetchLesson} />;
+    }
+    
+    if (error === 'LESSON_NOT_FOUND') {
+      return (
+        <ErrorMessage
+          title="Lesson Not Found"
+          message="This lesson doesn't exist or has been removed."
+          onRetry={() => window.location.reload()}
+          showRetry={false}
+        />
+      );
+    }
+    
+    if (error === 'SERVER_ERROR') {
+      return (
+        <ErrorMessage
+          title="Server Error"
+          message="Our server encountered an error. Please try again."
+          onRetry={fetchLesson}
+        />
+      );
+    }
+
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-red-500">Error loading lesson: {error}</div>
-      </div>
+      <ErrorMessage
+        title="Error Loading Lesson"
+        message="We encountered an unexpected error."
+        details={error}
+        onRetry={fetchLesson}
+      />
     );
   }
 

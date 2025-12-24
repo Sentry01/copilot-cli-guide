@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import CommandDetailView from './CommandDetailView';
 import { CommandsLoadingSkeleton } from './LoadingStates';
 import { delay, LOADING_DELAY } from '../utils/delay';
+import ErrorMessage, { NetworkError } from './ErrorMessage';
 
 function CommandsView({ onNavigateToTerminal }) {
   const [commands, setCommands] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [categories, setCategories] = useState([]);
@@ -16,11 +18,19 @@ function CommandsView({ onNavigateToTerminal }) {
   }, []);
 
   const fetchCommands = async () => {
+    setLoading(true);
+    setError(null);
+    
     try {
       const [response] = await Promise.all([
         fetch('http://localhost:3000/api/commands'),
         delay(LOADING_DELAY)
       ]);
+
+      if (!response.ok) {
+        throw new Error('FETCH_ERROR');
+      }
+
       const data = await response.json();
       setCommands(data);
       
@@ -28,9 +38,15 @@ function CommandsView({ onNavigateToTerminal }) {
       const uniqueCategories = [...new Set(data.map(cmd => cmd.category))];
       setCategories(['all', ...uniqueCategories]);
       
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching commands:', error);
+      setError(null);
+    } catch (err) {
+      if (err.name === 'TypeError' || err.message === 'Failed to fetch') {
+        setError('NETWORK_ERROR');
+      } else {
+        setError('FETCH_ERROR');
+      }
+      setCommands([]);
+    } finally {
       setLoading(false);
     }
   };
@@ -70,6 +86,19 @@ function CommandsView({ onNavigateToTerminal }) {
 
   if (loading) {
     return <CommandsLoadingSkeleton />;
+  }
+
+  if (error) {
+    if (error === 'NETWORK_ERROR') {
+      return <NetworkError onRetry={fetchCommands} />;
+    }
+    return (
+      <ErrorMessage
+        title="Error Loading Commands"
+        message="We couldn't load the command reference."
+        onRetry={fetchCommands}
+      />
+    );
   }
 
   return (

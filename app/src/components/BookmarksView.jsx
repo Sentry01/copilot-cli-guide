@@ -1,29 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { CardLoadingSkeleton } from './LoadingStates';
+import ErrorMessage, { NetworkError } from './ErrorMessage';
 
 export default function BookmarksView({ onLessonSelect }) {
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [sortBy, setSortBy] = useState('date'); // date, title, module
   const [editingNoteId, setEditingNoteId] = useState(null);
   const [noteText, setNoteText] = useState('');
   const { sessionId } = useUser();
 
-  useEffect(() => {
+  const fetchBookmarks = async () => {
     if (!sessionId) return;
 
     setLoading(true);
-    fetch(`http://localhost:3000/api/bookmarks/${sessionId}`)
-      .then(res => res.json())
-      .then(data => {
-        setBookmarks(data.bookmarks || []);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error loading bookmarks:', err);
-        setLoading(false);
-      });
+    setError(null);
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/bookmarks/${sessionId}`);
+      
+      if (!response.ok) {
+        throw new Error('FETCH_ERROR');
+      }
+
+      const data = await response.json();
+      setBookmarks(data.bookmarks || []);
+      setError(null);
+    } catch (err) {
+      if (err.name === 'TypeError' || err.message === 'Failed to fetch') {
+        setError('NETWORK_ERROR');
+      } else {
+        setError('FETCH_ERROR');
+      }
+      setBookmarks([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBookmarks();
   }, [sessionId]);
 
   const handleUpdateNotes = async (bookmarkId, notes) => {
@@ -84,6 +102,19 @@ export default function BookmarksView({ onLessonSelect }) {
           <CardLoadingSkeleton count={5} />
         </div>
       </div>
+    );
+  }
+
+  if (error) {
+    if (error === 'NETWORK_ERROR') {
+      return <NetworkError onRetry={fetchBookmarks} />;
+    }
+    return (
+      <ErrorMessage
+        title="Error Loading Bookmarks"
+        message="We couldn't load your bookmarks."
+        onRetry={fetchBookmarks}
+      />
     );
   }
 

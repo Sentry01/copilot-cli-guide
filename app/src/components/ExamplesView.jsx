@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { ExamplesLoadingSkeleton } from './LoadingStates';
 import { delay, LOADING_DELAY } from '../utils/delay';
+import ErrorMessage, { NetworkError } from './ErrorMessage';
 
 function ExamplesView() {
   const [examples, setExamples] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [categories, setCategories] = useState([]);
@@ -15,11 +17,19 @@ function ExamplesView() {
   }, []);
 
   const fetchExamples = async () => {
+    setLoading(true);
+    setError(null);
+    
     try {
       const [response] = await Promise.all([
         fetch('http://localhost:3000/api/examples'),
         delay(LOADING_DELAY)
       ]);
+
+      if (!response.ok) {
+        throw new Error('FETCH_ERROR');
+      }
+
       const data = await response.json();
       setExamples(data);
       
@@ -27,9 +37,15 @@ function ExamplesView() {
       const uniqueCategories = [...new Set(data.map(ex => ex.category))];
       setCategories(['all', ...uniqueCategories]);
       
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching examples:', error);
+      setError(null);
+    } catch (err) {
+      if (err.name === 'TypeError' || err.message === 'Failed to fetch') {
+        setError('NETWORK_ERROR');
+      } else {
+        setError('FETCH_ERROR');
+      }
+      setExamples([]);
+    } finally {
       setLoading(false);
     }
   };
@@ -51,6 +67,19 @@ function ExamplesView() {
 
   if (loading) {
     return <ExamplesLoadingSkeleton />;
+  }
+
+  if (error) {
+    if (error === 'NETWORK_ERROR') {
+      return <NetworkError onRetry={fetchExamples} />;
+    }
+    return (
+      <ErrorMessage
+        title="Error Loading Examples"
+        message="We couldn't load the code examples."
+        onRetry={fetchExamples}
+      />
+    );
   }
 
   return (
