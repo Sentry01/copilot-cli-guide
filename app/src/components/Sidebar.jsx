@@ -42,9 +42,6 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
     if (onLessonSelect) {
       onLessonSelect(lessonId);
     }
-    if (onViewChange) {
-      onViewChange('lesson');
-    }
     // Close mobile menu when selecting a lesson
     if (onCloseMobileMenu) {
       onCloseMobileMenu();
