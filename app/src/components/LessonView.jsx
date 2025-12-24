@@ -1,6 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+// Code block component with syntax highlighting and copy button
+function CodeBlock({ inline, className, children, ...props }) {
+  const [copied, setCopied] = useState(false);
+  const match = /language-(\w+)/.exec(className || '');
+  const language = match ? match[1] : '';
+  const code = String(children).replace(/\n$/, '');
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  if (inline) {
+    return (
+      <code className="bg-gray-100 dark:bg-gray-800 text-primary px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
+        {children}
+      </code>
+    );
+  }
+
+  return (
+    <div className="relative group mb-4">
+      {language && (
+        <div className="absolute top-2 right-2 z-10 flex items-center gap-2">
+          <span className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded font-mono">
+            {language}
+          </span>
+          <button
+            onClick={handleCopy}
+            className="px-2 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-xs rounded transition-colors opacity-0 group-hover:opacity-100"
+            title="Copy code"
+          >
+            {copied ? '✓ Copied!' : 'Copy'}
+          </button>
+        </div>
+      )}
+      <SyntaxHighlighter
+        language={language || 'text'}
+        style={vscDarkPlus}
+        customStyle={{
+          margin: 0,
+          borderRadius: '0.5rem',
+          padding: '1rem',
+          paddingTop: language ? '2.5rem' : '1rem',
+        }}
+        {...props}
+      >
+        {code}
+      </SyntaxHighlighter>
+    </div>
+  );
+}
 
 export default function LessonView({ lessonId }) {
   const [lesson, setLesson] = useState(null);
@@ -81,15 +137,19 @@ export default function LessonView({ lessonId }) {
             h1: ({node, ...props}) => <h1 className="text-3xl font-bold text-gray-900 dark:text-white mt-8 mb-4" {...props} />,
             h2: ({node, ...props}) => <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-6 mb-3" {...props} />,
             h3: ({node, ...props}) => <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-4 mb-2" {...props} />,
-            p: ({node, ...props}) => <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4" {...props} />,
+            p: ({node, children, ...props}) => {
+              // Check if this paragraph only contains a code block
+              const hasOnlyCode = node?.children?.length === 1 && node.children[0].tagName === 'code';
+              if (hasOnlyCode) {
+                return <div {...props}>{children}</div>;
+              }
+              return <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4" {...props}>{children}</p>;
+            },
             ul: ({node, ...props}) => <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-4" {...props} />,
             ol: ({node, ...props}) => <ol className="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-4" {...props} />,
             li: ({node, ...props}) => <li className="ml-4" {...props} />,
-            code: ({node, inline, ...props}) => 
-              inline 
-                ? <code className="bg-gray-100 dark:bg-gray-800 text-primary px-1.5 py-0.5 rounded text-sm font-mono" {...props} />
-                : <code className="block bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono" {...props} />,
-            pre: ({node, ...props}) => <pre className="bg-gray-900 rounded-lg mb-4 overflow-hidden" {...props} />,
+            code: CodeBlock,
+            pre: ({node, ...props}) => <div {...props} />,
             a: ({node, ...props}) => <a className="text-primary hover:underline" {...props} />,
             blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary pl-4 italic text-gray-600 dark:text-gray-400 my-4" {...props} />,
             strong: ({node, ...props}) => <strong className="font-bold text-gray-900 dark:text-white" {...props} />,
