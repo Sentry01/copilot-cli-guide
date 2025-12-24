@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import Terminal from './Terminal';
 
 // Code block component with syntax highlighting and copy button
 function CodeBlock({ inline, className, children, ...props }) {
@@ -78,6 +79,33 @@ export default function LessonView({ lessonId }) {
         setLoading(false);
       });
   }, [lessonId]);
+
+  // Handle terminal commands with simulated responses
+  const handleTerminalCommand = (command, lessonId) => {
+    const cmd = command.trim().toLowerCase();
+    
+    // Simulate Copilot CLI commands
+    if (cmd.startsWith('gh copilot suggest')) {
+      const query = cmd.replace('gh copilot suggest', '').trim().replace(/['"]/g, '');
+      return `✨ Copilot Suggestion:\n\nFor "${query}":\n\n  find . -name "*.js" -type f\n\nThis command will:\n- Search current directory and subdirectories\n- Find files matching the pattern\n- Show only files (not directories)\n\nWould you like to:\n  [E] Execute  [R] Revise  [X] Explain`;
+    }
+    
+    if (cmd.startsWith('gh copilot explain')) {
+      const query = cmd.replace('gh copilot explain', '').trim().replace(/['"]/g, '');
+      return `📖 Copilot Explanation:\n\nCommand: ${query}\n\nThis command performs the following actions:\n- Breaks down each part of the command\n- Explains flags and options\n- Shows potential side effects\n\nUse this before running unfamiliar commands!`;
+    }
+    
+    if (cmd === 'gh copilot --help' || cmd === 'gh copilot -h') {
+      return `GitHub Copilot CLI - AI-powered command line assistance\n\nUsage:\n  gh copilot suggest [options] "<description>"\n  gh copilot explain "<command>"\n\nFlags:\n  -t, --target    Target shell (bash, zsh, powershell)\n  -h, --help      Show help information\n  --version       Display version`;
+    }
+    
+    if (cmd === 'clear') {
+      return null; // Terminal will handle clear
+    }
+    
+    // Default response for unrecognized commands
+    return `Command: ${command}\n\nTry these Copilot CLI commands:\n  gh copilot suggest "your task description"\n  gh copilot explain "command to explain"\n  gh copilot --help`;
+  };
 
   if (loading) {
     return (
@@ -158,6 +186,19 @@ export default function LessonView({ lessonId }) {
           {lesson.content}
         </ReactMarkdown>
       </div>
+
+      {/* Interactive Terminal (if lesson has terminal) */}
+      {lesson.has_terminal && (
+        <div className="mt-8">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            🔧 Try It Yourself
+          </h3>
+          <Terminal 
+            scenarioId={lesson.id}
+            onCommand={(cmd) => handleTerminalCommand(cmd, lesson.id)}
+          />
+        </div>
+      )}
 
       {/* Lesson footer with navigation */}
       <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700">
