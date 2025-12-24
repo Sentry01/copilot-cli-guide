@@ -610,6 +610,25 @@ app.delete('/api/bookmarks/:session_id/lesson/:lesson_id', (req, res) => {
   );
 });
 
+// Update bookmark notes
+app.put('/api/bookmarks/:id/notes', (req, res) => {
+  const { notes } = req.body;
+  
+  db.run(
+    'UPDATE bookmarks SET notes = ? WHERE id = ?',
+    [notes, req.params.id],
+    function(err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Bookmark not found' });
+      }
+      res.json({ success: true, bookmark_id: req.params.id, notes });
+    }
+  );
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running on http://localhost:${PORT}`);

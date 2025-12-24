@@ -4,6 +4,9 @@ import { useUser } from '../contexts/UserContext';
 export default function BookmarksView({ onLessonSelect }) {
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState('date'); // date, title, module
+  const [editingNoteId, setEditingNoteId] = useState(null);
+  const [noteText, setNoteText] = useState('');
   const { sessionId } = useUser();
 
   useEffect(() => {
@@ -21,6 +24,52 @@ export default function BookmarksView({ onLessonSelect }) {
         setLoading(false);
       });
   }, [sessionId]);
+
+  const handleUpdateNotes = async (bookmarkId, notes) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/bookmarks/${bookmarkId}/notes`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes })
+      });
+      
+      if (response.ok) {
+        setBookmarks(prev => prev.map(b => 
+          b.id === bookmarkId ? { ...b, notes } : b
+        ));
+        setEditingNoteId(null);
+      }
+    } catch (err) {
+      console.error('Error updating notes:', err);
+    }
+  };
+
+  const startEditingNote = (bookmark) => {
+    setEditingNoteId(bookmark.id);
+    setNoteText(bookmark.notes || '');
+  };
+
+  const saveNote = (bookmarkId) => {
+    handleUpdateNotes(bookmarkId, noteText);
+  };
+
+  const cancelEdit = () => {
+    setEditingNoteId(null);
+    setNoteText('');
+  };
+
+  const getSortedBookmarks = () => {
+    const sorted = [...bookmarks];
+    switch (sortBy) {
+      case 'title':
+        return sorted.sort((a, b) => a.title.localeCompare(b.title));
+      case 'module':
+        return sorted.sort((a, b) => a.module_name.localeCompare(b.module_name));
+      case 'date':
+      default:
+        return sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+  };
 
   if (loading) {
     return (
@@ -53,17 +102,33 @@ export default function BookmarksView({ onLessonSelect }) {
 
   return (
     <div className="max-w-4xl mx-auto px-8 py-12">
-      <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">
-        Your Bookmarks
-      </h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+          Your Bookmarks
+        </h1>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600 dark:text-gray-400">Sort by:</span>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary"
+          >
+            <option value="date">Date Added</option>
+            <option value="title">Title</option>
+            <option value="module">Module</option>
+          </select>
+        </div>
+      </div>
       <div className="space-y-4">
-        {bookmarks.map(bookmark => (
+        {getSortedBookmarks().map(bookmark => (
           <div
             key={bookmark.id}
-            onClick={() => onLessonSelect(bookmark.lesson_id)}
-            className="p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary cursor-pointer transition-colors"
+            className="p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary transition-colors"
           >
-            <div className="flex items-start justify-between">
+            <div 
+              onClick={() => onLessonSelect(bookmark.lesson_id)}
+              className="flex items-start justify-between cursor-pointer"
+            >
               <div className="flex-1">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   {bookmark.title}
@@ -97,6 +162,58 @@ export default function BookmarksView({ onLessonSelect }) {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
               </svg>
+            </div>
+            
+            {/* Notes section */}
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              {editingNoteId === bookmark.id ? (
+                <div onClick={(e) => e.stopPropagation()}>
+                  <textarea
+                    value={noteText}
+                    onChange={(e) => setNoteText(e.target.value)}
+                    placeholder="Add your notes here..."
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-primary resize-none"
+                    rows="3"
+                  />
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => saveNote(bookmark.id)}
+                      className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div onClick={(e) => e.stopPropagation()}>
+                  {bookmark.notes ? (
+                    <div className="flex items-start justify-between">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 flex-1">
+                        {bookmark.notes}
+                      </p>
+                      <button
+                        onClick={() => startEditingNote(bookmark)}
+                        className="ml-4 text-primary hover:text-primary/80 text-sm font-medium"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => startEditingNote(bookmark)}
+                      className="text-sm text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors"
+                    >
+                      + Add notes
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         ))}
