@@ -289,6 +289,128 @@ function seedInitialData() {
       );
     });
     
+    // Seed commands
+    const commands = [
+      {
+        name: 'gh copilot suggest',
+        syntax: 'gh copilot suggest [options] "<description>"',
+        description: 'Generate shell commands from natural language descriptions',
+        category: 'Core Commands',
+        examples: JSON.stringify([
+          {
+            description: 'Find all JavaScript files',
+            command: 'gh copilot suggest "find all javascript files"'
+          },
+          {
+            description: 'List running Docker containers',
+            command: 'gh copilot suggest "list all running docker containers"'
+          },
+          {
+            description: 'Search for text in files',
+            command: 'gh copilot suggest "search for TODO in all js files"'
+          }
+        ])
+      },
+      {
+        name: 'gh copilot explain',
+        syntax: 'gh copilot explain "<command>"',
+        description: 'Explain what a command does in plain English',
+        category: 'Core Commands',
+        examples: JSON.stringify([
+          {
+            description: 'Explain a find command',
+            command: 'gh copilot explain "find . -name \'*.js\' -type f"'
+          },
+          {
+            description: 'Understand git rebase',
+            command: 'gh copilot explain "git rebase -i HEAD~3"'
+          },
+          {
+            description: 'Docker command explanation',
+            command: 'gh copilot explain "docker run -d -p 8080:80 nginx"'
+          }
+        ])
+      },
+      {
+        name: 'gh copilot --version',
+        syntax: 'gh copilot --version',
+        description: 'Display version information for GitHub Copilot CLI',
+        category: 'Info Commands',
+        examples: JSON.stringify([
+          {
+            description: 'Check installed version',
+            command: 'gh copilot --version'
+          }
+        ])
+      },
+      {
+        name: 'gh copilot --help',
+        syntax: 'gh copilot --help',
+        description: 'Show help information and available commands',
+        category: 'Info Commands',
+        examples: JSON.stringify([
+          {
+            description: 'Get general help',
+            command: 'gh copilot --help'
+          },
+          {
+            description: 'Get help for suggest command',
+            command: 'gh copilot suggest --help'
+          },
+          {
+            description: 'Get help for explain command',
+            command: 'gh copilot explain --help'
+          }
+        ])
+      },
+      {
+        name: 'gh extension install',
+        syntax: 'gh extension install github/gh-copilot',
+        description: 'Install the GitHub Copilot CLI extension',
+        category: 'Setup',
+        examples: JSON.stringify([
+          {
+            description: 'Install Copilot CLI extension',
+            command: 'gh extension install github/gh-copilot'
+          }
+        ])
+      },
+      {
+        name: 'gh extension upgrade',
+        syntax: 'gh extension upgrade gh-copilot',
+        description: 'Upgrade the GitHub Copilot CLI extension to the latest version',
+        category: 'Setup',
+        examples: JSON.stringify([
+          {
+            description: 'Upgrade to latest version',
+            command: 'gh extension upgrade gh-copilot'
+          }
+        ])
+      },
+      {
+        name: 'gh auth login',
+        syntax: 'gh auth login',
+        description: 'Authenticate with GitHub (required for Copilot CLI)',
+        category: 'Setup',
+        examples: JSON.stringify([
+          {
+            description: 'Login to GitHub',
+            command: 'gh auth login'
+          }
+        ])
+      }
+    ];
+    
+    commands.forEach(cmd => {
+      db.run(
+        'INSERT INTO commands (name, syntax, description, category, examples) VALUES (?, ?, ?, ?, ?)',
+        [cmd.name, cmd.syntax, cmd.description, cmd.category, cmd.examples],
+        (err) => {
+          if (err) console.error('Error seeding command:', err);
+        }
+      );
+    });
+    
     console.log('✓ Initial data seeded');
   });
 }

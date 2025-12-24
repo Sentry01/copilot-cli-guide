@@ -23,6 +23,13 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView }) {
     }
   };
 
+  const handleCommandsClick = (e) => {
+    e.preventDefault();
+    if (onViewChange) {
+      onViewChange('commands');
+    }
+  };
+
   const handleLessonClickInternal = (lessonId) => {
     setActiveLessonId(lessonId);
     if (onLessonSelect) {
@@ -207,7 +214,15 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView }) {
       {!isCollapsed && (
         <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           <div className="space-y-2">
-            <a href="#" className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg">
+            <a 
+              href="#" 
+              onClick={handleCommandsClick}
+              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
+                currentView === 'commands' 
+                  ? 'bg-primary text-white' 
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}
+            >
               📚 Commands
             </a>
             <a href="#" className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg">
