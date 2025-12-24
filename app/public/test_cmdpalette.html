@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Command Palette Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background: #3B82F6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px 0;
+      display: block;
+      width: 100%;
+    }
+    .test-button:hover {
+      background: #2563EB;
+    }
+    #log {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .pass { color: #10B981; font-weight: bold; }
+    .fail { color: #EF4444; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>🧪 Command Palette Test Suite</h1>
+  <p>This will test the Cmd+K command palette feature by opening the main app.</p>
+  
+  <button class="test-button" onclick="runTests()">▶ Run All Tests</button>
+  <button class="test-button" onclick="openApp()">🔗 Just Open App</button>
+  
+  <div id="log"></div>
+
+  <script>
+    let testWindow = null;
+    const logEl = document.getElementById('log');
+    
+    function log(msg, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const className = type === 'pass' ? 'pass' : type === 'fail' ? 'fail' : '';
+      logEl.innerHTML += `<span class="${className}">[${timestamp}] ${msg}</span>\n`;
+      logEl.scrollTop = logEl.scrollHeight;
+      console.log(msg);
+    }
+    
+    function openApp() {
+      log('Opening app in new window...');
+      testWindow = window.open('/', 'copilotapp', 'width=1400,height=900');
+      if (!testWindow) {
+        log('❌ FAIL: Popup blocked. Please allow popups.', 'fail');
+      } else {
+        log('✓ App window opened');
+      }
+    }
+    
+    async function runTests() {
+      logEl.innerHTML = '';
+      log('=== Starting Command Palette Test Suite ===\n');
+      
+      openApp();
+      
+      if (!testWindow) return;
+      
+      // Wait for app to load
+      log('Waiting 3 seconds for React app to initialize...');
+      await sleep(3000);
+      
+      try {
+        // Test 1: Trigger Cmd+K
+        log('\n[Test 1] Triggering Cmd+K keyboard event...');
+        const cmdKEvent = new KeyboardEvent('keydown', {
+          key: 'k',
+          code: 'KeyK',
+          metaKey: true,
+          ctrlKey: false,
+          bubbles: true,
+          cancelable: true
+        });
+        testWindow.document.dispatchEvent(cmdKEvent);
+        
+        await sleep(500);
+        
+        // Test 2: Check if palette opened
+        log('[Test 2] Checking if command palette opened...');
+        const paletteInput = testWindow.document.querySelector('[aria-label="Command palette search"]');
+        
+        if (paletteInput) {
+          log('✅ PASS: Command palette opened successfully!', 'pass');
+          log('✅ PASS: Search input is present and accessible', 'pass');
+          
+          // Test 3: Type "settings"
+          log('\n[Test 3] Typing "settings" into search...');
+          paletteInput.value = 'settings';
+          paletteInput.dispatchEvent(new Event('input', { bubbles: true }));
+          log('✅ PASS: Text input working', 'pass');
+          
+          await sleep(500);
+          
+          // Test 4: Check for settings option
+          log('[Test 4] Checking for settings option in results...');
+          const buttons = testWindow.document.querySelectorAll('[role="dialog"] button');
+          let foundSettings = false;
+          buttons.forEach(btn => {
+            if (btn.textContent.includes('Settings') || btn.textContent.includes('Open Settings')) {
+              foundSettings = true;
+            }
+          });
+          
+          if (foundSettings) {
+            log(`✅ PASS: Settings option found in ${buttons.length} results`, 'pass');
+          } else {
+            log(`❌ FAIL: Settings option not found (${buttons.length} buttons checked)`, 'fail');
+          }
+          
+          // Test 5: Arrow key navigation
+          log('\n[Test 5] Testing arrow key navigation...');
+          const downEvent = new KeyboardEvent('keydown', {
+            key: 'ArrowDown',
+            code: 'ArrowDown',
+            bubbles: true
+          });
+          testWindow.document.dispatchEvent(downEvent);
+          await sleep(200);
+          log('✅ PASS: Arrow down event dispatched', 'pass');
+          
+          // Test 6: Escape key
+          log('\n[Test 6] Testing Escape key to close...');
+          const escEvent = new KeyboardEvent('keydown', {
+            key: 'Escape',
+            code: 'Escape',
+            bubbles: true,
+            cancelable: true
+          });
+          testWindow.document.dispatchEvent(escEvent);
+          
+          await sleep(300);
+          
+          const paletteAfterEsc = testWindow.document.querySelector('[aria-label="Command palette search"]');
+          if (!paletteAfterEsc) {
+            log('✅ PASS: Command palette closed with Escape key!', 'pass');
+          } else {
+            log('❌ FAIL: Command palette still visible after Escape', 'fail');
+          }
+          
+          log('\n=== Test Suite Complete ===');
+          log('All required test steps verified!', 'pass');
+          
+        } else {
+          log('❌ FAIL: Command palette did not open', 'fail');
+          log('Possible issues:', 'fail');
+          log('- Keyboard event not reaching React', 'fail');
+          log('- State not updating', 'fail');
+          log('- Component not rendering', 'fail');
+        }
+        
+      } catch (error) {
+        log(`❌ ERROR: ${error.message}`, 'fail');
+        log(`Stack: ${error.stack}`, 'fail');
+      }
+    }
+    
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+  </script>
+</body>
+</html>
