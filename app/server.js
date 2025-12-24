@@ -337,17 +337,24 @@ app.get('/api/lessons', (req, res) => {
 
 // Get single lesson
 app.get('/api/lessons/:id', (req, res) => {
-  db.get('SELECT * FROM lessons WHERE id = ?', [req.params.id], (err, row) => {
-    if (err) {
-      res.status(500).json({ error: err.message });
-      return;
+  db.get(
+    `SELECT lessons.*, modules.title as module_name, modules.id as module_id
+     FROM lessons 
+     LEFT JOIN modules ON lessons.module_id = modules.id
+     WHERE lessons.id = ?`,
+    [req.params.id],
+    (err, row) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+        return;
+      }
+      if (!row) {
+        res.status(404).json({ error: 'Lesson not found' });
+        return;
+      }
+      res.json(row);
     }
-    if (!row) {
-      res.status(404).json({ error: 'Lesson not found' });
-      return;
-    }
-    res.json(row);
-  });
+  );
 });
 
 // Get all commands

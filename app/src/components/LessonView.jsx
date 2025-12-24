@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Terminal from './Terminal';
+import Breadcrumbs from './Breadcrumbs';
 
 // Code block component with syntax highlighting and copy button
 function CodeBlock({ inline, className, children, ...props }) {
@@ -133,6 +134,15 @@ export default function LessonView({ lessonId }) {
 
   return (
     <div className="max-w-4xl mx-auto px-8 py-8">
+      {/* Breadcrumb navigation */}
+      <Breadcrumbs
+        items={[
+          { label: 'Home', link: true, onClick: () => window.location.reload() },
+          { label: lesson.module_name || 'Module', link: false },
+          { label: lesson.title, link: false },
+        ]}
+      />
+
       {/* Lesson header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -188,7 +198,7 @@ export default function LessonView({ lessonId }) {
       </div>
 
       {/* Interactive Terminal (if lesson has terminal) */}
-      {lesson.has_terminal && (
+      {lesson.has_terminal === 1 && (
         <div className="mt-8">
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
             🔧 Try It Yourself
