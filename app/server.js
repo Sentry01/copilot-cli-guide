@@ -518,6 +518,98 @@ app.delete('/api/progress/:session_id/lesson/:lesson_id', (req, res) => {
   );
 });
 
+// Get user bookmarks
+app.get('/api/bookmarks/:session_id', (req, res) => {
+  db.get(
+    'SELECT id FROM users WHERE session_id = ?',
+    [req.params.session_id],
+    (err, user) => {
+      if (err || !user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      db.all(
+        `SELECT b.*, l.title, l.duration, l.difficulty, m.title as module_name, b.resource_id as lesson_id
+         FROM bookmarks b
+         JOIN lessons l ON b.resource_id = l.id AND b.resource_type = 'lesson'
+         JOIN modules m ON l.module_id = m.id
+         WHERE b.user_id = ?
+         ORDER BY b.created_at DESC`,
+        [user.id],
+        (err, bookmarks) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({ bookmarks });
+        }
+      );
+    }
+  );
+});
+
+// Add bookmark
+app.post('/api/bookmarks/:session_id/lesson/:lesson_id', (req, res) => {
+  db.get(
+    'SELECT id FROM users WHERE session_id = ?',
+    [req.params.session_id],
+    (err, user) => {
+      if (err || !user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      // Check if bookmark already exists
+      db.get(
+        'SELECT id FROM bookmarks WHERE user_id = ? AND resource_type = ? AND resource_id = ?',
+        [user.id, 'lesson', req.params.lesson_id],
+        (err, existing) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          
+          if (existing) {
+            return res.json({ success: true, already_bookmarked: true });
+          }
+          
+          db.run(
+            'INSERT INTO bookmarks (user_id, resource_type, resource_id) VALUES (?, ?, ?)',
+            [user.id, 'lesson', req.params.lesson_id],
+            function(err) {
+              if (err) {
+                return res.status(500).json({ error: err.message });
+              }
+              res.json({ success: true, lesson_id: req.params.lesson_id });
+            }
+          );
+        }
+      );
+    }
+  );
+});
+
+// Remove bookmark
+app.delete('/api/bookmarks/:session_id/lesson/:lesson_id', (req, res) => {
+  db.get(
+    'SELECT id FROM users WHERE session_id = ?',
+    [req.params.session_id],
+    (err, user) => {
+      if (err || !user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      db.run(
+        'DELETE FROM bookmarks WHERE user_id = ? AND resource_type = ? AND resource_id = ?',
+        [user.id, 'lesson', req.params.lesson_id],
+        function(err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({ success: true, lesson_id: req.params.lesson_id });
+        }
+      );
+    }
+  );
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running on http://localhost:${PORT}`);

@@ -16,6 +16,13 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView }) {
     }
   };
 
+  const handleBookmarksClick = (e) => {
+    e.preventDefault();
+    if (onViewChange) {
+      onViewChange('bookmarks');
+    }
+  };
+
   const handleLessonClickInternal = (lessonId) => {
     setActiveLessonId(lessonId);
     if (onLessonSelect) {
@@ -205,6 +212,17 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView }) {
             </a>
             <a href="#" className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg">
               💡 Examples
+            </a>
+            <a 
+              href="#" 
+              onClick={handleBookmarksClick}
+              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
+                currentView === 'bookmarks' 
+                  ? 'bg-primary text-white' 
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              🔖 Bookmarks
             </a>
             <a 
               href="#" 

@@ -65,8 +65,10 @@ export default function LessonView({ lessonId }) {
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { markLessonComplete, isLessonComplete } = useUser();
+  const { markLessonComplete, isLessonComplete, sessionId } = useUser();
   const [isCompleting, setIsCompleting] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isBookmarking, setIsBookmarking] = useState(false);
 
   const isComplete = lessonId ? isLessonComplete(lessonId) : false;
 
@@ -85,6 +87,44 @@ export default function LessonView({ lessonId }) {
         setLoading(false);
       });
   }, [lessonId]);
+
+  // Check if lesson is bookmarked
+  useEffect(() => {
+    if (!lessonId || !sessionId) return;
+
+    fetch(`http://localhost:3000/api/bookmarks/${sessionId}`)
+      .then(res => res.json())
+      .then(data => {
+        const bookmarked = data.bookmarks?.some(b => b.lesson_id === parseInt(lessonId));
+        setIsBookmarked(bookmarked);
+      })
+      .catch(err => console.error('Error checking bookmark:', err));
+  }, [lessonId, sessionId]);
+
+  // Toggle bookmark
+  const toggleBookmark = async () => {
+    if (!sessionId) return;
+    
+    setIsBookmarking(true);
+    try {
+      if (isBookmarked) {
+        // Remove bookmark
+        await fetch(`http://localhost:3000/api/bookmarks/${sessionId}/lesson/${lessonId}`, {
+          method: 'DELETE',
+        });
+        setIsBookmarked(false);
+      } else {
+        // Add bookmark
+        await fetch(`http://localhost:3000/api/bookmarks/${sessionId}/lesson/${lessonId}`, {
+          method: 'POST',
+        });
+        setIsBookmarked(true);
+      }
+    } catch (err) {
+      console.error('Error toggling bookmark:', err);
+    }
+    setIsBookmarking(false);
+  };
 
   // Handle terminal commands with simulated responses
   const handleTerminalCommand = (command, lessonId) => {
@@ -150,9 +190,26 @@ export default function LessonView({ lessonId }) {
 
       {/* Lesson header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          {lesson.title}
-        </h1>
+        <div className="flex items-start justify-between mb-4">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+            {lesson.title}
+          </h1>
+          <button
+            onClick={toggleBookmark}
+            disabled={isBookmarking}
+            className="ml-4 p-2 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+            title={isBookmarked ? 'Remove bookmark' : 'Bookmark this lesson'}
+          >
+            <svg 
+              className={`w-6 h-6 ${isBookmarked ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`}
+              fill={isBookmarked ? 'currentColor' : 'none'}
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+            </svg>
+          </button>
+        </div>
         <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
           <span className="flex items-center">
             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
