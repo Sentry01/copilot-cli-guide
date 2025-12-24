@@ -191,7 +191,7 @@ function CommandsView({ onNavigateToTerminal }) {
           <p className="text-xl text-gray-500 dark:text-gray-400 mb-2">
             No commands found
           </p>
-          <p className="text-gray-400 dark:text-gray-500">
+          <p className="text-gray-500 dark:text-gray-400">
             {searchTerm ? `No commands match "${searchTerm}"` : 'No commands in this category'}
           </p>
           {(searchTerm || selectedCategory !== 'all') && (

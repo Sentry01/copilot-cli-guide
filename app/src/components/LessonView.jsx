@@ -385,7 +385,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
               prevLesson 
                 ? 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
-                : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                : 'text-gray-500 dark:text-gray-500 cursor-not-allowed opacity-50'
             }`}
             aria-label={prevLesson ? `Go to previous lesson: ${prevLesson.title}` : 'No previous lesson'}
           >
@@ -417,7 +417,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
               nextLesson 
                 ? 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
-                : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                : 'text-gray-500 dark:text-gray-500 cursor-not-allowed opacity-50'
             }`}
             aria-label={nextLesson ? `Go to next lesson: ${nextLesson.title}` : 'No next lesson'}
           >

@@ -142,7 +142,7 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }) {
                             {key}
                           </kbd>
                           {keyIdx < shortcut.keys.length - 1 && (
-                            <span className={isDark ? 'text-gray-500' : 'text-gray-400'}>
+                            <span className={isDark ? 'text-gray-400' : 'text-gray-500'}>
                               {shortcut.keys.length === 2 && keyIdx === 0 ? '+' : ' then '}
                             </span>
                           )}

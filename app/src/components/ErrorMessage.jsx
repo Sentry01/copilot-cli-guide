@@ -65,7 +65,7 @@ export default function ErrorMessage({
         </div>
 
         {/* Help Text */}
-        <p className="mt-4 text-xs text-center text-gray-500 dark:text-gray-500">
+        <p className="mt-4 text-xs text-center text-gray-600 dark:text-gray-400">
           If the problem persists, please check your network connection or try again later.
         </p>
       </div>

@@ -174,7 +174,7 @@ export default function SearchBar({ onNavigate }) {
                     </p>
                   )}
                   {result.module_name && (
-                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                       {result.module_name}
                     </p>
                   )}
