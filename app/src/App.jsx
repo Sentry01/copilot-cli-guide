@@ -28,7 +28,12 @@ function App() {
         ) : currentView === 'bookmarks' ? (
           <BookmarksView onLessonSelect={handleLessonSelect} />
         ) : currentView === 'commands' ? (
-          <CommandsView />
+          <CommandsView 
+            onNavigateToTerminal={(commandName) => {
+              // Navigate to "First Command" lesson (id=2) which has a terminal
+              handleLessonSelect(2);
+            }}
+          />
         ) : currentView === 'examples' ? (
           <ExamplesView />
         ) : (

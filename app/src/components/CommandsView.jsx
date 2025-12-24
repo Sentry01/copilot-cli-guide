@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import CommandDetailView from './CommandDetailView';
 
-function CommandsView() {
+function CommandsView({ onNavigateToTerminal }) {
   const [commands, setCommands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [categories, setCategories] = useState([]);
+  const [selectedCommand, setSelectedCommand] = useState(null);
 
   useEffect(() => {
     fetchCommands();
@@ -39,6 +41,21 @@ function CommandsView() {
     }
     commandsByCategory[cmd.category].push(cmd);
   });
+
+  // Show detail view if command is selected
+  if (selectedCommand) {
+    return (
+      <CommandDetailView
+        commandName={selectedCommand}
+        onBack={() => setSelectedCommand(null)}
+        onTryIt={() => {
+          if (onNavigateToTerminal) {
+            onNavigateToTerminal(selectedCommand);
+          }
+        }}
+      />
+    );
+  }
 
   if (loading) {
     return (
@@ -86,7 +103,11 @@ function CommandsView() {
             </h2>
             <div className="space-y-4">
               {cmds.map(command => (
-                <CommandCard key={command.id} command={command} />
+                <CommandCard 
+                  key={command.id} 
+                  command={command}
+                  onViewDetail={() => setSelectedCommand(command.name)}
+                />
               ))}
             </div>
           </div>
@@ -105,12 +126,15 @@ function CommandsView() {
   );
 }
 
-function CommandCard({ command }) {
+function CommandCard({ command, onViewDetail }) {
   const [showExamples, setShowExamples] = useState(false);
   const examples = command.examples ? JSON.parse(command.examples) : [];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-shadow">
+    <div 
+      className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-shadow cursor-pointer"
+      onClick={onViewDetail}
+    >
       {/* Command Name */}
       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
         <code className="font-mono text-blue-600 dark:text-blue-400">
@@ -135,9 +159,14 @@ function CommandCard({ command }) {
         </div>
       </div>
 
-      {/* Examples Toggle */}
+      {/* View Details Link */}
+      <div className="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium">
+        View Full Documentation →
+      </div>
+
+      {/* Examples Toggle (stop propagation to prevent navigation) */}
       {examples.length > 0 && (
-        <div>
+        <div className="mt-3" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => setShowExamples(!showExamples)}
             className="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium flex items-center gap-1"

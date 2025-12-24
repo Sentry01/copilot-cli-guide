@@ -597,6 +597,23 @@ app.get('/api/commands', (req, res) => {
   });
 });
 
+// Get single command by name
+app.get('/api/commands/:name', (req, res) => {
+  const commandName = decodeURIComponent(req.params.name);
+  
+  db.get('SELECT * FROM commands WHERE name = ?', [commandName], (err, row) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    if (!row) {
+      res.status(404).json({ error: 'Command not found' });
+      return;
+    }
+    res.json(row);
+  });
+});
+
 // Get all examples (with optional category/difficulty filter)
 app.get('/api/examples', (req, res) => {
   const { category, difficulty } = req.query;
