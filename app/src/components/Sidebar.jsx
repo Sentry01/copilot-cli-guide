@@ -1,13 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 
-export default function Sidebar({ onLessonSelect }) {
+export default function Sidebar({ onLessonSelect, onViewChange, currentView }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedModuleId, setExpandedModuleId] = useState(1);
   const [activeLessonId, setActiveLessonId] = useState(3);
   const [modules, setModules] = useState([]);
   const [lessons, setLessons] = useState({});
   const { completedLessons } = useUser();
+
+  const handleProgressClick = (e) => {
+    e.preventDefault();
+    if (onViewChange) {
+      onViewChange('progress');
+    }
+  };
+
+  const handleLessonClickInternal = (lessonId) => {
+    setActiveLessonId(lessonId);
+    if (onLessonSelect) {
+      onLessonSelect(lessonId);
+    }
+    if (onViewChange) {
+      onViewChange('lesson');
+    }
+  };
 
   useEffect(() => {
     // Fetch modules
@@ -32,10 +49,7 @@ export default function Sidebar({ onLessonSelect }) {
   };
 
   const handleLessonClick = (lessonId) => {
-    setActiveLessonId(lessonId);
-    if (onLessonSelect) {
-      onLessonSelect(lessonId);
-    }
+    handleLessonClickInternal(lessonId);
   };
 
   // Calculate module progress
@@ -192,7 +206,15 @@ export default function Sidebar({ onLessonSelect }) {
             <a href="#" className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg">
               💡 Examples
             </a>
-            <a href="#" className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg">
+            <a 
+              href="#" 
+              onClick={handleProgressClick}
+              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
+                currentView === 'progress' 
+                  ? 'bg-primary text-white' 
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}
+            >
               📊 Progress
             </a>
           </div>
