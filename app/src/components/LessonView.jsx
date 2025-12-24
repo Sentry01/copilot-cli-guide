@@ -8,7 +8,7 @@ import Breadcrumbs from './Breadcrumbs';
 import { useUser } from '../contexts/UserContext';
 
 // Code block component with syntax highlighting and copy button
-function CodeBlock({ inline, className, children, ...props }) {
+function CodeBlock({ node, inline, className, children, ...props }) {
   const [copied, setCopied] = useState(false);
   const match = /language-(\w+)/.exec(className || '');
   const language = match ? match[1] : '';
@@ -20,9 +20,12 @@ function CodeBlock({ inline, className, children, ...props }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (inline) {
+  // Detect if this is inline code (no language class and no newlines in content)
+  const isInline = !className && !code.includes('\n');
+
+  if (isInline) {
     return (
-      <code className="bg-gray-100 dark:bg-gray-800 text-primary px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
+      <code style={{ display: 'inline' }} className="bg-gray-100 dark:bg-gray-800 text-primary px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
         {children}
       </code>
     );
