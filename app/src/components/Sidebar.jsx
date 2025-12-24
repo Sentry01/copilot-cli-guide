@@ -1,30 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function Sidebar() {
+export default function Sidebar({ onLessonSelect }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedModuleId, setExpandedModuleId] = useState(1);
-  const [activeLesson, setActiveLesson] = useState('Introduction');
+  const [activeLessonId, setActiveLessonId] = useState(3);
+  const [modules, setModules] = useState([]);
+  const [lessons, setLessons] = useState({});
 
-  const modules = [
-    {
-      id: 1,
-      title: 'Getting Started',
-      lessons: ['Introduction', 'Installation', 'First Command']
-    },
-    {
-      id: 2,
-      title: 'Basic Commands',
-      lessons: ['gh copilot suggest', 'gh copilot explain', 'Common Flags']
-    },
-    {
-      id: 3,
-      title: 'Advanced Topics',
-      lessons: ['Workflow Integration', 'Custom Prompts', 'Best Practices']
-    }
-  ];
+  useEffect(() => {
+    // Fetch modules
+    fetch('http://localhost:3000/api/modules')
+      .then(res => res.json())
+      .then(data => {
+        setModules(data);
+        // Fetch lessons for each module
+        data.forEach(module => {
+          fetch(`http://localhost:3000/api/lessons?module_id=${module.id}`)
+            .then(res => res.json())
+            .then(lessonData => {
+              setLessons(prev => ({ ...prev, [module.id]: lessonData }));
+            });
+        });
+      })
+      .catch(err => console.error('Error fetching modules:', err));
+  }, []);
 
   const toggleModule = (moduleId) => {
     setExpandedModuleId(expandedModuleId === moduleId ? null : moduleId);
+  };
+
+  const handleLessonClick = (lessonId) => {
+    setActiveLessonId(lessonId);
+    if (onLessonSelect) {
+      onLessonSelect(lessonId);
+    }
   };
 
   return (
@@ -71,24 +80,20 @@ export default function Sidebar() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
-                {expandedModuleId === module.id && (
+                {expandedModuleId === module.id && lessons[module.id] && (
                   <div className="space-y-1 ml-2 mt-1">
-                    {module.lessons.map((lesson, idx) => (
-                      <a
-                        key={idx}
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setActiveLesson(lesson);
-                        }}
-                        className={`block px-3 py-2 text-sm rounded-lg transition-colors ${
-                          activeLesson === lesson
+                    {lessons[module.id].map((lesson) => (
+                      <button
+                        key={lesson.id}
+                        onClick={() => handleLessonClick(lesson.id)}
+                        className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors ${
+                          activeLessonId === lesson.id
                             ? 'bg-primary text-white'
                             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'
                         }`}
                       >
-                        {lesson}
-                      </a>
+                        {lesson.title}
+                      </button>
                     ))}
                   </div>
                 )}
