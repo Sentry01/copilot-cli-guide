@@ -7,15 +7,35 @@ import ProgressDashboard from './components/ProgressDashboard'
 import BookmarksView from './components/BookmarksView'
 import CommandsView from './components/CommandsView'
 import ExamplesView from './components/ExamplesView'
+import KeyboardShortcutsModal from './components/KeyboardShortcutsModal'
+import useKeyboardShortcuts from './hooks/useKeyboardShortcuts'
 
 function App() {
   const [currentLessonId, setCurrentLessonId] = useState(3); // Default to first lesson (Introduction)
   const [currentView, setCurrentView] = useState('lesson'); // 'lesson', 'progress', 'bookmarks', 'commands', or 'examples'
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
 
   const handleLessonSelect = (lessonId) => {
     setCurrentLessonId(lessonId);
     setCurrentView('lesson');
   };
+
+  // Keyboard shortcut handlers
+  useKeyboardShortcuts({
+    onShowKeyboardShortcuts: () => setShowKeyboardShortcuts(prev => !prev),
+    onFocusSearch: () => {
+      const searchInput = document.querySelector('input[type="text"]');
+      searchInput?.focus();
+    },
+    onEscape: () => {
+      setShowKeyboardShortcuts(false);
+      const searchInput = document.querySelector('input[type="text"]');
+      if (searchInput && searchInput === document.activeElement) {
+        searchInput.blur();
+        searchInput.value = '';
+      }
+    },
+  });
 
   return (
     <ThemeProvider>
@@ -24,6 +44,7 @@ function App() {
           onLessonSelect={handleLessonSelect}
           onViewChange={setCurrentView}
           currentView={currentView}
+          onShowKeyboardShortcuts={() => setShowKeyboardShortcuts(true)}
         >
           {currentView === 'progress' ? (
             <ProgressDashboard />
@@ -42,6 +63,12 @@ function App() {
             <LessonView lessonId={currentLessonId} />
           )}
         </MainLayout>
+
+        {/* Keyboard Shortcuts Modal */}
+        <KeyboardShortcutsModal 
+          isOpen={showKeyboardShortcuts}
+          onClose={() => setShowKeyboardShortcuts(false)}
+        />
       </UserProvider>
     </ThemeProvider>
   )
