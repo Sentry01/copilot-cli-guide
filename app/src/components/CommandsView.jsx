@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import CommandDetailView from './CommandDetailView';
+import { CommandsLoadingSkeleton } from './LoadingStates';
+import { delay, LOADING_DELAY } from '../utils/delay';
 
 function CommandsView({ onNavigateToTerminal }) {
   const [commands, setCommands] = useState([]);
@@ -15,7 +17,10 @@ function CommandsView({ onNavigateToTerminal }) {
 
   const fetchCommands = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/commands');
+      const [response] = await Promise.all([
+        fetch('http://localhost:3000/api/commands'),
+        delay(LOADING_DELAY)
+      ]);
       const data = await response.json();
       setCommands(data);
       
@@ -64,11 +69,7 @@ function CommandsView({ onNavigateToTerminal }) {
   }
 
   if (loading) {
-    return (
-      <div className="p-8">
-        <div className="text-gray-600 dark:text-gray-400">Loading commands...</div>
-      </div>
-    );
+    return <CommandsLoadingSkeleton />;
   }
 
   return (

@@ -6,6 +6,8 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Terminal from './Terminal';
 import Breadcrumbs from './Breadcrumbs';
 import { useUser } from '../contexts/UserContext';
+import { LessonLoadingSkeleton } from './LoadingStates';
+import { delay, LOADING_DELAY } from '../utils/delay';
 
 // Code block component with syntax highlighting and copy button
 function CodeBlock({ node, inline, className, children, ...props }) {
@@ -79,9 +81,11 @@ export default function LessonView({ lessonId }) {
     if (!lessonId) return;
 
     setLoading(true);
-    fetch(`http://localhost:3000/api/lessons/${lessonId}`)
-      .then(res => res.json())
-      .then(data => {
+    Promise.all([
+      fetch(`http://localhost:3000/api/lessons/${lessonId}`).then(res => res.json()),
+      delay(LOADING_DELAY)
+    ])
+      .then(([data]) => {
         setLesson(data);
         setLoading(false);
       })
@@ -157,11 +161,7 @@ export default function LessonView({ lessonId }) {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500 dark:text-gray-400">Loading lesson...</div>
-      </div>
-    );
+    return <LessonLoadingSkeleton />;
   }
 
   if (error) {

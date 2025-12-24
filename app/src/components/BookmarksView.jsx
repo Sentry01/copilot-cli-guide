@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
+import { CardLoadingSkeleton } from './LoadingStates';
 
 export default function BookmarksView({ onLessonSelect }) {
   const [bookmarks, setBookmarks] = useState([]);
@@ -73,8 +74,15 @@ export default function BookmarksView({ onLessonSelect }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500 dark:text-gray-400">Loading bookmarks...</div>
+      <div className="max-w-4xl mx-auto px-8 py-12">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            Your Bookmarks
+          </h1>
+        </div>
+        <div className="space-y-4">
+          <CardLoadingSkeleton count={5} />
+        </div>
       </div>
     );
   }

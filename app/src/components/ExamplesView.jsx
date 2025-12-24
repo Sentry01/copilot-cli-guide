@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { ExamplesLoadingSkeleton } from './LoadingStates';
+import { delay, LOADING_DELAY } from '../utils/delay';
 
 function ExamplesView() {
   const [examples, setExamples] = useState([]);
@@ -14,7 +16,10 @@ function ExamplesView() {
 
   const fetchExamples = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/examples');
+      const [response] = await Promise.all([
+        fetch('http://localhost:3000/api/examples'),
+        delay(LOADING_DELAY)
+      ]);
       const data = await response.json();
       setExamples(data);
       
@@ -45,11 +50,7 @@ function ExamplesView() {
   };
 
   if (loading) {
-    return (
-      <div className="p-8">
-        <div className="text-gray-600 dark:text-gray-400">Loading examples...</div>
-      </div>
-    );
+    return <ExamplesLoadingSkeleton />;
   }
 
   return (
