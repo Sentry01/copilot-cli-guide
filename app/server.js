@@ -411,6 +411,104 @@ function seedInitialData() {
       );
     });
     
+    // Seed examples
+    const examples = [
+      {
+        title: 'Find Large Files',
+        code: 'gh copilot suggest "find files larger than 100MB"',
+        category: 'File Operations',
+        difficulty: 'beginner',
+        language: 'bash'
+      },
+      {
+        title: 'Git Commit with Message',
+        code: 'gh copilot suggest "commit all changes with message \'Fix bug\'"',
+        category: 'Git',
+        difficulty: 'beginner',
+        language: 'bash'
+      },
+      {
+        title: 'Docker Container Management',
+        code: 'gh copilot suggest "stop all running docker containers"',
+        category: 'Docker',
+        difficulty: 'intermediate',
+        language: 'bash'
+      },
+      {
+        title: 'Network Diagnostics',
+        code: 'gh copilot suggest "check which process is using port 3000"',
+        category: 'System',
+        difficulty: 'intermediate',
+        language: 'bash'
+      },
+      {
+        title: 'Archive Directory',
+        code: 'gh copilot suggest "create tar.gz archive of src folder"',
+        category: 'File Operations',
+        difficulty: 'beginner',
+        language: 'bash'
+      },
+      {
+        title: 'Search in Files',
+        code: 'gh copilot suggest "search for TODO comments in all js files"',
+        category: 'File Operations',
+        difficulty: 'beginner',
+        language: 'bash'
+      },
+      {
+        title: 'Process Management',
+        code: 'gh copilot suggest "kill all node processes"',
+        category: 'System',
+        difficulty: 'intermediate',
+        language: 'bash'
+      },
+      {
+        title: 'Git Branch Operations',
+        code: 'gh copilot suggest "delete all local branches except main"',
+        category: 'Git',
+        difficulty: 'advanced',
+        language: 'bash'
+      },
+      {
+        title: 'Log Analysis',
+        code: 'gh copilot suggest "find errors in last 100 lines of system log"',
+        category: 'System',
+        difficulty: 'intermediate',
+        language: 'bash'
+      },
+      {
+        title: 'Permission Changes',
+        code: 'gh copilot suggest "make all shell scripts executable"',
+        category: 'File Operations',
+        difficulty: 'beginner',
+        language: 'bash'
+      },
+      {
+        title: 'Database Backup',
+        code: 'gh copilot suggest "backup postgres database to file"',
+        category: 'Database',
+        difficulty: 'intermediate',
+        language: 'bash'
+      },
+      {
+        title: 'Kubernetes Pods',
+        code: 'gh copilot suggest "list all pods in namespace production"',
+        category: 'Kubernetes',
+        difficulty: 'advanced',
+        language: 'bash'
+      }
+    ];
+    
+    examples.forEach(ex => {
+      db.run(
+        'INSERT INTO examples (title, code, category, difficulty, language) VALUES (?, ?, ?, ?, ?)',
+        [ex.title, ex.code, ex.category, ex.difficulty, ex.language],
+        (err) => {
+          if (err) console.error('Error seeding example:', err);
+        }
+      );
+    });
+    
     console.log('✓ Initial data seeded');
   });
 }
@@ -488,6 +586,36 @@ app.get('/api/commands', (req, res) => {
   if (category) {
     query += ' WHERE category = ?';
     params = [category];
+  }
+  
+  db.all(query, params, (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    res.json(rows);
+  });
+});
+
+// Get all examples (with optional category/difficulty filter)
+app.get('/api/examples', (req, res) => {
+  const { category, difficulty } = req.query;
+  let query = 'SELECT * FROM examples';
+  let params = [];
+  let conditions = [];
+  
+  if (category) {
+    conditions.push('category = ?');
+    params.push(category);
+  }
+  
+  if (difficulty) {
+    conditions.push('difficulty = ?');
+    params.push(difficulty);
+  }
+  
+  if (conditions.length > 0) {
+    query += ' WHERE ' + conditions.join(' AND ');
   }
   
   db.all(query, params, (err, rows) => {

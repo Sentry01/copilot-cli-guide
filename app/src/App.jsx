@@ -5,10 +5,11 @@ import LessonView from './components/LessonView'
 import ProgressDashboard from './components/ProgressDashboard'
 import BookmarksView from './components/BookmarksView'
 import CommandsView from './components/CommandsView'
+import ExamplesView from './components/ExamplesView'
 
 function App() {
   const [currentLessonId, setCurrentLessonId] = useState(3); // Default to first lesson (Introduction)
-  const [currentView, setCurrentView] = useState('lesson'); // 'lesson', 'progress', 'bookmarks', or 'commands'
+  const [currentView, setCurrentView] = useState('lesson'); // 'lesson', 'progress', 'bookmarks', 'commands', or 'examples'
 
   const handleLessonSelect = (lessonId) => {
     setCurrentLessonId(lessonId);
@@ -28,6 +29,8 @@ function App() {
           <BookmarksView onLessonSelect={handleLessonSelect} />
         ) : currentView === 'commands' ? (
           <CommandsView />
+        ) : currentView === 'examples' ? (
+          <ExamplesView />
         ) : (
           <LessonView lessonId={currentLessonId} />
         )}

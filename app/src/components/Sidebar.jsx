@@ -30,6 +30,13 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView }) {
     }
   };
 
+  const handleExamplesClick = (e) => {
+    e.preventDefault();
+    if (onViewChange) {
+      onViewChange('examples');
+    }
+  };
+
   const handleLessonClickInternal = (lessonId) => {
     setActiveLessonId(lessonId);
     if (onLessonSelect) {
@@ -225,7 +232,15 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView }) {
             >
               📚 Commands
             </a>
-            <a href="#" className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg">
+            <a 
+              href="#" 
+              onClick={handleExamplesClick}
+              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
+                currentView === 'examples' 
+                  ? 'bg-primary text-white' 
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}
+            >
               💡 Examples
             </a>
             <a 
