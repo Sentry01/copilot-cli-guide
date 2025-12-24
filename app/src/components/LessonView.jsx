@@ -11,7 +11,7 @@ import { delay, LOADING_DELAY } from '../utils/delay';
 import ErrorMessage, { NetworkError } from './ErrorMessage';
 
 // Code block component with syntax highlighting and copy button
-function CodeBlock({ node, inline, className, children, ...props }) {
+function CodeBlock({ node: _node, inline: _inline, className, children, ...props }) {
   const [copied, setCopied] = useState(false);
   const match = /language-(\w+)/.exec(className || '');
   const language = match ? match[1] : '';
@@ -76,7 +76,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
   const [isCompleting, setIsCompleting] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isBookmarking, setIsBookmarking] = useState(false);
-  const [allLessons, setAllLessons] = useState([]);
+  const [_allLessons, setAllLessons] = useState([]);
   const [prevLesson, setPrevLesson] = useState(null);
   const [nextLesson, setNextLesson] = useState(null);
 
@@ -121,6 +121,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
 
   useEffect(() => {
     fetchLesson();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lessonId]);
 
   // Fetch all lessons to determine next/previous
@@ -192,30 +193,43 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
   };
 
   // Handle terminal commands with simulated responses
-  const handleTerminalCommand = (command, lessonId) => {
+  const handleTerminalCommand = (command) => {
     const cmd = command.trim().toLowerCase();
     
-    // Simulate Copilot CLI commands
-    if (cmd.startsWith('gh copilot suggest')) {
-      const query = cmd.replace('gh copilot suggest', '').trim().replace(/['"]/g, '');
-      return `✨ Copilot Suggestion:\n\nFor "${query}":\n\n  find . -name "*.js" -type f\n\nThis command will:\n- Search current directory and subdirectories\n- Find files matching the pattern\n- Show only files (not directories)\n\nWould you like to:\n  [E] Execute  [R] Revise  [X] Explain`;
+    // Simulate Copilot CLI commands (standalone CLI with interactive mode)
+    if (cmd === 'copilot' || cmd === 'copilot -i') {
+      return `🚀 GitHub Copilot CLI v1.0.0\n\nEntering interactive mode...\n\n> Welcome to Copilot CLI!\n> Ask me anything about shell commands, or use slash commands:\n>   /help    - Show available commands\n>   /login   - Authenticate with GitHub\n>   /mcp add - Add MCP server integration\n>   /agent   - Create a custom agent\n>\n> Try: "find all javascript files in this project"`;
     }
     
-    if (cmd.startsWith('gh copilot explain')) {
-      const query = cmd.replace('gh copilot explain', '').trim().replace(/['"]/g, '');
-      return `📖 Copilot Explanation:\n\nCommand: ${query}\n\nThis command performs the following actions:\n- Breaks down each part of the command\n- Explains flags and options\n- Shows potential side effects\n\nUse this before running unfamiliar commands!`;
+    if (cmd === '/help' || cmd === 'copilot /help') {
+      return `📚 Copilot CLI Help\n\nSlash Commands:\n  /help           Show this help message\n  /login          Authenticate with GitHub\n  /logout         Sign out of GitHub\n  /mcp add        Add MCP server integration\n  /mcp list       List configured MCP servers\n  /agent          Create a custom agent\n  /delegate       Delegate task to an agent\n  /exit           Exit interactive mode\n\nFile References:\n  @path/to/file   Reference a file in your prompt\n\nExamples:\n  "find all TODO comments"\n  "explain @package.json"\n  "how do I compress this folder?"`;
     }
     
-    if (cmd === 'gh copilot --help' || cmd === 'gh copilot -h') {
-      return `GitHub Copilot CLI - AI-powered command line assistance\n\nUsage:\n  gh copilot suggest [options] "<description>"\n  gh copilot explain "<command>"\n\nFlags:\n  -t, --target    Target shell (bash, zsh, powershell)\n  -h, --help      Show help information\n  --version       Display version`;
+    if (cmd === '/login' || cmd === 'copilot /login') {
+      return `🔐 Authentication\n\nOpening browser for GitHub authentication...\n\n✓ Successfully authenticated!\nConnected as: github-user\n\nYou're ready to use Copilot CLI!`;
+    }
+    
+    if (cmd.startsWith('/mcp') || cmd.startsWith('copilot /mcp')) {
+      return `🔧 MCP Server Integration\n\nUsage:\n  /mcp add <server>  - Add a new MCP server\n  /mcp list          - List configured servers\n  /mcp remove        - Remove a server\n\nExample:\n  /mcp add @playwright/mcp-server`;
+    }
+    
+    if (cmd.includes('@') && !cmd.startsWith('/')) {
+      const fileRef = cmd.match(/@[\w/.+-]+/);
+      const file = fileRef ? fileRef[0] : '@file';
+      return `📄 Reading ${file}...\n\n✓ File context added to conversation.\n\nI can see the contents of ${file}. What would you like to know about it?`;
     }
     
     if (cmd === 'clear') {
       return null; // Terminal will handle clear
     }
     
-    // Default response for unrecognized commands
-    return `Command: ${command}\n\nTry these Copilot CLI commands:\n  gh copilot suggest "your task description"\n  gh copilot explain "command to explain"\n  gh copilot --help`;
+    // Default response for natural language queries
+    if (cmd.length > 3 && !cmd.startsWith('/')) {
+      return `✨ Copilot Response:\n\nFor "${command}":\n\n  find . -name "*.js" -type f\n\nThis command will:\n- Search current directory and subdirectories\n- Find files matching the pattern\n- Show only files (not directories)\n\n💡 Tip: Use @filepath to include file context in your questions.`;
+    }
+    
+    // Help for unrecognized commands
+    return `Command: ${command}\n\nTry these Copilot CLI commands:\n  copilot           Start interactive mode\n  /help             Show available commands\n  /login            Authenticate with GitHub\n  @file.js          Reference a file in your query`;
   };
 
   if (loading) {
@@ -324,9 +338,9 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
-            h1: ({node, ...props}) => <h1 className="text-3xl font-bold text-gray-900 dark:text-white mt-8 mb-4" {...props} />,
-            h2: ({node, ...props}) => <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-6 mb-3" {...props} />,
-            h3: ({node, ...props}) => <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-4 mb-2" {...props} />,
+            h1: ({node: _node, ...props}) => <h1 className="text-3xl font-bold text-gray-900 dark:text-white mt-8 mb-4" {...props} />,
+            h2: ({node: _node, ...props}) => <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-6 mb-3" {...props} />,
+            h3: ({node: _node, ...props}) => <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-4 mb-2" {...props} />,
             p: ({node, children, ...props}) => {
               // Check if this paragraph only contains a code block
               const hasOnlyCode = node?.children?.length === 1 && node.children[0].tagName === 'code';
@@ -335,14 +349,14 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
               }
               return <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4" {...props}>{children}</p>;
             },
-            ul: ({node, ...props}) => <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-4" {...props} />,
-            ol: ({node, ...props}) => <ol className="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-4" {...props} />,
-            li: ({node, ...props}) => <li className="ml-4" {...props} />,
+            ul: ({node: _node, ...props}) => <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-4" {...props} />,
+            ol: ({node: _node, ...props}) => <ol className="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2 mb-4" {...props} />,
+            li: ({node: _node, ...props}) => <li className="ml-4" {...props} />,
             code: CodeBlock,
-            pre: ({node, ...props}) => <div {...props} />,
-            a: ({node, ...props}) => <a className="text-primary hover:underline" {...props} />,
-            blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary pl-4 italic text-gray-600 dark:text-gray-400 my-4" {...props} />,
-            strong: ({node, ...props}) => <strong className="font-bold text-gray-900 dark:text-white" {...props} />,
+            pre: ({node: _node, ...props}) => <div {...props} />,
+            a: ({node: _node, ...props}) => <a className="text-primary hover:underline" {...props} />,
+            blockquote: ({node: _node, ...props}) => <blockquote className="border-l-4 border-primary pl-4 italic text-gray-600 dark:text-gray-400 my-4" {...props} />,
+            strong: ({node: _node, ...props}) => <strong className="font-bold text-gray-900 dark:text-white" {...props} />,
           }}
         >
           {lesson.content}

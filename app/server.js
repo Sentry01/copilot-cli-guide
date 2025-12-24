@@ -180,11 +180,13 @@ function seedInitialData() {
     
     console.log('📦 Seeding initial data...');
     
-    // Seed modules
+    // Seed modules - comprehensive course based on official GitHub docs
     const modules = [
-      { title: 'Getting Started', description: 'Learn the basics of GitHub Copilot CLI', order: 1 },
-      { title: 'Basic Commands', description: 'Master essential Copilot CLI commands', order: 2 },
-      { title: 'Advanced Topics', description: 'Advanced usage and best practices', order: 3 }
+      { title: 'Getting Started', description: 'Install Copilot CLI, authenticate, and run your first session', order: 1 },
+      { title: 'Interactive Mode Essentials', description: 'Master file references, shell commands, and tool approvals', order: 2 },
+      { title: 'Slash Commands & Features', description: 'Learn all slash commands and directory management', order: 3 },
+      { title: 'Custom Agents & MCP', description: 'Extend Copilot with custom agents and MCP servers', order: 4 },
+      { title: 'Advanced Workflows', description: 'Sessions, delegation, custom instructions, and best practices', order: 5 }
     ];
     
     modules.forEach(module => {
@@ -200,77 +202,153 @@ function seedInitialData() {
           const moduleId = this.lastID;
           let lessons = [];
           
-          // Lessons for each module
+          // Lessons based on official GitHub Copilot CLI documentation
           if (module.title === 'Getting Started') {
             lessons = [
               {
-                title: 'Introduction',
-                content: '# Introduction to GitHub Copilot CLI\n\nGitHub Copilot CLI is a powerful command-line tool that brings AI-powered assistance directly to your terminal.\n\n## What is Copilot CLI?\n\nCopilot CLI helps you:\n- Generate shell commands from natural language\n- Explain complex commands\n- Learn new CLI tools faster\n\n## Key Features\n\n- **Natural Language to Commands**: Describe what you want in plain English\n- **Command Explanations**: Understand what commands do before running them\n- **Context-Aware**: Learns from your environment and history',
+                title: 'What is Copilot CLI?',
+                content: '# What is GitHub Copilot CLI?\n\nGitHub Copilot CLI is a standalone command-line tool that brings AI-powered assistance directly to your terminal.\n\n## Who Can Use It?\n\nCopilot CLI is available with:\n- GitHub Copilot Pro\n- GitHub Copilot Pro+\n- GitHub Copilot Business\n- GitHub Copilot Enterprise\n\n> **Note**: If you receive Copilot from an organization, the Copilot CLI policy must be enabled in your organization\'s settings.\n\n## What Can It Do?\n\n- **Natural Language Commands**: Describe what you need in plain English\n- **File Context**: Reference files with `@path/to/file` syntax\n- **Tool Integration**: Extend capabilities with MCP servers\n- **Custom Agents**: Create specialized AI assistants\n- **Delegate Work**: Hand off tasks to Copilot coding agent on GitHub\n\n## Important Note\n\nGitHub Copilot CLI is in **public preview** with data protection and is subject to change.',
                 duration: 5,
                 difficulty: 'beginner',
                 order: 1
               },
               {
                 title: 'Installation',
-                content: '# Installing GitHub Copilot CLI\n\n## Prerequisites\n\n- GitHub account with Copilot access\n- GitHub CLI (`gh`) installed\n\n## Installation Steps\n\n```bash\n# Install GitHub CLI if not already installed\nbrew install gh\n\n# Install Copilot CLI extension\ngh extension install github/gh-copilot\n\n# Verify installation\ngh copilot --version\n```\n\n## Authentication\n\n```bash\n# Authenticate with GitHub\ngh auth login\n```',
+                content: '# Installing GitHub Copilot CLI\n\n## Prerequisites\n\n- GitHub account with an active Copilot subscription\n- Administrator access on your machine\n\n## Installation Methods\n\n### Windows (WinGet)\n```bash\nwinget install GitHub.Copilot\n```\n\n### macOS (Homebrew)\n```bash\nbrew install copilot-cli\n```\n\n### Linux (Homebrew)\n```bash\nbrew install copilot-cli\n```\n\n### npm (Cross-Platform)\n```bash\n# Requires Node.js 22 or later\nnpm install -g @github/copilot\n```\n\n### Direct Download\n\nAlternatively, download the binary directly from the [GitHub releases page](https://github.com/githubnext/copilot-cli/releases).\n\n## Verify Installation\n\n```bash\ncopilot --version\n```\n\n## Getting Help\n\n```bash\ncopilot help\ncopilot help config\ncopilot help environment\ncopilot help logging\ncopilot help permissions\n```',
                 duration: 10,
                 difficulty: 'beginner',
                 order: 2
               },
               {
-                title: 'First Command',
-                content: '# Your First Copilot CLI Command\n\nLet\'s try generating your first command!\n\n## Using `gh copilot suggest`\n\n```bash\n# Ask Copilot to suggest a command\ngh copilot suggest "find all javascript files"\n```\n\nCopilot will analyze your request and provide relevant command suggestions.\n\n## Interactive Mode\n\nYou can refine suggestions interactively:\n1. Review the suggested command\n2. Execute, revise, or explain\n3. Learn as you go!\n\n## Try It Yourself\n\nAsk Copilot to help with:\n- File operations\n- Git commands\n- System administration tasks',
+                title: 'Starting Your First Session',
+                content: '# Starting Your First Session\n\n## Launch Copilot CLI\n\n1. Navigate to a folder with code you want to work with:\n```bash\ncd ~/my-project\n```\n\n2. Start Copilot CLI:\n```bash\ncopilot\n```\n\n## Trust Folder Prompt\n\nCopilot will ask you to confirm that you trust the files in this folder:\n\n> **Important**: During this session, Copilot may attempt to read, modify, and execute files in and below this folder.\n\nChoose one option:\n\n1. **Yes, proceed** - Trust for this session only\n2. **Yes, and remember this folder** - Trust for all future sessions\n3. **No, exit (Esc)** - End the session\n\n## Authentication\n\nIf not logged in, you\'ll be prompted to authenticate:\n\n```bash\n/login\n```\n\nFollow the on-screen instructions to complete GitHub authentication.\n\n## Alternative: Token Authentication\n\nYou can also authenticate using environment variables:\n- `GH_TOKEN` - Fine-grained personal access token\n- `GITHUB_TOKEN` - Alternative token variable\n\n## Getting Help in Interactive Mode\n\nType `?` in the prompt box to see all available commands and options.',
                 duration: 8,
                 difficulty: 'beginner',
                 order: 3
               }
             ];
-          } else if (module.title === 'Basic Commands') {
+          } else if (module.title === 'Interactive Mode Essentials') {
             lessons = [
               {
-                title: 'gh copilot suggest',
-                content: '# gh copilot suggest\n\n## Overview\n\nThe `suggest` command generates shell commands from natural language descriptions.\n\n## Syntax\n\n```bash\ngh copilot suggest [options] "<description>"\n```\n\n## Common Usage\n\n```bash\n# Generate command suggestion\ngh copilot suggest "list all running docker containers"\n\n# With target shell\ngh copilot suggest -t powershell "get system info"\n```\n\n## Flags\n\n- `-t, --target` - Target shell (bash, zsh, powershell, etc.)\n- `-h, --help` - Show help information',
-                duration: 12,
-                difficulty: 'beginner',
-                order: 1
-              },
-              {
-                title: 'gh copilot explain',
-                content: '# gh copilot explain\n\n## Overview\n\nThe `explain` command helps you understand what a command does.\n\n## Syntax\n\n```bash\ngh copilot explain "<command>"\n```\n\n## Examples\n\n```bash\n# Explain a complex command\ngh copilot explain "find . -name \'*.js\' -type f -exec grep -l \'TODO\' {} \\;"\n\n# Understand git commands\ngh copilot explain "git rebase -i HEAD~3"\n\n# Learn new tools\ngh copilot explain "docker run -d -p 8080:80 nginx"\n```\n\n## Benefits\n\n- Learn unfamiliar syntax\n- Understand flags and options\n- Gain confidence before executing',
+                title: 'Natural Language Prompts',
+                content: '# Natural Language Prompts\n\n## How It Works\n\nSimply type what you want in plain English. Copilot understands context and generates appropriate commands.\n\n## Example Prompts\n\n### File Operations\n```\nfind all JavaScript files larger than 1MB\nlist files modified in the last 24 hours\ncreate a new directory called components\n```\n\n### Git Operations\n```\nshow commits from last week\ncreate a new branch called feature/login\nstage and commit all changes with message "Fix bug"\n```\n\n### System Tasks\n```\nwhich process is using port 3000?\nshow disk usage for current directory\nfind and kill zombie processes\n```\n\n### Docker\n```\nlist all running containers\nstop all containers using more than 1GB memory\nbuild and run this Dockerfile\n```\n\n## Tips for Better Results\n\n1. **Be Specific**: "find PNG files > 5MB in /images" beats "find big files"\n2. **Add Context**: Mention your OS or preferred tools\n3. **Iterate**: Refine your prompt based on results',
                 duration: 10,
                 difficulty: 'beginner',
-                order: 2
-              },
-              {
-                title: 'Common Flags',
-                content: '# Common Flags and Options\n\n## Global Flags\n\nFlags available across all Copilot CLI commands:\n\n### `--help` / `-h`\nShow help information\n```bash\ngh copilot --help\ngh copilot suggest --help\n```\n\n### `--version`\nDisplay version information\n```bash\ngh copilot --version\n```\n\n## Command-Specific Flags\n\n### For `suggest`\n\n- `--target` / `-t` - Specify target shell\n- `--shell-out` - Execute command directly\n\n### For `explain`\n\n- `--web` - Open explanation in browser\n\n## Tips\n\n- Use tab completion for flags\n- Combine flags for precise control\n- Check help for latest options',
-                duration: 8,
-                difficulty: 'beginner',
-                order: 3
-              }
-            ];
-          } else if (module.title === 'Advanced Topics') {
-            lessons = [
-              {
-                title: 'Workflow Integration',
-                content: '# Workflow Integration\n\n## Shell Aliases\n\nCreate shortcuts for common operations:\n\n```bash\n# Add to .bashrc or .zshrc\nalias gcs="gh copilot suggest"\nalias gce="gh copilot explain"\n```\n\n## Script Integration\n\nUse Copilot CLI in scripts:\n\n```bash\n#!/bin/bash\n# Get command suggestion and execute\nCMD=$(gh copilot suggest --shell-out "list processes using port 3000")\neval "$CMD"\n```\n\n## CI/CD Integration\n\n- Generate deployment commands\n- Explain pipeline failures\n- Automate complex operations',
-                duration: 15,
-                difficulty: 'advanced',
                 order: 1
               },
               {
-                title: 'Custom Prompts',
-                content: '# Custom Prompts and Context\n\n## Providing Context\n\nGive Copilot more context for better suggestions:\n\n```bash\ngh copilot suggest "optimize this for production:\n  node server.js\n  running on Ubuntu 22.04\n  need PM2 process manager"\n```\n\n## Domain-Specific Queries\n\n### DevOps\n```bash\ngh copilot suggest "kubernetes deploy app with 3 replicas"\n```\n\n### Data Processing\n```bash\ngh copilot suggest "convert CSV to JSON with jq"\n```\n\n### System Administration\n```bash\ngh copilot suggest "monitor disk usage and alert if over 90%"\n```',
-                duration: 12,
-                difficulty: 'advanced',
+                title: 'File References with @',
+                content: '# File References with @\n\n## Overview\n\nUse the `@` symbol followed by a file path to include file contents as context in your prompt.\n\n## Syntax\n\n```\n@path/to/file\n```\n\n## Auto-Complete\n\nWhen you start typing a file path after `@`, matching paths appear below the prompt box. Use:\n- **Arrow keys** to navigate\n- **Tab** to complete the path\n\n## Examples\n\n### Explain a File\n```\nExplain @config/ci/ci-required-checks.yml\n```\n\n### Fix Code\n```\nFix the bug in @src/app.js\n```\n\n### Compare Files\n```\nWhat\'s different between @old.js and @new.js?\n```\n\n### Summarize Multiple Files\n```\nSummarize @README.md and @CONTRIBUTING.md\n```\n\n### Review Dependencies\n```\nWhat dependencies are in @package.json that I should update?\n```\n\n## Why Use File References?\n\n- **Accuracy**: Copilot sees actual file contents\n- **Context**: Better understanding of your project\n- **Efficiency**: No need to copy-paste code',
+                duration: 8,
+                difficulty: 'beginner',
                 order: 2
               },
               {
-                title: 'Best Practices',
-                content: '# Best Practices\n\n## Safety First\n\n1. **Always review before executing**\n   - Read suggested commands carefully\n   - Understand what they do\n   - Check for destructive operations\n\n2. **Test in safe environments**\n   - Use containers or VMs for testing\n   - Have backups before system changes\n\n## Effective Prompting\n\n1. **Be specific**\n   - Good: "find large log files over 100MB in /var/log"\n   - Poor: "find big files"\n\n2. **Include constraints**\n   - Specify OS, tools available\n   - Mention performance requirements\n   - State security considerations\n\n## Learning Loop\n\n1. Generate command\n2. Explain command\n3. Execute and observe\n4. Iterate and improve\n\nRemember: Copilot CLI is a learning tool, not a replacement for understanding!',
-                duration: 20,
+                title: 'Tool Approvals',
+                content: '# Tool Approvals\n\n## Why Approvals Exist\n\nWhen Copilot wants to use a tool that could modify or execute files (like `touch`, `chmod`, `node`, or `sed`), it asks for your approval first.\n\n## Approval Options\n\nWhen prompted, choose one:\n\n### 1. Yes\n- Allow Copilot to use this tool once\n- Next time it wants to use this tool, it will ask again\n\n### 2. Yes, and approve TOOL for the rest of the running session\n- Allow this tool (with any options) without asking again\n- Approval only lasts for current session\n- **Use with caution**: Approving `rm` would let Copilot delete any file!\n\n### 3. No, and tell Copilot what to do differently (Esc)\n- Copilot won\'t run the command\n- You can provide alternative instructions\n\n## Example Workflow\n\n```\nYou: Create a script that backs up my database\n\nCopilot: I\'ll create a backup script. \n[Tool: touch backup.sh]\nApprove? [Yes / Yes for session / No (Esc)]\n```\n\n## Recovering from a Denial\n\nIf you press Esc, you can refine your request:\n```\nContinue the previous task but use a Python script instead\n```\n\n## Stopping Operations\n\nPress **Esc** while Copilot is "Thinking" to stop the current operation.',
+                duration: 10,
+                difficulty: 'beginner',
+                order: 3
+              },
+              {
+                title: 'Shell Commands with !',
+                content: '# Direct Shell Commands with !\n\n## Overview\n\nPrepend your input with `!` to run shell commands directly, without making a call to the AI model.\n\n## Syntax\n\n```\n!command\n```\n\n## Examples\n\n### Clone a Repository\n```\n!git clone https://github.com/user/repo\n```\n\n### Check Status\n```\n!git status\n```\n\n### List Files\n```\n!ls -la\n```\n\n### Run Scripts\n```\n!npm install\n!python script.py\n```\n\n## When to Use !\n\n- **Known commands**: When you already know exactly what to run\n- **Quick operations**: Faster than waiting for AI response\n- **System checks**: `!pwd`, `!whoami`, `!which node`\n\n## When NOT to Use !\n\n- When you need help figuring out the right command\n- When you want Copilot to explain what a command does\n- When you need multi-step assistance',
+                duration: 5,
+                difficulty: 'beginner',
+                order: 4
+              }
+            ];
+          } else if (module.title === 'Slash Commands & Features') {
+            lessons = [
+              {
+                title: 'Essential Slash Commands',
+                content: '# Essential Slash Commands\n\n## Overview\n\nSlash commands are quick actions you can use in interactive mode.\n\n## Authentication\n\n```bash\n/login          # Authenticate with GitHub\n/logout         # Sign out of GitHub\n```\n\n## Getting Help\n\n```bash\n?               # Show available commands (type in prompt)\n/feedback       # Submit feedback, bug reports, or feature requests\n```\n\n## Session Management\n\n```bash\n/usage          # View context and usage statistics\nexit            # Exit interactive mode\nCtrl+C          # Also exits interactive mode\n```\n\n## What /usage Shows\n\n- Premium requests used in current session\n- Session duration\n- Lines of code edited\n- Token usage breakdown per model\n\n> **Warning**: When you have less than 20% of a model\'s token limit remaining, Copilot CLI displays a warning that context will be truncated.',
+                duration: 8,
+                difficulty: 'beginner',
+                order: 1
+              },
+              {
+                title: 'Directory Management',
+                content: '# Directory Management\n\n## Working with Files Outside Current Directory\n\nCopilot may need to work with files outside your current location. It will ask for approval to access those directories.\n\n## /add-dir - Add Trusted Directory\n\nManually add a trusted directory:\n\n```bash\n/add-dir /path/to/directory\n```\n\nThis lets Copilot work with files in that location.\n\n## /cwd - Change Working Directory\n\nSwitch to a different working directory without starting a new session:\n\n```bash\n/cwd /path/to/directory\n```\n\n## Use Cases\n\n### Multi-Project Work\n```bash\n# Start in one project\ncopilot\n\n# Switch to another project\n/cwd ~/other-project\n\n# Add a shared utilities folder\n/add-dir ~/shared/utils\n```\n\n### Monorepo Navigation\n```bash\n# Working in packages/frontend\n/add-dir ../backend\n/add-dir ../shared\n```',
+                duration: 6,
+                difficulty: 'intermediate',
+                order: 2
+              },
+              {
+                title: 'Agent Commands',
+                content: '# Agent Commands\n\n## /agent - Select Custom Agent\n\nSwitch to a custom agent for specialized tasks:\n\n```bash\n/agent\n```\n\nThis shows a list of available custom agents to choose from.\n\n## /delegate - Hand Off to Copilot Coding Agent\n\nDelegates your current session to Copilot coding agent on GitHub:\n\n```bash\n/delegate complete the API integration tests and fix any failing edge cases\n```\n\n## How /delegate Works\n\n1. Copilot asks to commit unstaged changes as a checkpoint\n2. Creates a new branch for the work\n3. Opens a **draft pull request** on GitHub\n4. Copilot coding agent works in the background\n5. Requests a review from you when complete\n6. Provides a link to the PR and agent session\n\n## When to Use /delegate\n\n- Long-running tasks you don\'t want to wait for\n- Complex multi-file changes\n- Test writing and debugging\n- When you want work to continue while you do other things\n\n## Important Notes\n\n- Your local context is preserved for the agent\n- Work happens on GitHub, not locally\n- You\'ll get notifications when review is needed',
+                duration: 10,
+                difficulty: 'intermediate',
+                order: 3
+              },
+              {
+                title: 'MCP Commands',
+                content: '# MCP Commands\n\n## What is MCP?\n\nModel Context Protocol (MCP) extends Copilot CLI with external tools and services.\n\n## Built-in MCP Server\n\nCopilot CLI comes with the **GitHub MCP server** pre-configured, allowing you to:\n- Interact with GitHub.com resources\n- Merge pull requests from CLI\n- Manage issues and discussions\n\n## /mcp add - Add New Server\n\n```bash\n/mcp add\n```\n\n1. Fill in the MCP server details\n2. Use **Tab** to move between fields\n3. Press **Ctrl+S** to save\n\n## /mcp list - View Configured Servers\n\n```bash\n/mcp list\n```\n\n## Configuration File\n\nMCP server configurations are stored in:\n```\n~/.copilot/mcp-config.json\n```\n\nYou can change this location with the `XDG_CONFIG_HOME` environment variable.\n\n## Popular MCP Servers\n\n- **Playwright**: Browser automation and testing\n- **Filesystem**: Enhanced file operations\n- **Database**: Direct database queries\n- **Custom**: Build your own for specific tools',
+                duration: 10,
+                difficulty: 'intermediate',
+                order: 4
+              }
+            ];
+          } else if (module.title === 'Custom Agents & MCP') {
+            lessons = [
+              {
+                title: 'Understanding Custom Agents',
+                content: '# Understanding Custom Agents\n\n## What Are Custom Agents?\n\nCustom agents are specialized versions of Copilot coding agent tailored to your unique:\n- Workflows\n- Coding conventions\n- Use cases\n\nThey\'re defined using Markdown files called **agent profiles** that specify prompts, tools, and MCP servers.\n\n## Agent Profile Locations\n\n| Level | Location | Scope |\n|-------|----------|-------|\n| User-level | `~/.copilot/agents/` | All projects |\n| Repository-level | `.github/agents/` | Current project |\n| Organization-level | `.github-private/agents/` | All org projects |\n\n## Priority Order\n\nWhen agents have the same name:\n1. **User-level** overrides repository-level\n2. **Repository-level** overrides organization-level\n\n## Agent Profile Contents\n\nAn agent profile (`.md` file) typically includes:\n- Agent name and description\n- Specialized instructions\n- Tool preferences\n- MCP server configurations',
+                duration: 8,
+                difficulty: 'intermediate',
+                order: 1
+              },
+              {
+                title: 'Using Custom Agents',
+                content: '# Using Custom Agents\n\n## Three Ways to Use Custom Agents\n\n### 1. Interactive Selection\n\nUse the slash command to see available agents:\n\n```bash\n/agent\n```\n\nSelect from the list of configured agents.\n\n### 2. Natural Language Inference\n\nMention the agent in your prompt:\n\n```bash\nUse the refactoring agent to refactor this code block\n```\n\nCopilot automatically infers which agent you mean.\n\n### 3. Command-Line Option\n\nSpecify the agent when starting Copilot:\n\n```bash\ncopilot --agent=refactor-agent --prompt "Refactor this code block"\n```\n\n## Example Agent Use Cases\n\n### DevOps Agent\n- Deployment automation\n- Infrastructure monitoring\n- Container management\n\n### Code Review Agent\n- PR reviews\n- Style enforcement\n- Bug detection\n\n### Documentation Agent\n- README generation\n- API documentation\n- Changelog updates',
+                duration: 8,
+                difficulty: 'intermediate',
+                order: 2
+              },
+              {
+                title: 'Configuring MCP Servers',
+                content: '# Configuring MCP Servers\n\n## Adding an MCP Server\n\n1. Start interactive mode:\n```bash\ncopilot\n```\n\n2. Use the add command:\n```bash\n/mcp add\n```\n\n3. Fill in server details (use Tab to navigate)\n\n4. Save with **Ctrl+S**\n\n## Configuration File Structure\n\nServers are stored in `~/.copilot/mcp-config.json`:\n\n```json\n{\n  "mcpServers": {\n    "github": {\n      "command": "npx",\n      "args": ["@github/mcp-server"]\n    },\n    "playwright": {\n      "command": "npx",\n      "args": ["@playwright/mcp@latest"]\n    }\n  }\n}\n```\n\n## Server Types\n\n### stdio Servers\nCommunicate via standard input/output:\n```json\n{\n  "command": "npx",\n  "args": ["@some/mcp-server"]\n}\n```\n\n### HTTP Servers\nCommunicate over HTTP:\n```json\n{\n  "url": "http://localhost:3100"\n}\n```\n\n## Environment Variables\n\nYou can include environment variables:\n```json\n{\n  "command": "node",\n  "args": ["server.js"],\n  "env": {\n    "API_KEY": "your-key"\n  }\n}\n```',
+                duration: 12,
                 difficulty: 'advanced',
                 order: 3
+              },
+              {
+                title: 'Skills',
+                content: '# Skills\n\n## What Are Skills?\n\nSkills enhance Copilot\'s ability to perform specialized tasks with:\n- Custom instructions\n- Scripts\n- Resources\n\n## How Skills Work\n\nSkills are reusable components that agents can leverage for specific capabilities:\n\n- **Code Generation Skills**: Language-specific patterns\n- **Testing Skills**: Test framework conventions\n- **Deployment Skills**: CI/CD workflows\n- **Documentation Skills**: Doc generation patterns\n\n## Skill Benefits\n\n1. **Consistency**: Same approach across projects\n2. **Reusability**: Write once, use everywhere\n3. **Specialization**: Deep expertise in specific areas\n4. **Maintainability**: Update skills centrally\n\n## Learning More\n\nSkills are an advanced feature. For detailed information, see the official GitHub documentation on Agent Skills.',
+                duration: 6,
+                difficulty: 'advanced',
+                order: 4
+              }
+            ];
+          } else if (module.title === 'Advanced Workflows') {
+            lessons = [
+              {
+                title: 'Session Management',
+                content: '# Session Management\n\n## Resuming Previous Sessions\n\nCopilot CLI saves your session history so you can return to previous conversations.\n\n### List Previous Sessions\n\n```bash\ncopilot --resume\n```\n\nThis shows a list of your previous sessions. Select one to continue.\n\n### Quick Resume Last Session\n\n```bash\ncopilot --continue\n```\n\nThis immediately resumes your most recently closed session.\n\n## Why Resume Sessions?\n\n- **Context Preservation**: Continue where you left off\n- **Long-Running Tasks**: Break up complex work\n- **Reference**: Review what you discussed before\n\n## Session Tips\n\n1. Use `/usage` to check remaining context before long tasks\n2. Exit gracefully with `exit` or Ctrl+C to save session state\n3. Use `--resume` to find that command you used last week',
+                duration: 6,
+                difficulty: 'intermediate',
+                order: 1
+              },
+              {
+                title: 'Custom Instructions',
+                content: '# Custom Instructions\n\n## Overview\n\nCustom instructions are natural language descriptions in Markdown files that are automatically included in your prompts. They help Copilot understand your project context.\n\n## Supported Instruction Files\n\n### Repository-Wide Instructions\n```\n.github/copilot-instructions.md\n```\nApply to all prompts in this repository.\n\n### Path-Specific Instructions\n```\n.github/copilot-instructions/**/*.instructions.md\n```\nApply to specific directories or file types.\n\n### Agent Files\n```\nAGENTS.md\n```\nSpecial instructions for agent behavior.\n\n## Example Instructions File\n\n```markdown\n# Project Guidelines\n\n## Code Style\n- Use TypeScript with strict mode\n- Prefer functional components in React\n- Always include error handling\n\n## Testing\n- Write tests for all new functions\n- Use Jest and React Testing Library\n\n## Git Commits\n- Use conventional commit format\n- Keep commits atomic\n```\n\n## Benefits\n\n- **Consistency**: Copilot follows your team\'s conventions\n- **Context**: Better understanding of project structure\n- **Quality**: Suggestions match your standards',
+                duration: 10,
+                difficulty: 'intermediate',
+                order: 2
+              },
+              {
+                title: 'Configuration & Environment',
+                content: '# Configuration & Environment\n\n## Configuration File\n\nAdjust settings in `~/.copilot/config.json` (or location set by `XDG_CONFIG_HOME`).\n\n## Getting Configuration Help\n\n```bash\ncopilot help config\n```\n\n## Environment Variables\n\n```bash\ncopilot help environment\n```\n\nKey environment variables:\n- `GH_TOKEN` / `GITHUB_TOKEN`: Authentication token\n- `XDG_CONFIG_HOME`: Custom config directory\n\n## Logging\n\n```bash\ncopilot help logging\n```\n\nConfigure log levels for debugging.\n\n## Permissions\n\n```bash\ncopilot help permissions\n```\n\nManage tool allow/deny lists.\n\n## Key Config Options\n\n- Model preferences\n- Default MCP servers\n- Trusted directories\n- Tool permissions',
+                duration: 8,
+                difficulty: 'advanced',
+                order: 3
+              },
+              {
+                title: 'Best Practices & Safety',
+                content: '# Best Practices & Safety\n\n## Safety First\n\n### 1. Review Tool Actions\n- Always check what tools want to do before approving\n- Be cautious with session-wide approvals\n- Never approve unknown operations on production systems\n\n### 2. Trust Carefully\n- Only trust folders you control\n- Be careful with cloned repositories from unknown sources\n- Review files before trusting new directories\n\n### 3. Use Safe Environments\n- Test destructive commands in containers or VMs\n- Have backups before system-wide changes\n- Use version control\n\n## Effective Prompting\n\n### Be Specific\n✅ "Find log files larger than 100MB in /var/log"\n❌ "Find big files"\n\n### Use File References\n✅ "Explain @src/auth.js and suggest improvements"\n❌ "Explain my auth code"\n\n### Iterate\n- Start with simple prompts\n- Refine based on results\n- Use `/usage` to track context\n\n## Providing Feedback\n\n```bash\n/feedback\n```\n\nOptions:\n- Private feedback survey\n- Bug reports\n- Feature suggestions\n\n## Remember\n\nCopilot CLI is a powerful tool. With great power comes responsibility. Always review before approving!',
+                duration: 12,
+                difficulty: 'advanced',
+                order: 4
               }
             ];
           }
@@ -289,114 +367,190 @@ function seedInitialData() {
       );
     });
     
-    // Seed commands
+    // Seed commands - based on official GitHub Copilot CLI documentation
     const commands = [
+      // Core Commands
       {
-        name: 'gh copilot suggest',
-        syntax: 'gh copilot suggest [options] "<description>"',
-        description: 'Generate shell commands from natural language descriptions',
+        name: 'copilot',
+        syntax: 'copilot [options]',
+        description: 'Start Copilot CLI in interactive mode',
         category: 'Core Commands',
         examples: JSON.stringify([
-          {
-            description: 'Find all JavaScript files',
-            command: 'gh copilot suggest "find all javascript files"'
-          },
-          {
-            description: 'List running Docker containers',
-            command: 'gh copilot suggest "list all running docker containers"'
-          },
-          {
-            description: 'Search for text in files',
-            command: 'gh copilot suggest "search for TODO in all js files"'
-          }
+          { description: 'Start interactive mode', command: 'copilot' },
+          { description: 'Resume a previous session', command: 'copilot --resume' },
+          { description: 'Continue last session', command: 'copilot --continue' },
+          { description: 'Start with specific agent', command: 'copilot --agent=refactor-agent' }
         ])
       },
       {
-        name: 'gh copilot explain',
-        syntax: 'gh copilot explain "<command>"',
-        description: 'Explain what a command does in plain English',
+        name: 'copilot help',
+        syntax: 'copilot help [topic]',
+        description: 'Get help about Copilot CLI commands and configuration',
         category: 'Core Commands',
         examples: JSON.stringify([
-          {
-            description: 'Explain a find command',
-            command: 'gh copilot explain "find . -name \'*.js\' -type f"'
-          },
-          {
-            description: 'Understand git rebase',
-            command: 'gh copilot explain "git rebase -i HEAD~3"'
-          },
-          {
-            description: 'Docker command explanation',
-            command: 'gh copilot explain "docker run -d -p 8080:80 nginx"'
-          }
+          { description: 'General help', command: 'copilot help' },
+          { description: 'Configuration settings', command: 'copilot help config' },
+          { description: 'Environment variables', command: 'copilot help environment' },
+          { description: 'Logging options', command: 'copilot help logging' },
+          { description: 'Tool permissions', command: 'copilot help permissions' }
+        ])
+      },
+      // Installation Commands
+      {
+        name: 'brew install copilot-cli',
+        syntax: 'brew install copilot-cli',
+        description: 'Install Copilot CLI on macOS/Linux via Homebrew',
+        category: 'Installation',
+        examples: JSON.stringify([
+          { description: 'Install on macOS or Linux', command: 'brew install copilot-cli' }
         ])
       },
       {
-        name: 'gh copilot --version',
-        syntax: 'gh copilot --version',
-        description: 'Display version information for GitHub Copilot CLI',
-        category: 'Info Commands',
+        name: 'winget install GitHub.Copilot',
+        syntax: 'winget install GitHub.Copilot',
+        description: 'Install Copilot CLI on Windows via WinGet',
+        category: 'Installation',
         examples: JSON.stringify([
-          {
-            description: 'Check installed version',
-            command: 'gh copilot --version'
-          }
+          { description: 'Install on Windows', command: 'winget install GitHub.Copilot' }
         ])
       },
       {
-        name: 'gh copilot --help',
-        syntax: 'gh copilot --help',
-        description: 'Show help information and available commands',
-        category: 'Info Commands',
+        name: 'npm install -g @github/copilot',
+        syntax: 'npm install -g @github/copilot',
+        description: 'Install Copilot CLI via npm (requires Node.js 22+)',
+        category: 'Installation',
         examples: JSON.stringify([
-          {
-            description: 'Get general help',
-            command: 'gh copilot --help'
-          },
-          {
-            description: 'Get help for suggest command',
-            command: 'gh copilot suggest --help'
-          },
-          {
-            description: 'Get help for explain command',
-            command: 'gh copilot explain --help'
-          }
+          { description: 'Install via npm', command: 'npm install -g @github/copilot' }
+        ])
+      },
+      // Authentication Slash Commands
+      {
+        name: '/login',
+        syntax: '/login',
+        description: 'Authenticate with GitHub to use Copilot CLI',
+        category: 'Authentication',
+        examples: JSON.stringify([
+          { description: 'Login to GitHub', command: '/login' }
         ])
       },
       {
-        name: 'gh extension install',
-        syntax: 'gh extension install github/gh-copilot',
-        description: 'Install the GitHub Copilot CLI extension',
-        category: 'Setup',
+        name: '/logout',
+        syntax: '/logout',
+        description: 'Sign out of your GitHub account',
+        category: 'Authentication',
         examples: JSON.stringify([
-          {
-            description: 'Install Copilot CLI extension',
-            command: 'gh extension install github/gh-copilot'
-          }
+          { description: 'Sign out', command: '/logout' }
+        ])
+      },
+      // Directory Management
+      {
+        name: '/add-dir',
+        syntax: '/add-dir <path>',
+        description: 'Add a trusted directory for Copilot to access',
+        category: 'Directory Management',
+        examples: JSON.stringify([
+          { description: 'Trust another directory', command: '/add-dir /path/to/directory' },
+          { description: 'Add parent directory', command: '/add-dir ..' }
         ])
       },
       {
-        name: 'gh extension upgrade',
-        syntax: 'gh extension upgrade gh-copilot',
-        description: 'Upgrade the GitHub Copilot CLI extension to the latest version',
-        category: 'Setup',
+        name: '/cwd',
+        syntax: '/cwd <path>',
+        description: 'Change working directory without starting a new session',
+        category: 'Directory Management',
         examples: JSON.stringify([
-          {
-            description: 'Upgrade to latest version',
-            command: 'gh extension upgrade gh-copilot'
-          }
+          { description: 'Switch to another project', command: '/cwd ~/other-project' },
+          { description: 'Go to subdirectory', command: '/cwd ./src' }
+        ])
+      },
+      // Agent Commands
+      {
+        name: '/agent',
+        syntax: '/agent',
+        description: 'Select from available custom agents',
+        category: 'Agent Commands',
+        examples: JSON.stringify([
+          { description: 'Show available agents', command: '/agent' }
         ])
       },
       {
-        name: 'gh auth login',
-        syntax: 'gh auth login',
-        description: 'Authenticate with GitHub (required for Copilot CLI)',
-        category: 'Setup',
+        name: '/delegate',
+        syntax: '/delegate <task description>',
+        description: 'Delegate task to Copilot coding agent on GitHub (creates PR)',
+        category: 'Agent Commands',
         examples: JSON.stringify([
-          {
-            description: 'Login to GitHub',
-            command: 'gh auth login'
-          }
+          { description: 'Delegate test writing', command: '/delegate complete the API integration tests and fix any failing edge cases' },
+          { description: 'Delegate feature work', command: '/delegate add input validation to the user registration form' }
+        ])
+      },
+      // MCP Commands
+      {
+        name: '/mcp add',
+        syntax: '/mcp add',
+        description: 'Add an MCP server to extend Copilot CLI capabilities',
+        category: 'MCP Commands',
+        examples: JSON.stringify([
+          { description: 'Add a new MCP server', command: '/mcp add' }
+        ])
+      },
+      {
+        name: '/mcp list',
+        syntax: '/mcp list',
+        description: 'List all configured MCP servers',
+        category: 'MCP Commands',
+        examples: JSON.stringify([
+          { description: 'View configured servers', command: '/mcp list' }
+        ])
+      },
+      // Session & Info Commands
+      {
+        name: '/usage',
+        syntax: '/usage',
+        description: 'View context and usage statistics for current session',
+        category: 'Session Commands',
+        examples: JSON.stringify([
+          { description: 'Check token usage', command: '/usage' }
+        ])
+      },
+      {
+        name: '/feedback',
+        syntax: '/feedback',
+        description: 'Submit feedback, bug reports, or feature suggestions',
+        category: 'Session Commands',
+        examples: JSON.stringify([
+          { description: 'Give feedback', command: '/feedback' }
+        ])
+      },
+      // Special Syntax
+      {
+        name: '@filepath',
+        syntax: '@path/to/file',
+        description: 'Reference a file to include its contents as context',
+        category: 'Special Syntax',
+        examples: JSON.stringify([
+          { description: 'Explain a config file', command: 'Explain @config/ci/ci-required-checks.yml' },
+          { description: 'Fix a bug', command: 'Fix the bug in @src/app.js' },
+          { description: 'Compare files', command: 'What is different between @old.js and @new.js?' }
+        ])
+      },
+      {
+        name: '!command',
+        syntax: '!<shell command>',
+        description: 'Run shell command directly without AI model call',
+        category: 'Special Syntax',
+        examples: JSON.stringify([
+          { description: 'Clone a repo', command: '!git clone https://github.com/user/repo' },
+          { description: 'Check git status', command: '!git status' },
+          { description: 'List files', command: '!ls -la' }
+        ])
+      },
+      {
+        name: '?',
+        syntax: '?',
+        description: 'Show all available commands and options in interactive mode',
+        category: 'Help',
+        examples: JSON.stringify([
+          { description: 'Get in-session help', command: '?' }
         ])
       }
     ];
@@ -411,91 +565,198 @@ function seedInitialData() {
       );
     });
     
-    // Seed examples
+    // Seed examples - comprehensive examples for GitHub Copilot CLI
     const examples = [
+      // Getting Started
       {
-        title: 'Find Large Files',
-        code: 'gh copilot suggest "find files larger than 100MB"',
-        category: 'File Operations',
+        title: 'Start Interactive Mode',
+        code: 'copilot',
+        category: 'Getting Started',
         difficulty: 'beginner',
-        language: 'bash'
+        language: 'shell'
       },
       {
-        title: 'Git Commit with Message',
-        code: 'gh copilot suggest "commit all changes with message \'Fix bug\'"',
-        category: 'Git',
+        title: 'Resume Previous Session',
+        code: 'copilot --resume',
+        category: 'Getting Started',
         difficulty: 'beginner',
-        language: 'bash'
+        language: 'shell'
+      },
+      {
+        title: 'Continue Last Session',
+        code: 'copilot --continue',
+        category: 'Getting Started',
+        difficulty: 'beginner',
+        language: 'shell'
+      },
+      // File References with @
+      {
+        title: 'Explain a Config File',
+        code: 'Explain @config/ci/ci-required-checks.yml',
+        category: 'File References',
+        difficulty: 'beginner',
+        language: 'natural'
+      },
+      {
+        title: 'Fix a Bug in Code',
+        code: 'Fix the bug in @src/app.js',
+        category: 'File References',
+        difficulty: 'beginner',
+        language: 'natural'
+      },
+      {
+        title: 'Compare Two Files',
+        code: 'What is different between @old.js and @new.js?',
+        category: 'File References',
+        difficulty: 'intermediate',
+        language: 'natural'
+      },
+      {
+        title: 'Review Dependencies',
+        code: 'What dependencies in @package.json should I update?',
+        category: 'File References',
+        difficulty: 'beginner',
+        language: 'natural'
+      },
+      // Direct Shell Commands with !
+      {
+        title: 'Run Git Status Directly',
+        code: '!git status',
+        category: 'Shell Commands',
+        difficulty: 'beginner',
+        language: 'shell'
+      },
+      {
+        title: 'Clone Repository Directly',
+        code: '!git clone https://github.com/user/repo',
+        category: 'Shell Commands',
+        difficulty: 'beginner',
+        language: 'shell'
+      },
+      // Natural Language Prompts
+      {
+        title: 'Find Large Files',
+        code: 'find all files larger than 100MB in this directory',
+        category: 'Natural Language',
+        difficulty: 'beginner',
+        language: 'natural'
+      },
+      {
+        title: 'Check Port Usage',
+        code: 'which process is using port 3000?',
+        category: 'Natural Language',
+        difficulty: 'intermediate',
+        language: 'natural'
+      },
+      {
+        title: 'Git Commit All Changes',
+        code: 'stage and commit all changes with message "Fix authentication bug"',
+        category: 'Natural Language',
+        difficulty: 'beginner',
+        language: 'natural'
       },
       {
         title: 'Docker Container Management',
-        code: 'gh copilot suggest "stop all running docker containers"',
-        category: 'Docker',
+        code: 'stop all running docker containers',
+        category: 'Natural Language',
         difficulty: 'intermediate',
-        language: 'bash'
-      },
-      {
-        title: 'Network Diagnostics',
-        code: 'gh copilot suggest "check which process is using port 3000"',
-        category: 'System',
-        difficulty: 'intermediate',
-        language: 'bash'
-      },
-      {
-        title: 'Archive Directory',
-        code: 'gh copilot suggest "create tar.gz archive of src folder"',
-        category: 'File Operations',
-        difficulty: 'beginner',
-        language: 'bash'
+        language: 'natural'
       },
       {
         title: 'Search in Files',
-        code: 'gh copilot suggest "search for TODO comments in all js files"',
-        category: 'File Operations',
+        code: 'search for TODO comments in all JavaScript files',
+        category: 'Natural Language',
         difficulty: 'beginner',
-        language: 'bash'
+        language: 'natural'
       },
+      // Slash Commands
       {
-        title: 'Process Management',
-        code: 'gh copilot suggest "kill all node processes"',
-        category: 'System',
-        difficulty: 'intermediate',
-        language: 'bash'
-      },
-      {
-        title: 'Git Branch Operations',
-        code: 'gh copilot suggest "delete all local branches except main"',
-        category: 'Git',
-        difficulty: 'advanced',
-        language: 'bash'
-      },
-      {
-        title: 'Log Analysis',
-        code: 'gh copilot suggest "find errors in last 100 lines of system log"',
-        category: 'System',
-        difficulty: 'intermediate',
-        language: 'bash'
-      },
-      {
-        title: 'Permission Changes',
-        code: 'gh copilot suggest "make all shell scripts executable"',
-        category: 'File Operations',
+        title: 'Authenticate with GitHub',
+        code: '/login',
+        category: 'Slash Commands',
         difficulty: 'beginner',
-        language: 'bash'
+        language: 'slash'
       },
       {
-        title: 'Database Backup',
-        code: 'gh copilot suggest "backup postgres database to file"',
-        category: 'Database',
+        title: 'Add Trusted Directory',
+        code: '/add-dir ../shared-utils',
+        category: 'Slash Commands',
         difficulty: 'intermediate',
-        language: 'bash'
+        language: 'slash'
       },
       {
-        title: 'Kubernetes Pods',
-        code: 'gh copilot suggest "list all pods in namespace production"',
-        category: 'Kubernetes',
+        title: 'Change Working Directory',
+        code: '/cwd ~/other-project',
+        category: 'Slash Commands',
+        difficulty: 'intermediate',
+        language: 'slash'
+      },
+      {
+        title: 'View Session Usage',
+        code: '/usage',
+        category: 'Slash Commands',
+        difficulty: 'beginner',
+        language: 'slash'
+      },
+      // Delegation
+      {
+        title: 'Delegate Test Writing',
+        code: '/delegate complete the API integration tests and fix any failing edge cases',
+        category: 'Delegation',
         difficulty: 'advanced',
-        language: 'bash'
+        language: 'slash'
+      },
+      {
+        title: 'Delegate Feature Work',
+        code: '/delegate add input validation to the user registration form',
+        category: 'Delegation',
+        difficulty: 'advanced',
+        language: 'slash'
+      },
+      // Agents
+      {
+        title: 'Select Custom Agent',
+        code: '/agent',
+        category: 'Custom Agents',
+        difficulty: 'intermediate',
+        language: 'slash'
+      },
+      {
+        title: 'Use Agent in Prompt',
+        code: 'Use the refactoring agent to refactor this code block',
+        category: 'Custom Agents',
+        difficulty: 'intermediate',
+        language: 'natural'
+      },
+      // MCP
+      {
+        title: 'Add MCP Server',
+        code: '/mcp add',
+        category: 'MCP Integration',
+        difficulty: 'advanced',
+        language: 'slash'
+      },
+      {
+        title: 'List MCP Servers',
+        code: '/mcp list',
+        category: 'MCP Integration',
+        difficulty: 'intermediate',
+        language: 'slash'
+      },
+      // Help
+      {
+        title: 'In-Session Help',
+        code: '?',
+        category: 'Help',
+        difficulty: 'beginner',
+        language: 'slash'
+      },
+      {
+        title: 'Configuration Help',
+        code: 'copilot help config',
+        category: 'Help',
+        difficulty: 'beginner',
+        language: 'shell'
       }
     ];
     

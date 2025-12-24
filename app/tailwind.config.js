@@ -8,7 +8,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#3B82F6',
+        primary: '#2563EB', // Changed from #3B82F6 for WCAG AA compliance (5.17:1 contrast)
+        'primary-dark': '#1D4ED8',
         secondary: '#8B5CF6',
         success: '#10B981',
       },
