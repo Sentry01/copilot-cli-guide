@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import SearchBar from './SearchBar';
 
-export default function Header() {
+export default function Header({ onLessonSelect }) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -19,13 +20,7 @@ export default function Header() {
     <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center px-6">
       <div className="flex-1 flex items-center justify-between">
         {/* Search bar */}
-        <div className="flex-1 max-w-2xl">
-          <input
-            type="text"
-            placeholder="Search lessons, commands..."
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-        </div>
+        <SearchBar onNavigate={onLessonSelect} />
         
         {/* User menu */}
         <div className="ml-6 flex items-center gap-4">

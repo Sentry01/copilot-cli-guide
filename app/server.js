@@ -629,6 +629,118 @@ app.put('/api/bookmarks/:id/notes', (req, res) => {
   );
 });
 
+// Global search endpoint
+app.get('/api/search', (req, res) => {
+  const { q } = req.query;
+  
+  if (!q || q.trim().length === 0) {
+    return res.json({ results: [] });
+  }
+  
+  const searchTerm = `%${q}%`;
+  const results = {
+    lessons: [],
+    commands: [],
+    examples: []
+  };
+  
+  // Search lessons
+  db.all(
+    `SELECT l.id, l.title, l.content, l.difficulty, l.duration, m.title as module_name, m.id as module_id
+     FROM lessons l
+     JOIN modules m ON l.module_id = m.id
+     WHERE l.title LIKE ? OR l.content LIKE ?
+     ORDER BY l.title
+     LIMIT 10`,
+    [searchTerm, searchTerm],
+    (err, lessons) => {
+      if (err) {
+        console.error('Error searching lessons:', err);
+      } else {
+        results.lessons = lessons.map(lesson => ({
+          ...lesson,
+          type: 'lesson',
+          snippet: extractSnippet(lesson.content, q)
+        }));
+      }
+      
+      // Search commands
+      db.all(
+        `SELECT id, name, syntax, description, category
+         FROM commands
+         WHERE name LIKE ? OR description LIKE ? OR syntax LIKE ?
+         ORDER BY name
+         LIMIT 10`,
+        [searchTerm, searchTerm, searchTerm],
+        (err, commands) => {
+          if (err) {
+            console.error('Error searching commands:', err);
+          } else {
+            results.commands = commands.map(cmd => ({
+              ...cmd,
+              type: 'command',
+              snippet: cmd.description ? cmd.description.substring(0, 150) : ''
+            }));
+          }
+          
+          // Search examples
+          db.all(
+            `SELECT id, title, code, category, difficulty, language
+             FROM examples
+             WHERE title LIKE ? OR code LIKE ?
+             ORDER BY title
+             LIMIT 10`,
+            [searchTerm, searchTerm],
+            (err, examples) => {
+              if (err) {
+                console.error('Error searching examples:', err);
+              } else {
+                results.examples = examples.map(ex => ({
+                  ...ex,
+                  type: 'example',
+                  snippet: ex.code ? ex.code.substring(0, 150) : ''
+                }));
+              }
+              
+              // Combine all results
+              const allResults = [
+                ...results.lessons,
+                ...results.commands,
+                ...results.examples
+              ];
+              
+              res.json({ 
+                results: allResults,
+                count: allResults.length,
+                query: q
+              });
+            }
+          );
+        }
+      );
+    }
+  );
+});
+
+// Helper function to extract snippet with search term context
+function extractSnippet(text, searchTerm) {
+  if (!text) return '';
+  
+  const lowerText = text.toLowerCase();
+  const lowerTerm = searchTerm.toLowerCase();
+  const index = lowerText.indexOf(lowerTerm);
+  
+  if (index === -1) {
+    return text.substring(0, 150) + '...';
+  }
+  
+  const start = Math.max(0, index - 60);
+  const end = Math.min(text.length, index + searchTerm.length + 90);
+  const snippet = text.substring(start, end);
+  
+  return (start > 0 ? '...' : '') + snippet + (end < text.length ? '...' : '');
+}
+
 // Start server
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running on http://localhost:${PORT}`);

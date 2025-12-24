@@ -6,7 +6,7 @@ export default function MainLayout({ children, onLessonSelect, onViewChange, cur
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col">
       {/* Header */}
-      <Header />
+      <Header onLessonSelect={onLessonSelect} />
       
       {/* Main content area */}
       <div className="flex-1 flex overflow-hidden">
