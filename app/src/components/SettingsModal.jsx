@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function SettingsModal({ isOpen, onClose }) {
   const [activeTab, setActiveTab] = useState('appearance');
@@ -97,6 +98,8 @@ export default function SettingsModal({ isOpen, onClose }) {
 }
 
 function AppearanceTab() {
+  const { theme, setTheme } = useTheme();
+
   return (
     <div className="space-y-6">
       <div>
@@ -105,15 +108,36 @@ function AppearanceTab() {
         </h3>
         <div className="space-y-3">
           <label className="flex items-center gap-3 cursor-pointer">
-            <input type="radio" name="theme" value="light" className="w-4 h-4 text-blue-600" defaultChecked />
+            <input 
+              type="radio" 
+              name="theme" 
+              value="light" 
+              className="w-4 h-4 text-blue-600" 
+              checked={theme === 'light'}
+              onChange={(e) => setTheme(e.target.value)}
+            />
             <span className="text-gray-700 dark:text-gray-300">Light Mode</span>
           </label>
           <label className="flex items-center gap-3 cursor-pointer">
-            <input type="radio" name="theme" value="dark" className="w-4 h-4 text-blue-600" />
+            <input 
+              type="radio" 
+              name="theme" 
+              value="dark" 
+              className="w-4 h-4 text-blue-600"
+              checked={theme === 'dark'}
+              onChange={(e) => setTheme(e.target.value)}
+            />
             <span className="text-gray-700 dark:text-gray-300">Dark Mode</span>
           </label>
           <label className="flex items-center gap-3 cursor-pointer">
-            <input type="radio" name="theme" value="auto" className="w-4 h-4 text-blue-600" />
+            <input 
+              type="radio" 
+              name="theme" 
+              value="auto" 
+              className="w-4 h-4 text-blue-600"
+              checked={theme === 'auto'}
+              onChange={(e) => setTheme(e.target.value)}
+            />
             <span className="text-gray-700 dark:text-gray-300">Auto (System)</span>
           </label>
         </div>
