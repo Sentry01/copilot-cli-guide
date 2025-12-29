@@ -219,6 +219,48 @@ function EditorTab() {
 }
 
 function DataTab() {
+  const handleExportData = async () => {
+    try {
+      // Get or create session ID
+      let sessionId = localStorage.getItem('session_id');
+      if (!sessionId) {
+        sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        localStorage.setItem('session_id', sessionId);
+      }
+      
+      // Fetch all user data from the API
+      const response = await fetch(`/api/user/export?session_id=${sessionId}`, {
+        headers: {
+          'X-Session-ID': sessionId
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      // Create a blob with the JSON data
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      // Create a temporary link and trigger download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `copilot-cli-guide-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      alert('Data exported successfully!');
+    } catch (error) {
+      console.error('Error exporting data:', error);
+      alert('Failed to export data. Please try again.');
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -228,7 +270,10 @@ function DataTab() {
         <p className="text-gray-600 dark:text-gray-400 mb-4">
           Download all your progress, bookmarks, and settings as a JSON file.
         </p>
-        <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+        <button 
+          onClick={handleExportData}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+        >
           Export All Data
         </button>
       </div>

@@ -1167,6 +1167,84 @@ app.get('/api/user/:session_id', (req, res) => {
   );
 });
 
+// Export all user data
+app.get('/api/user/export', (req, res) => {
+  const sessionId = req.headers['x-session-id'] || req.query.session_id;
+  
+  console.log('[EXPORT] Session ID:', sessionId);
+  
+  if (!sessionId) {
+    return res.status(400).json({ error: 'Session ID required' });
+  }
+  
+  // Get user info
+  db.get(
+    'SELECT * FROM users WHERE session_id = ?',
+    [sessionId],
+    (err, user) => {
+      if (err) {
+        console.log('[EXPORT] Database error:', err);
+        return res.status(500).json({ error: err.message });
+      }
+      
+      console.log('[EXPORT] User found:', user ? 'YES (id: ' + user.id + ')' : 'NO');
+      
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      // Get user progress
+      db.all(
+        'SELECT * FROM progress WHERE user_id = ?',
+        [user.id],
+        (err, progress) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          
+          // Get user bookmarks
+          db.all(
+            'SELECT * FROM bookmarks WHERE user_id = ?',
+            [user.id],
+            (err, bookmarks) => {
+              if (err) {
+                return res.status(500).json({ error: err.message });
+              }
+              
+              // Get user achievements
+              db.all(
+                'SELECT * FROM user_achievements WHERE user_id = ?',
+                [user.id],
+                (err, achievements) => {
+                  if (err) {
+                    return res.status(500).json({ error: err.message });
+                  }
+                  
+                  // Compile all data
+                  const exportData = {
+                    export_date: new Date().toISOString(),
+                    app_version: '1.0.0',
+                    user: {
+                      session_id: user.session_id,
+                      preferences: user.preferences ? JSON.parse(user.preferences) : {},
+                      created_at: user.created_at
+                    },
+                    progress: progress || [],
+                    bookmarks: bookmarks || [],
+                    achievements: achievements || []
+                  };
+                  
+                  res.json(exportData);
+                }
+              );
+            }
+          );
+        }
+      );
+    }
+  );
+});
+
 // Progress Tracking
 
 // Get user's progress
