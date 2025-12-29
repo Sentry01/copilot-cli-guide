@@ -1867,6 +1867,197 @@ app.get('/api/achievements/user', (req, res) => {
   );
 });
 
+// Check and unlock achievements
+app.post('/api/achievements/check', (req, res) => {
+  const sessionId = req.headers['x-session-id'] || req.body.session_id;
+  
+  if (!sessionId) {
+    return res.status(400).json({ error: 'Session ID required' });
+  }
+  
+  // Get user ID from session
+  db.get(
+    'SELECT id FROM users WHERE session_id = ?',
+    [sessionId],
+    (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      const userId = user.id;
+      const newlyUnlocked = [];
+      
+      // Check all achievements
+      db.all('SELECT id, criteria FROM achievements', [], (err, achievements) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        
+        let checksCompleted = 0;
+        const totalChecks = achievements.length;
+        
+        achievements.forEach(achievement => {
+          checkAchievement(userId, achievement, (unlocked) => {
+            if (unlocked) {
+              newlyUnlocked.push(unlocked);
+            }
+            checksCompleted++;
+            
+            if (checksCompleted === totalChecks) {
+              res.json({ 
+                checked: totalChecks,
+                unlocked: newlyUnlocked 
+              });
+            }
+          });
+        });
+        
+        if (totalChecks === 0) {
+          res.json({ checked: 0, unlocked: [] });
+        }
+      });
+    }
+  );
+});
+
+// Helper function to check and unlock a specific achievement
+function checkAchievement(userId, achievement, callback) {
+  const criteria = achievement.criteria;
+  
+  // Check if already unlocked
+  db.get(
+    'SELECT id FROM user_achievements WHERE user_id = ? AND achievement_id = ?',
+    [userId, achievement.id],
+    (err, existing) => {
+      if (err || existing) {
+        return callback(null);
+      }
+      
+      // Check criteria
+      let shouldUnlock = false;
+      
+      if (criteria === 'complete_lesson_1') {
+        // Check if user has completed at least 1 lesson
+        db.get(
+          'SELECT COUNT(*) as count FROM progress WHERE user_id = ? AND completed = 1',
+          [userId],
+          (err, result) => {
+            if (!err && result.count >= 1) {
+              unlockAchievement(userId, achievement.id, achievement, callback);
+            } else {
+              callback(null);
+            }
+          }
+        );
+      } else if (criteria === 'complete_lesson_5') {
+        db.get(
+          'SELECT COUNT(*) as count FROM progress WHERE user_id = ? AND completed = 1',
+          [userId],
+          (err, result) => {
+            if (!err && result.count >= 5) {
+              unlockAchievement(userId, achievement.id, achievement, callback);
+            } else {
+              callback(null);
+            }
+          }
+        );
+      } else if (criteria === 'complete_lesson_10') {
+        db.get(
+          'SELECT COUNT(*) as count FROM progress WHERE user_id = ? AND completed = 1',
+          [userId],
+          (err, result) => {
+            if (!err && result.count >= 10) {
+              unlockAchievement(userId, achievement.id, achievement, callback);
+            } else {
+              callback(null);
+            }
+          }
+        );
+      } else if (criteria === 'complete_module_1') {
+        // Check if user has completed all lessons in at least one module
+        db.all(
+          `SELECT m.id, m.title,
+            (SELECT COUNT(*) FROM lessons WHERE module_id = m.id) as total_lessons,
+            (SELECT COUNT(*) FROM progress p 
+             JOIN lessons l ON p.lesson_id = l.id 
+             WHERE l.module_id = m.id AND p.user_id = ? AND p.completed = 1) as completed_lessons
+          FROM modules m`,
+          [userId],
+          (err, modules) => {
+            if (!err) {
+              const hasCompleteModule = modules.some(m => m.total_lessons > 0 && m.completed_lessons === m.total_lessons);
+              if (hasCompleteModule) {
+                unlockAchievement(userId, achievement.id, achievement, callback);
+              } else {
+                callback(null);
+              }
+            } else {
+              callback(null);
+            }
+          }
+        );
+      } else if (criteria === 'bookmark_5') {
+        db.get(
+          'SELECT COUNT(*) as count FROM bookmarks WHERE user_id = ?',
+          [userId],
+          (err, result) => {
+            if (!err && result.count >= 5) {
+              unlockAchievement(userId, achievement.id, achievement, callback);
+            } else {
+              callback(null);
+            }
+          }
+        );
+      } else if (criteria === 'complete_all') {
+        // Check if user completed all lessons
+        db.get(
+          `SELECT 
+            (SELECT COUNT(*) FROM lessons) as total,
+            (SELECT COUNT(*) FROM progress WHERE user_id = ? AND completed = 1) as completed`,
+          [userId],
+          (err, result) => {
+            if (!err && result.total > 0 && result.completed === result.total) {
+              unlockAchievement(userId, achievement.id, achievement, callback);
+            } else {
+              callback(null);
+            }
+          }
+        );
+      } else {
+        // Criteria not yet implemented
+        callback(null);
+      }
+    }
+  );
+}
+
+// Helper to unlock an achievement
+function unlockAchievement(userId, achievementId, achievement, callback) {
+  db.run(
+    'INSERT OR IGNORE INTO user_achievements (user_id, achievement_id) VALUES (?, ?)',
+    [userId, achievementId],
+    function(err) {
+      if (err) {
+        callback(null);
+      } else if (this.changes > 0) {
+        // Achievement was newly unlocked
+        callback({
+          id: achievement.id,
+          title: achievement.title,
+          description: achievement.description,
+          icon: achievement.icon
+        });
+      } else {
+        callback(null);
+      }
+    }
+  );
+}
+
 // Start server
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running on http://localhost:${PORT}`);

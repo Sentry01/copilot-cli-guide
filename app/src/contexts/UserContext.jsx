@@ -46,6 +46,36 @@ export function UserProvider({ children }) {
       
       if (response.ok) {
         setCompletedLessons(prev => new Set([...prev, lessonId]));
+        
+        // Check for newly unlocked achievements
+        try {
+          const achievementResponse = await fetch(
+            'http://localhost:3000/api/achievements/check',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-session-id': sessionId
+              }
+            }
+          );
+          
+          if (achievementResponse.ok) {
+            const result = await achievementResponse.json();
+            if (result.unlocked && result.unlocked.length > 0) {
+              // Trigger achievement notification (will be handled by notification system)
+              result.unlocked.forEach(achievement => {
+                // Dispatch custom event for achievement unlock
+                window.dispatchEvent(new CustomEvent('achievement-unlocked', {
+                  detail: achievement
+                }));
+              });
+            }
+          }
+        } catch (err) {
+          console.error('Failed to check achievements:', err);
+        }
+        
         return true;
       }
     } catch (error) {

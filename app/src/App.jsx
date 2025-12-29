@@ -4,6 +4,7 @@ import { UserProvider } from './contexts/UserContext'
 import { ThemeProvider } from './contexts/ThemeContext'
 import MainLayout from './layouts/MainLayout'
 import useKeyboardShortcuts from './hooks/useKeyboardShortcuts'
+import AchievementNotification from './components/AchievementNotification'
 
 // Lazy load route components
 const LessonView = lazy(() => import('./components/LessonView'))
@@ -127,6 +128,9 @@ function AppContent() {
           />
         </Suspense>
       )}
+
+      {/* Achievement Notifications */}
+      <AchievementNotification />
     </MainLayout>
   );
 }
