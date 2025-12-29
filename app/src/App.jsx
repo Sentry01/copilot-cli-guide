@@ -1,17 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import { UserProvider } from './contexts/UserContext'
 import { ThemeProvider } from './contexts/ThemeContext'
 import MainLayout from './layouts/MainLayout'
-import LessonView from './components/LessonView'
-import ProgressDashboard from './components/ProgressDashboard'
-import BookmarksView from './components/BookmarksView'
-import CommandsView from './components/CommandsView'
-import ExamplesView from './components/ExamplesView'
-import KeyboardShortcutsModal from './components/KeyboardShortcutsModal'
-import CommandPalette from './components/CommandPalette'
-import NotFound from './components/NotFound'
 import useKeyboardShortcuts from './hooks/useKeyboardShortcuts'
+
+// Lazy load route components
+const LessonView = lazy(() => import('./components/LessonView'))
+const ProgressDashboard = lazy(() => import('./components/ProgressDashboard'))
+const BookmarksView = lazy(() => import('./components/BookmarksView'))
+const CommandsView = lazy(() => import('./components/CommandsView'))
+const ExamplesView = lazy(() => import('./components/ExamplesView'))
+const KeyboardShortcutsModal = lazy(() => import('./components/KeyboardShortcutsModal'))
+const CommandPalette = lazy(() => import('./components/CommandPalette'))
+const NotFound = lazy(() => import('./components/NotFound'))
 
 function AppContent() {
   const navigate = useNavigate();
@@ -72,45 +74,59 @@ function AppContent() {
       currentView={currentView}
       onShowKeyboardShortcuts={() => setShowKeyboardShortcuts(true)}
     >
-      <Routes>
-        <Route path="/" element={
-          <LessonView 
-            lessonId={currentLessonId} 
-            onNavigateToLesson={handleLessonSelect}
-          />
-        } />
-        <Route path="/progress" element={<ProgressDashboard />} />
-        <Route path="/bookmarks" element={
-          <BookmarksView onLessonSelect={handleLessonSelect} />
-        } />
-        <Route path="/commands" element={
-          <CommandsView 
-            onNavigateToTerminal={(commandName) => {
-              handleLessonSelect(2);
-            }}
-          />
-        } />
-        <Route path="/examples" element={<ExamplesView />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+      }>
+        <Routes>
+          <Route path="/" element={
+            <LessonView 
+              lessonId={currentLessonId} 
+              onNavigateToLesson={handleLessonSelect}
+            />
+          } />
+          <Route path="/progress" element={<ProgressDashboard />} />
+          <Route path="/bookmarks" element={
+            <BookmarksView onLessonSelect={handleLessonSelect} />
+          } />
+          <Route path="/commands" element={
+            <CommandsView 
+              onNavigateToTerminal={(commandName) => {
+                handleLessonSelect(2);
+              }}
+            />
+          } />
+          <Route path="/examples" element={<ExamplesView />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
 
       {/* Keyboard Shortcuts Modal */}
-      <KeyboardShortcutsModal 
-        isOpen={showKeyboardShortcuts}
-        onClose={() => setShowKeyboardShortcuts(false)}
-      />
+      {showKeyboardShortcuts && (
+        <Suspense fallback={null}>
+          <KeyboardShortcutsModal 
+            isOpen={showKeyboardShortcuts}
+            onClose={() => setShowKeyboardShortcuts(false)}
+          />
+        </Suspense>
+      )}
 
       {/* Command Palette */}
-      <CommandPalette 
-        isOpen={showCommandPalette}
-        onClose={() => setShowCommandPalette(false)}
-        onNavigate={handleNavigate}
-        onOpenSettings={() => {
-          setShowCommandPalette(false);
-          const settingsBtn = document.querySelector('button[aria-label="Open settings"]');
-          settingsBtn?.click();
-        }}
-      />
+      {showCommandPalette && (
+        <Suspense fallback={null}>
+          <CommandPalette 
+            isOpen={showCommandPalette}
+            onClose={() => setShowCommandPalette(false)}
+            onNavigate={handleNavigate}
+            onOpenSettings={() => {
+              setShowCommandPalette(false);
+              const settingsBtn = document.querySelector('button[aria-label="Open settings"]');
+              settingsBtn?.click();
+            }}
+          />
+        </Suspense>
+      )}
     </MainLayout>
   );
 }
