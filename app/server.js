@@ -1052,6 +1052,104 @@ app.post('/api/user/session', (req, res) => {
   );
 });
 
+// Get current user (creates session if none exists)
+app.get('/api/user', (req, res) => {
+  // Get session ID from header or cookie, or generate new one
+  const sessionId = req.headers['x-session-id'] || req.query.session_id || `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  
+  // Check if user exists
+  db.get(
+    'SELECT * FROM users WHERE session_id = ?',
+    [sessionId],
+    (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      if (user) {
+        // User exists, return it
+        const preferences = user.preferences ? JSON.parse(user.preferences) : {};
+        res.json({
+          id: user.id,
+          session_id: user.session_id,
+          preferences,
+          created_at: user.created_at
+        });
+      } else {
+        // User doesn't exist, create new session
+        const defaultPreferences = JSON.stringify({
+          theme: 'light',
+          fontSize: 'medium',
+          codeTheme: 'vs-dark'
+        });
+        
+        db.run(
+          'INSERT INTO users (session_id, preferences) VALUES (?, ?)',
+          [sessionId, defaultPreferences],
+          function(err) {
+            if (err) {
+              return res.status(500).json({ error: err.message });
+            }
+            
+            res.json({
+              id: this.lastID,
+              session_id: sessionId,
+              preferences: JSON.parse(defaultPreferences),
+              created_at: new Date().toISOString()
+            });
+          }
+        );
+      }
+    }
+  );
+});
+
+// Update user preferences
+app.put('/api/user/preferences', (req, res) => {
+  const sessionId = req.headers['x-session-id'] || req.query.session_id;
+  const { preferences } = req.body;
+  
+  // Validate inputs
+  if (!sessionId) {
+    return res.status(400).json({ error: 'Session ID required' });
+  }
+  
+  if (!preferences || typeof preferences !== 'object') {
+    return res.status(400).json({ error: 'Invalid preferences data' });
+  }
+  
+  // Find user
+  db.get(
+    'SELECT id FROM users WHERE session_id = ?',
+    [sessionId],
+    (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      // Update preferences
+      db.run(
+        'UPDATE users SET preferences = ? WHERE id = ?',
+        [JSON.stringify(preferences), user.id],
+        (err) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          
+          res.json({
+            success: true,
+            preferences
+          });
+        }
+      );
+    }
+  );
+});
+
 // Get user by session ID
 app.get('/api/user/:session_id', (req, res) => {
   db.get(
