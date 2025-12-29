@@ -1150,47 +1150,51 @@ app.put('/api/user/preferences', (req, res) => {
   );
 });
 
-// Get user by session ID
-app.get('/api/user/:session_id', (req, res) => {
-  db.get(
-    'SELECT * FROM users WHERE session_id = ?',
-    [req.params.session_id],
-    (err, user) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-      res.json(user);
-    }
-  );
-});
-
-// Export all user data
+// Export all user data (MUST come before :session_id route!)
 app.get('/api/user/export', (req, res) => {
   const sessionId = req.headers['x-session-id'] || req.query.session_id;
-  
-  console.log('[EXPORT] Session ID:', sessionId);
   
   if (!sessionId) {
     return res.status(400).json({ error: 'Session ID required' });
   }
   
-  // Get user info
+  // Get user info - FIRST, create user if doesn't exist
   db.get(
     'SELECT * FROM users WHERE session_id = ?',
     [sessionId],
     (err, user) => {
       if (err) {
-        console.log('[EXPORT] Database error:', err);
         return res.status(500).json({ error: err.message });
       }
       
-      console.log('[EXPORT] User found:', user ? 'YES (id: ' + user.id + ')' : 'NO');
-      
+      // If user doesn't exist, create one
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        db.run(
+          'INSERT INTO users (session_id, preferences, created_at) VALUES (?, ?, datetime("now"))',
+          [sessionId, JSON.stringify({ theme: 'light', fontSize: 'medium', codeTheme: 'vscode-dark' })],
+          function(insertErr) {
+            if (insertErr) {
+              return res.status(500).json({ error: insertErr.message });
+            }
+            
+            // Return empty export data for new user
+            const exportData = {
+              export_date: new Date().toISOString(),
+              app_version: '1.0.0',
+              user: {
+                session_id: sessionId,
+                preferences: { theme: 'light', fontSize: 'medium', codeTheme: 'vscode-dark' },
+                created_at: new Date().toISOString()
+              },
+              progress: [],
+              bookmarks: [],
+              achievements: []
+            };
+            
+            return res.json(exportData);
+          }
+        );
+        return; // Exit early for new user creation
       }
       
       // Get user progress
@@ -1244,6 +1248,24 @@ app.get('/api/user/export', (req, res) => {
     }
   );
 });
+
+// Get user by session ID
+app.get('/api/user/:session_id', (req, res) => {
+  db.get(
+    'SELECT * FROM users WHERE session_id = ?',
+    [req.params.session_id],
+    (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json(user);
+    }
+  );
+});
+
 
 // Progress Tracking
 
