@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Terminal from './Terminal';
+import Quiz from './Quiz';
 import Breadcrumbs from './Breadcrumbs';
 import { useUser } from '../contexts/UserContext';
 import { LessonLoadingSkeleton } from './LoadingStates';
@@ -72,7 +73,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
   const [lesson, setLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { markLessonComplete, isLessonComplete, sessionId } = useUser();
+  const { markLessonComplete, isLessonComplete, sessionId, user } = useUser();
   const [isCompleting, setIsCompleting] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isBookmarking, setIsBookmarking] = useState(false);
@@ -375,6 +376,14 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
           />
         </div>
       )}
+
+      {/* Quiz Section */}
+      <div className="mt-12">
+        <h3 className="text-2xl font-bold text-text-light dark:text-text-dark mb-6">
+          📝 Test Your Knowledge
+        </h3>
+        <Quiz lessonId={lessonId} userId={user?.id || 1} />
+      </div>
 
       {/* Lesson footer with navigation */}
       <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700">

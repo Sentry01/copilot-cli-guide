@@ -165,6 +165,40 @@ function initializeDatabase() {
     `, (err) => {
       if (err) console.error('Error creating user_achievements table:', err);
       else console.log('✓ User achievements table ready');
+    });
+
+    // Quiz questions table
+    db.run(`
+      CREATE TABLE IF NOT EXISTS quiz_questions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        lesson_id INTEGER NOT NULL,
+        question TEXT NOT NULL,
+        options TEXT NOT NULL,
+        correct_answer INTEGER NOT NULL,
+        explanation TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (lesson_id) REFERENCES lessons(id)
+      )
+    `, (err) => {
+      if (err) console.error('Error creating quiz_questions table:', err);
+      else console.log('✓ Quiz questions table ready');
+    });
+
+    // Quiz attempts table
+    db.run(`
+      CREATE TABLE IF NOT EXISTS quiz_attempts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        question_id INTEGER NOT NULL,
+        selected_answer INTEGER NOT NULL,
+        is_correct BOOLEAN NOT NULL,
+        attempted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (question_id) REFERENCES quiz_questions(id)
+      )
+    `, (err) => {
+      if (err) console.error('Error creating quiz_attempts table:', err);
+      else console.log('✓ Quiz attempts table ready');
       
       // Seed initial data after all tables are created
       seedInitialData();
@@ -770,6 +804,62 @@ function seedInitialData() {
       );
     });
     
+    // Seed quiz questions
+    const quizQuestions = [
+      {
+        lesson_id: 1, // Essential Slash Commands
+        question: 'Which command shows available slash commands in an interactive session?',
+        options: JSON.stringify(['?', '/help', '/commands', '/list']),
+        correct_answer: 0,
+        explanation: 'The "?" command displays all available slash commands during an interactive session.'
+      },
+      {
+        lesson_id: 1,
+        question: 'What does the /clear command do?',
+        options: JSON.stringify(['Deletes all files', 'Clears conversation history', 'Resets terminal', 'Exits session']),
+        correct_answer: 1,
+        explanation: 'The /clear command clears the current conversation history from memory.'
+      },
+      {
+        lesson_id: 2, // Agent Commands
+        question: 'How do you select a custom agent to use?',
+        options: JSON.stringify(['/agent', '/select-agent', '@agent', '/custom']),
+        correct_answer: 0,
+        explanation: 'Use the /agent command to see and select from available custom agents.'
+      },
+      {
+        lesson_id: 3, // Directory Management
+        question: 'Which command adds a trusted directory for Copilot to access?',
+        options: JSON.stringify(['/trust', '/add-dir', '/directory', '/allow']),
+        correct_answer: 1,
+        explanation: 'The /add-dir command lets you add directories that Copilot can access without asking for approval.'
+      },
+      {
+        lesson_id: 3,
+        question: 'What does /cwd do?',
+        options: JSON.stringify(['Creates new directory', 'Changes working directory', 'Copies working directory', 'Current workspace details']),
+        correct_answer: 1,
+        explanation: '/cwd changes the current working directory without starting a new session.'
+      },
+      {
+        lesson_id: 4, // MCP Commands
+        question: 'What command lists all configured MCP servers?',
+        options: JSON.stringify(['/mcp show', '/mcp list', '/servers', '/mcp']),
+        correct_answer: 1,
+        explanation: 'Use /mcp list to see all configured Model Context Protocol servers.'
+      }
+    ];
+    
+    quizQuestions.forEach(quiz => {
+      db.run(
+        'INSERT INTO quiz_questions (lesson_id, question, options, correct_answer, explanation) VALUES (?, ?, ?, ?, ?)',
+        [quiz.lesson_id, quiz.question, quiz.options, quiz.correct_answer, quiz.explanation],
+        (err) => {
+          if (err) console.error('Error seeding quiz question:', err);
+        }
+      );
+    });
+    
     console.log('✓ Initial data seeded');
   });
 }
@@ -1246,6 +1336,90 @@ app.get('/api/search', (req, res) => {
           );
         }
       );
+    }
+  );
+});
+
+// Quiz API endpoints
+
+// Get quiz questions for a lesson
+app.get('/api/lessons/:id/quiz', (req, res) => {
+  db.all(
+    'SELECT * FROM quiz_questions WHERE lesson_id = ?',
+    [req.params.id],
+    (err, questions) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      // Parse options from JSON string
+      const parsedQuestions = questions.map(q => ({
+        ...q,
+        options: JSON.parse(q.options)
+      }));
+      
+      res.json(parsedQuestions);
+    }
+  );
+});
+
+// Submit quiz answer
+app.post('/api/quiz/submit', (req, res) => {
+  const { user_id, question_id, selected_answer } = req.body;
+  
+  if (!user_id || !question_id || selected_answer === undefined) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+  
+  // Get the correct answer
+  db.get(
+    'SELECT correct_answer, explanation FROM quiz_questions WHERE id = ?',
+    [question_id],
+    (err, question) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      if (!question) {
+        return res.status(404).json({ error: 'Question not found' });
+      }
+      
+      const isCorrect = selected_answer === question.correct_answer;
+      
+      // Record the attempt
+      db.run(
+        'INSERT INTO quiz_attempts (user_id, question_id, selected_answer, is_correct) VALUES (?, ?, ?, ?)',
+        [user_id, question_id, selected_answer, isCorrect],
+        function(err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          
+          res.json({
+            is_correct: isCorrect,
+            explanation: question.explanation,
+            correct_answer: question.correct_answer
+          });
+        }
+      );
+    }
+  );
+});
+
+// Get user quiz attempts for a lesson
+app.get('/api/quiz/attempts/:user_id/:lesson_id', (req, res) => {
+  db.all(
+    `SELECT qa.*, qq.question, qq.correct_answer 
+     FROM quiz_attempts qa
+     JOIN quiz_questions qq ON qa.question_id = qq.id
+     WHERE qa.user_id = ? AND qq.lesson_id = ?
+     ORDER BY qa.attempted_at DESC`,
+    [req.params.user_id, req.params.lesson_id],
+    (err, attempts) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json(attempts);
     }
   );
 });
