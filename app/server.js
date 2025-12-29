@@ -259,6 +259,13 @@ function seedInitialData() {
                 duration: 8,
                 difficulty: 'beginner',
                 order: 3
+              },
+              {
+                title: 'Basic Usage Patterns',
+                content: '# Basic Usage Patterns\n\n## Understanding Copilot CLI Modes\n\nCopilot CLI has two primary interaction modes:\n\n### Direct Mode\nExecute a single command and exit:\n```bash\ncopilot "your question or command"\n```\n\n### Interactive Mode\nStart a persistent session:\n```bash\ncopilot\n# Now you can ask multiple questions\n```\n\n## Common Usage Patterns\n\n### Ask Questions\n```bash\n> Explain this error message\n> How do I fix merge conflicts?\n> What does this code do?\n```\n\n### Generate Commands\n```bash\n> Find all JavaScript files modified in the last week\n> Create a new React component\n> Update all dependencies\n```\n\n### Reference Files\n```bash\n> Explain @src/app.js\n> What\'s the difference between @file1.js and @file2.js?\n> Refactor @utils/helper.js\n```\n\n### Chain Operations\nYou can build on previous responses:\n```bash\n> List all TypeScript files in src/\n> Now check which ones need type fixes\n> Fix the first one\n```\n\n## Tips for Best Results\n\n1. **Be Specific**: "Explain the authentication flow in @src/auth.js" is better than "Explain this"\n2. **Use Context**: Reference files with @ syntax\n3. **Iterate**: Build on Copilot\'s responses\n4. **Verify**: Always review generated commands before executing\n\n## Next Steps\n\nNow that you understand the basics, explore:\n- Slash commands for advanced features\n- Custom agents for specialized tasks\n- MCP servers for tool integration',
+                duration: 8,
+                difficulty: 'beginner',
+                order: 4
               }
             ];
           } else if (module.title === 'Interactive Mode Essentials') {
