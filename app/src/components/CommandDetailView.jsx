@@ -50,18 +50,28 @@ function CommandDetailView({ commandName, onBack, onTryIt }) {
     navigator.clipboard.writeText(text);
   };
 
+  const relatedCommands = command.relatedCommands || [];
+
+  const handleRelatedCommandClick = (commandName) => {
+    // Trigger a re-fetch by updating the parent component
+    window.location.hash = `#command-${encodeURIComponent(commandName)}`;
+    window.location.reload();
+  };
+
   return (
-    <div className="p-8 max-w-4xl">
-      {/* Back Button */}
-      <button
-        onClick={onBack}
-        className="mb-6 text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-2"
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-        Back to Commands
-      </button>
+    <div className="flex gap-6 p-8 max-w-7xl">
+      {/* Main Content */}
+      <div className="flex-1 max-w-4xl">
+        {/* Back Button */}
+        <button
+          onClick={onBack}
+          className="mb-6 text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-2"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Commands
+        </button>
 
       {/* Command Header */}
       <div className="mb-8">
@@ -178,6 +188,44 @@ function CommandDetailView({ commandName, onBack, onTryIt }) {
         </button>
       </div>
     </div>
+
+    {/* Sidebar - Related Commands */}
+    {relatedCommands.length > 0 && (
+      <aside className="w-80 flex-shrink-0">
+        <div className="sticky top-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Related Commands
+          </h3>
+          <div className="space-y-3">
+            {relatedCommands.map((relatedCmd, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleRelatedCommandClick(relatedCmd.name)}
+                className="w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
+              >
+                <div className="font-mono text-sm font-semibold text-blue-600 dark:text-blue-400 mb-1 group-hover:underline">
+                  {relatedCmd.name}
+                </div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
+                  {relatedCmd.description}
+                </div>
+                {relatedCmd.category && (
+                  <div className="mt-2">
+                    <span className="inline-block px-2 py-0.5 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded text-xs">
+                      {relatedCmd.category}
+                    </span>
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      </aside>
+    )}
+  </div>
   );
 }
 

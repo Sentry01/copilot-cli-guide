@@ -968,7 +968,39 @@ app.get('/api/commands/:name', (req, res) => {
       res.status(404).json({ error: 'Command not found' });
       return;
     }
-    res.json(row);
+    
+    // Parse related commands and fetch their details
+    if (row.related_commands) {
+      try {
+        const relatedNames = JSON.parse(row.related_commands);
+        if (relatedNames && relatedNames.length > 0) {
+          const placeholders = relatedNames.map(() => '?').join(',');
+          db.all(
+            `SELECT name, description, category FROM commands WHERE name IN (${placeholders})`,
+            relatedNames,
+            (err, relatedCommands) => {
+              if (err) {
+                console.error('Error fetching related commands:', err);
+                row.relatedCommands = [];
+              } else {
+                row.relatedCommands = relatedCommands;
+              }
+              res.json(row);
+            }
+          );
+        } else {
+          row.relatedCommands = [];
+          res.json(row);
+        }
+      } catch (e) {
+        console.error('Error parsing related_commands:', e);
+        row.relatedCommands = [];
+        res.json(row);
+      }
+    } else {
+      row.relatedCommands = [];
+      res.json(row);
+    }
   });
 });
 
