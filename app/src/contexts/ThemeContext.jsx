@@ -28,6 +28,11 @@ export function ThemeProvider({ children }) {
     return saved || 'medium';
   });
 
+  const [codeTheme, setCodeTheme] = useState(() => {
+    const saved = localStorage.getItem('codeTheme');
+    return saved || 'vscode-dark';
+  });
+
   useEffect(() => {
     // Save to localStorage
     localStorage.setItem('theme', theme);
@@ -85,8 +90,14 @@ export function ThemeProvider({ children }) {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [theme]);
 
+  // Apply code theme
+  useEffect(() => {
+    localStorage.setItem('codeTheme', codeTheme);
+    document.documentElement.setAttribute('data-code-theme', codeTheme);
+  }, [codeTheme]);
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, fontSize, setFontSize }}>
+    <ThemeContext.Provider value={{ theme, setTheme, fontSize, setFontSize, codeTheme, setCodeTheme }}>
       {children}
     </ThemeContext.Provider>
   );

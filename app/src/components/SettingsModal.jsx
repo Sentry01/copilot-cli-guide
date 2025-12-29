@@ -163,7 +163,7 @@ function AppearanceTab() {
 }
 
 function EditorTab() {
-  const { fontSize, setFontSize } = useTheme();
+  const { fontSize, setFontSize, codeTheme, setCodeTheme } = useTheme();
 
   return (
     <div className="space-y-6">
@@ -187,11 +187,15 @@ function EditorTab() {
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Code Theme
         </h3>
-        <select className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-          <option>VS Code Dark (Default)</option>
-          <option>GitHub Light</option>
-          <option>Monokai</option>
-          <option>Dracula</option>
+        <select 
+          className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          value={codeTheme}
+          onChange={(e) => setCodeTheme(e.target.value)}
+        >
+          <option value="vscode-dark">VS Code Dark (Default)</option>
+          <option value="github-light">GitHub Light</option>
+          <option value="monokai">Monokai</option>
+          <option value="dracula">Dracula</option>
         </select>
       </div>
 

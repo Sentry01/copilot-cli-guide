@@ -56,3 +56,121 @@ pre code {
 .dark * {
   scrollbar-color: rgba(75, 85, 99, 0.5) transparent;
 }
+
+/* Code Theme Styles */
+/* VS Code Dark (Default) */
+[data-code-theme="vscode-dark"] pre code {
+  background: #1e1e1e !important;
+  color: #d4d4d4 !important;
+}
+
+[data-code-theme="vscode-dark"] .hljs-keyword,
+[data-code-theme="vscode-dark"] .hljs-selector-tag {
+  color: #569cd6 !important;
+}
+
+[data-code-theme="vscode-dark"] .hljs-string,
+[data-code-theme="vscode-dark"] .hljs-attr {
+  color: #ce9178 !important;
+}
+
+[data-code-theme="vscode-dark"] .hljs-comment {
+  color: #6a9955 !important;
+}
+
+[data-code-theme="vscode-dark"] .hljs-function,
+[data-code-theme="vscode-dark"] .hljs-title {
+  color: #dcdcaa !important;
+}
+
+[data-code-theme="vscode-dark"] .hljs-number {
+  color: #b5cea8 !important;
+}
+
+/* GitHub Light */
+[data-code-theme="github-light"] pre code {
+  background: #ffffff !important;
+  color: #24292e !important;
+  border: 1px solid #e1e4e8 !important;
+}
+
+[data-code-theme="github-light"] .hljs-keyword,
+[data-code-theme="github-light"] .hljs-selector-tag {
+  color: #d73a49 !important;
+}
+
+[data-code-theme="github-light"] .hljs-string,
+[data-code-theme="github-light"] .hljs-attr {
+  color: #032f62 !important;
+}
+
+[data-code-theme="github-light"] .hljs-comment {
+  color: #6a737d !important;
+}
+
+[data-code-theme="github-light"] .hljs-function,
+[data-code-theme="github-light"] .hljs-title {
+  color: #6f42c1 !important;
+}
+
+[data-code-theme="github-light"] .hljs-number {
+  color: #005cc5 !important;
+}
+
+/* Monokai */
+[data-code-theme="monokai"] pre code {
+  background: #272822 !important;
+  color: #f8f8f2 !important;
+}
+
+[data-code-theme="monokai"] .hljs-keyword,
+[data-code-theme="monokai"] .hljs-selector-tag {
+  color: #f92672 !important;
+}
+
+[data-code-theme="monokai"] .hljs-string,
+[data-code-theme="monokai"] .hljs-attr {
+  color: #e6db74 !important;
+}
+
+[data-code-theme="monokai"] .hljs-comment {
+  color: #75715e !important;
+}
+
+[data-code-theme="monokai"] .hljs-function,
+[data-code-theme="monokai"] .hljs-title {
+  color: #a6e22e !important;
+}
+
+[data-code-theme="monokai"] .hljs-number {
+  color: #ae81ff !important;
+}
+
+/* Dracula */
+[data-code-theme="dracula"] pre code {
+  background: #282a36 !important;
+  color: #f8f8f2 !important;
+}
+
+[data-code-theme="dracula"] .hljs-keyword,
+[data-code-theme="dracula"] .hljs-selector-tag {
+  color: #ff79c6 !important;
+}
+
+[data-code-theme="dracula"] .hljs-string,
+[data-code-theme="dracula"] .hljs-attr {
+  color: #f1fa8c !important;
+}
+
+[data-code-theme="dracula"] .hljs-comment {
+  color: #6272a4 !important;
+}
+
+[data-code-theme="dracula"] .hljs-function,
+[data-code-theme="dracula"] .hljs-title {
+  color: #50fa7b !important;
+}
+
+[data-code-theme="dracula"] .hljs-number {
+  color: #bd93f9 !important;
+}
