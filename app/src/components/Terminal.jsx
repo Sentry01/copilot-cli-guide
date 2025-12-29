@@ -156,47 +156,51 @@ export default function Terminal({ scenarioId, onCommand }) {
         isFullscreen ? 'h-screen' : 'h-96'
       }`}>
         {/* Terminal header with controls */}
-        <div className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex items-center justify-between">
+        <div className="bg-gray-800 border-b border-gray-700 px-2 sm:px-3 md:px-4 py-2 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500"></div>
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500"></div>
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
             </div>
-            <span className="ml-3 text-gray-400 text-sm font-mono">Terminal</span>
+            <span className="ml-2 sm:ml-3 text-gray-400 text-xs sm:text-sm font-mono">Terminal</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
               onClick={copyOutput}
-              className="px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
+              className="px-2 py-1.5 text-xs text-gray-400 hover:text-gray-200 transition-colors touch-manipulation"
               title="Copy output"
               aria-label="Copy terminal output to clipboard"
             >
-              📋 Copy
+              <span className="hidden sm:inline">📋 Copy</span>
+              <span className="sm:hidden">📋</span>
             </button>
             <button
               onClick={handleClear}
-              className="px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
+              className="px-2 py-1.5 text-xs text-gray-400 hover:text-gray-200 transition-colors touch-manipulation"
               title="Clear terminal"
               aria-label="Clear terminal output"
             >
-              🗑️ Clear
+              <span className="hidden sm:inline">🗑️ Clear</span>
+              <span className="sm:hidden">🗑️</span>
             </button>
             <button
               onClick={handleReset}
-              className="px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
+              className="px-2 py-1.5 text-xs text-gray-400 hover:text-gray-200 transition-colors touch-manipulation"
               title="Reset terminal"
               aria-label="Reset terminal to initial state"
             >
-              ↻ Reset
+              <span className="hidden sm:inline">↻ Reset</span>
+              <span className="sm:hidden">↻</span>
             </button>
             <button
               onClick={toggleFullscreen}
-              className="px-2 py-1 text-xs text-gray-400 hover:text-gray-200 transition-colors"
+              className="px-2 py-1.5 text-xs text-gray-400 hover:text-gray-200 transition-colors touch-manipulation"
               title="Toggle fullscreen"
               aria-label={isFullscreen ? 'Exit fullscreen mode' : 'Enter fullscreen mode'}
             >
-              {isFullscreen ? '⊡ Exit' : '⛶ Fullscreen'}
+              <span className="hidden sm:inline">{isFullscreen ? '⊡ Exit' : '⛶ Fullscreen'}</span>
+              <span className="sm:hidden">{isFullscreen ? '⊡' : '⛶'}</span>
             </button>
           </div>
         </div>
@@ -204,7 +208,7 @@ export default function Terminal({ scenarioId, onCommand }) {
         {/* Terminal output area */}
         <div 
           ref={outputRef}
-          className="p-4 font-mono text-sm overflow-y-auto"
+          className="p-2 sm:p-3 md:p-4 font-mono text-xs sm:text-sm overflow-y-auto overflow-x-auto touch-pan-y"
           style={{ height: isFullscreen ? 'calc(100vh - 120px)' : '320px' }}
           onClick={() => {
             skipTyping(); // Skip animation on click
@@ -214,8 +218,8 @@ export default function Terminal({ scenarioId, onCommand }) {
           {/* Welcome message */}
           {output.length === 0 && (
             <div className="text-green-400 mb-4">
-              <div>Welcome to GitHub Copilot CLI Interactive Terminal</div>
-              <div className="text-gray-500 mt-1">Type a command and press Enter to execute</div>
+              <div className="text-sm sm:text-base">Welcome to GitHub Copilot CLI Interactive Terminal</div>
+              <div className="text-gray-500 mt-1 text-xs sm:text-sm">Type a command and press Enter to execute</div>
             </div>
           )}
 
@@ -223,11 +227,11 @@ export default function Terminal({ scenarioId, onCommand }) {
           {output.map((line, index) => (
             <div key={index} className="mb-1">
               {line.type === 'command' ? (
-                <div className="text-green-400">
+                <div className="text-green-400 break-words">
                   <span className="text-gray-500">$</span> {line.text}
                 </div>
               ) : (
-                <div className="text-gray-300 whitespace-pre-wrap">
+                <div className="text-gray-300 whitespace-pre-wrap break-words">
                   {index === typingIndex ? typedText : line.text}
                   {index === typingIndex && (
                     <span className="animate-pulse">▋</span>
@@ -246,7 +250,7 @@ export default function Terminal({ scenarioId, onCommand }) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="flex-1 bg-transparent text-green-400 outline-none font-mono caret-green-400"
+              className="flex-1 bg-transparent text-green-400 outline-none font-mono caret-green-400 text-xs sm:text-sm touch-manipulation"
               spellCheck={false}
               autoComplete="off"
               aria-label="Terminal command input"
