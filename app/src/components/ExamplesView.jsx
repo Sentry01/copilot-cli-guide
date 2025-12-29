@@ -83,7 +83,7 @@ function ExamplesView() {
   }
 
   return (
-    <div className="p-8 max-w-7xl">
+    <div className="p-4 md:p-6 lg:p-8 max-w-7xl">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">

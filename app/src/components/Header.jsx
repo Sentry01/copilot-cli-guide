@@ -19,7 +19,7 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
   }, []);
 
   return (
-    <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center px-6">
+    <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center px-4 md:px-4 lg:px-6">
       <div className="flex-1 flex items-center justify-between">
         {/* Mobile hamburger menu */}
         <button
@@ -36,7 +36,7 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
         <SearchBar onNavigate={onLessonSelect} />
         
         {/* User menu */}
-        <div className="ml-6 flex items-center gap-4">
+        <div className="ml-4 md:ml-4 lg:ml-6 flex items-center gap-2 md:gap-3 lg:gap-4">
           {/* Keyboard Shortcuts Button */}
           <button 
             onClick={onShowKeyboardShortcuts}

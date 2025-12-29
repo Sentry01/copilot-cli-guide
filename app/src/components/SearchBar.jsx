@@ -110,7 +110,7 @@ export default function SearchBar({ onNavigate }) {
   };
 
   return (
-    <div ref={searchRef} className="relative flex-1 max-w-2xl">
+    <div ref={searchRef} className="relative flex-1 md:max-w-md lg:max-w-2xl">
       <div className="relative">
         <input
           type="text"
@@ -118,7 +118,7 @@ export default function SearchBar({ onNavigate }) {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => query && results.length > 0 && setIsOpen(true)}
           placeholder="Search lessons, commands..."
-          className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary md:text-sm lg:text-base"
           aria-label="Search lessons, commands, and examples"
           role="searchbox"
           aria-autocomplete="list"

@@ -103,7 +103,7 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
       <aside className={`
         bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 
         transition-all duration-300 flex flex-col
-        ${isCollapsed ? 'w-16' : 'w-64'}
+        ${isCollapsed ? 'w-16' : 'w-64 md:w-56 lg:w-64'}
         
         /* Mobile: fixed overlay that slides in */
         md:relative fixed inset-y-0 left-0 z-50
