@@ -1431,6 +1431,131 @@ app.get('/api/quiz/attempts/:user_id/:lesson_id', (req, res) => {
   );
 });
 
+// Terminal Simulator
+
+// Execute simulated terminal command
+app.post('/api/terminal/execute', (req, res) => {
+  const { command } = req.body;
+  
+  if (!command) {
+    return res.status(400).json({ error: 'command required' });
+  }
+  
+  const cmd = command.trim().toLowerCase();
+  let output = '';
+  let exitCode = 0;
+  
+  // Simulate Copilot CLI commands
+  if (cmd === 'copilot' || cmd === 'copilot help') {
+    output = `GitHub Copilot CLI - Your AI pair programmer in the terminal
+
+Usage: copilot [options]
+
+Options:
+  --version    Show version number
+  --help       Show help
+
+Interactive Mode:
+  copilot      Start an interactive session
+
+Slash Commands:
+  /login       Authenticate with GitHub
+  /logout      Sign out
+  /add-dir     Add a trusted directory
+  /cwd         Change working directory
+  /agent       Work with custom agents
+  /delegate    Delegate work to Copilot on GitHub
+  /mcp         Manage MCP servers
+  /feedback    Send feedback to GitHub
+  /usage       View API usage
+
+Type '?' in interactive mode for more help.`;
+  } else if (cmd === '/help' || cmd === '?') {
+    output = `Available Commands:
+
+Slash Commands:
+  /login       - Authenticate with GitHub
+  /logout      - Sign out  
+  /add-dir     - Add a trusted directory
+  /cwd         - Change working directory
+  /agent       - Work with custom agents
+  /delegate    - Delegate work to Copilot
+  /mcp         - Manage MCP servers
+  /feedback    - Send feedback
+  /usage       - View API usage
+
+Special Syntax:
+  @file        - Reference a file
+  !command     - Run shell command directly
+
+Press Esc to cancel the current operation.`;
+  } else if (cmd.startsWith('/login')) {
+    output = `Authenticating with GitHub...
+
+✓ Successfully authenticated as demo-user
+✓ Copilot subscription: Active
+✓ Ready to assist!`;
+  } else if (cmd.startsWith('/add-dir')) {
+    const path = cmd.replace('/add-dir', '').trim() || '/example/path';
+    output = `✓ Added trusted directory: ${path}
+
+Copilot can now access files in this directory without asking for approval.`;
+  } else if (cmd.startsWith('/cwd')) {
+    const path = cmd.replace('/cwd', '').trim() || '/example/path';
+    output = `✓ Changed working directory to: ${path}
+
+Current directory: ${path}`;
+  } else if (cmd.startsWith('/agent')) {
+    output = `Available Agents:
+
+  - @workspace   Work with your codebase
+  - @terminal    Terminal command expert
+  - @vscode      VS Code extension help
+  - @github      GitHub operations
+
+Use: /agent <name> <your question>`;
+  } else if (cmd.startsWith('/mcp list')) {
+    output = `Installed MCP Servers:
+
+  ✓ filesystem      - File operations
+  ✓ brave-search    - Web search
+  ✓ sqlite          - Database queries
+  ✓ playwright      - Browser automation
+
+Use: /mcp add <server-name> to install more servers.`;
+  } else if (cmd.startsWith('/usage')) {
+    output = `API Usage Statistics:
+
+Requests this month: 1,247 / 5,000
+Code completions:    856
+Chat messages:       391
+
+Current plan: Copilot Pro
+Resets: January 1, 2025`;
+  } else if (cmd === 'clear') {
+    output = '[Terminal cleared]';
+  } else {
+    // Simulate natural language response
+    output = `💡 Copilot suggests:
+
+I understand you want to: "${command}"
+
+Here's what I recommend:
+  1. Verify your current directory
+  2. Check file permissions
+  3. Review relevant documentation
+
+Would you like me to help with any specific step?`;
+  }
+  
+  res.json({
+    command,
+    output,
+    exitCode,
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Helper function to extract snippet with search term context
 function extractSnippet(text, searchTerm) {
   if (!text) return '';
