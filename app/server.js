@@ -1673,6 +1673,68 @@ function extractSnippet(text, searchTerm) {
   return (start > 0 ? '...' : '') + snippet + (end < text.length ? '...' : '');
 }
 
+// Achievements API
+
+// Get all achievements
+app.get('/api/achievements', (req, res) => {
+  db.all(
+    'SELECT id, title, description, criteria, icon FROM achievements ORDER BY id',
+    [],
+    (err, achievements) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json(achievements);
+    }
+  );
+});
+
+// Get user's unlocked achievements
+app.get('/api/achievements/user', (req, res) => {
+  const sessionId = req.headers['x-session-id'] || req.query.session_id;
+  
+  if (!sessionId) {
+    return res.status(400).json({ error: 'Session ID required' });
+  }
+  
+  // Get user ID from session
+  db.get(
+    'SELECT id FROM users WHERE session_id = ?',
+    [sessionId],
+    (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      // Get user's achievements with details
+      db.all(
+        `SELECT 
+          a.id, 
+          a.title, 
+          a.description, 
+          a.criteria,
+          a.icon,
+          ua.unlocked_at 
+        FROM user_achievements ua 
+        JOIN achievements a ON ua.achievement_id = a.id 
+        WHERE ua.user_id = ?
+        ORDER BY ua.unlocked_at DESC`,
+        [user.id],
+        (err, achievements) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json(achievements);
+        }
+      );
+    }
+  );
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`\n🚀 Server running on http://localhost:${PORT}`);
