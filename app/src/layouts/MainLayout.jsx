@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 
 export default function MainLayout({ children, onLessonSelect, onViewChange, currentView, onShowKeyboardShortcuts }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -33,10 +34,13 @@ export default function MainLayout({ children, onLessonSelect, onViewChange, cur
           onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
         />
         
-        {/* Main content */}
-        <main id="main-content" className="flex-1 overflow-y-auto" tabIndex="-1">
-          {children}
-        </main>
+        {/* Main content with footer */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <main id="main-content" className="flex-1 overflow-y-auto" tabIndex="-1">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </div>
     </div>
   );
