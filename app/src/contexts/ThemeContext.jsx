@@ -23,6 +23,11 @@ export function ThemeProvider({ children }) {
     return 'light';
   });
 
+  const [fontSize, setFontSize] = useState(() => {
+    const saved = localStorage.getItem('fontSize');
+    return saved || 'medium';
+  });
+
   useEffect(() => {
     // Save to localStorage
     localStorage.setItem('theme', theme);
@@ -45,6 +50,23 @@ export function ThemeProvider({ children }) {
     }
   }, [theme]);
 
+  // Apply font size to document
+  useEffect(() => {
+    localStorage.setItem('fontSize', fontSize);
+    const root = document.documentElement;
+    
+    // Use CSS custom property for font size
+    const fontSizeValues = {
+      small: '14px',
+      medium: '16px',
+      large: '18px',
+      xlarge: '20px'
+    };
+    
+    root.style.setProperty('--base-font-size', fontSizeValues[fontSize]);
+    document.body.style.fontSize = fontSizeValues[fontSize];
+  }, [fontSize]);
+
   // Listen for system theme changes when in auto mode
   useEffect(() => {
     if (theme !== 'auto') return;
@@ -64,7 +86,7 @@ export function ThemeProvider({ children }) {
   }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, fontSize, setFontSize }}>
       {children}
     </ThemeContext.Provider>
   );

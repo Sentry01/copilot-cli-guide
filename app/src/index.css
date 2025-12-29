@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global font size control */
+:root {
+  --base-font-size: 16px;
+}
+
+/* Scale code blocks with base font size */
+pre code {
+  font-size: var(--base-font-size) !important;
+  line-height: 1.5 !important;
+}

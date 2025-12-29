@@ -163,17 +163,23 @@ function AppearanceTab() {
 }
 
 function EditorTab() {
+  const { fontSize, setFontSize } = useTheme();
+
   return (
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Font Size
         </h3>
-        <select className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-          <option>Small</option>
-          <option selected>Medium (Default)</option>
-          <option>Large</option>
-          <option>Extra Large</option>
+        <select 
+          className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          value={fontSize}
+          onChange={(e) => setFontSize(e.target.value)}
+        >
+          <option value="small">Small</option>
+          <option value="medium">Medium (Default)</option>
+          <option value="large">Large</option>
+          <option value="xlarge">Extra Large</option>
         </select>
       </div>
 
