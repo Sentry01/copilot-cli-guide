@@ -29,7 +29,7 @@ function CodeBlock({ node: _node, inline: _inline, className, children, ...props
 
   if (isInline) {
     return (
-      <code style={{ display: 'inline' }} className="bg-gray-100 dark:bg-gray-800 text-primary px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
+      <code style={{ display: 'inline' }} className="bg-gray-100 dark:bg-gray-800 text-primary dark:text-blue-400 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
         {children}
       </code>
     );
@@ -60,6 +60,7 @@ function CodeBlock({ node: _node, inline: _inline, className, children, ...props
           borderRadius: '0.5rem',
           padding: '1rem',
           paddingTop: language ? '2.5rem' : '1rem',
+          backgroundColor: '#1e1e1e', // Force consistent dark background in both themes
         }}
         {...props}
       >
