@@ -61,7 +61,7 @@ function ExamplesView() {
       case 'beginner': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'intermediate': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
       case 'advanced': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gh-dark-surface dark:text-gray-200';
     }
   };
 
@@ -104,7 +104,7 @@ function ExamplesView() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-600"
+            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gh-dark-border bg-white dark:bg-gh-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-600"
           >
             {categories.map(cat => (
               <option key={cat} value={cat}>
@@ -122,7 +122,7 @@ function ExamplesView() {
           <select
             value={selectedDifficulty}
             onChange={(e) => setSelectedDifficulty(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-600"
+            className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gh-dark-border bg-white dark:bg-gh-dark-surface text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-600"
           >
             <option value="all">All Levels</option>
             <option value="beginner">Beginner</option>
@@ -190,7 +190,7 @@ function ExampleCard({ example, isExpanded, onToggle, getDifficultyColor }) {
 
   return (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5 hover:shadow-lg transition-all cursor-pointer"
+      className="bg-white dark:bg-gh-dark-surface rounded-lg border border-gray-200 dark:border-gh-dark-border p-5 hover:shadow-lg transition-all cursor-pointer"
       onClick={onToggle}
     >
       {/* Header */}

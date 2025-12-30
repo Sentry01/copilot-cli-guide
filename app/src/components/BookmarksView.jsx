@@ -124,7 +124,7 @@ export default function BookmarksView({ onLessonSelect }) {
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">
           Your Bookmarks
         </h1>
-        <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div className="text-center py-12 bg-gray-50 dark:bg-gh-dark-surface rounded-lg">
           <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
           </svg>
@@ -150,7 +150,7 @@ export default function BookmarksView({ onLessonSelect }) {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary"
+            className="px-3 py-2 bg-white dark:bg-gh-dark-surface border border-gray-300 dark:border-gh-dark-border rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary"
           >
             <option value="date">Date Added</option>
             <option value="title">Title</option>
@@ -162,7 +162,7 @@ export default function BookmarksView({ onLessonSelect }) {
         {getSortedBookmarks().map(bookmark => (
           <div
             key={bookmark.id}
-            className="p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary transition-colors"
+            className="p-6 bg-white dark:bg-gh-dark-surface rounded-lg border border-gray-200 dark:border-gh-dark-border hover:border-primary dark:hover:border-primary transition-colors"
           >
             <div 
               onClick={() => onLessonSelect(bookmark.lesson_id)}
@@ -204,14 +204,14 @@ export default function BookmarksView({ onLessonSelect }) {
             </div>
             
             {/* Notes section */}
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gh-dark-border">
               {editingNoteId === bookmark.id ? (
                 <div onClick={(e) => e.stopPropagation()}>
                   <textarea
                     value={noteText}
                     onChange={(e) => setNoteText(e.target.value)}
                     placeholder="Add your notes here..."
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-primary resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gh-dark-border rounded-lg bg-white dark:bg-gh-dark-bg text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-primary resize-none"
                     rows="3"
                   />
                   <div className="flex gap-2 mt-2">
@@ -224,7 +224,7 @@ export default function BookmarksView({ onLessonSelect }) {
                     </button>
                     <button
                       onClick={cancelEdit}
-                      className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                      className="px-4 py-2 bg-gray-200 dark:bg-gh-dark-surface text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                       aria-label="Cancel editing notes"
                     >
                       Cancel

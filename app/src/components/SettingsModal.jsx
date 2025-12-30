@@ -47,14 +47,14 @@ export default function SettingsModal({ isOpen, onClose }) {
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div 
-          className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-3xl w-full"
+          className="relative bg-white dark:bg-gh-dark-surface rounded-lg shadow-xl max-w-3xl w-full"
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
           aria-labelledby="settings-title"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gh-dark-border">
             <h2 id="settings-title" className="text-2xl font-bold text-gray-900 dark:text-white">
               Settings
             </h2>
@@ -70,7 +70,7 @@ export default function SettingsModal({ isOpen, onClose }) {
           </div>
 
           {/* Tabs */}
-          <div className="border-b border-gray-200 dark:border-gray-700">
+          <div className="border-b border-gray-200 dark:border-gh-dark-border">
             <div className="flex px-6">
               {tabs.map(tab => (
                 <button
@@ -147,11 +147,11 @@ function AppearanceTab() {
         </div>
       </div>
 
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+      <div className="border-t border-gray-200 dark:border-gh-dark-border pt-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Color Scheme
         </h3>
-        <select className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+        <select className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gh-dark-border bg-white dark:bg-gh-dark-surface text-gray-900 dark:text-white">
           <option>Blue (Default)</option>
           <option>Purple</option>
           <option>Green</option>
@@ -172,7 +172,7 @@ function EditorTab() {
           Font Size
         </h3>
         <select 
-          className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gh-dark-border bg-white dark:bg-gh-dark-surface text-gray-900 dark:text-white"
           value={fontSize}
           onChange={(e) => setFontSize(e.target.value)}
         >
@@ -183,12 +183,12 @@ function EditorTab() {
         </select>
       </div>
 
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+      <div className="border-t border-gray-200 dark:border-gh-dark-border pt-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Code Theme
         </h3>
         <select 
-          className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gh-dark-border bg-white dark:bg-gh-dark-surface text-gray-900 dark:text-white"
           value={codeTheme}
           onChange={(e) => setCodeTheme(e.target.value)}
         >
@@ -199,7 +199,7 @@ function EditorTab() {
         </select>
       </div>
 
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+      <div className="border-t border-gray-200 dark:border-gh-dark-border pt-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Options
         </h3>
@@ -278,14 +278,14 @@ function DataTab() {
         </button>
       </div>
 
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+      <div className="border-t border-gray-200 dark:border-gh-dark-border pt-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Import Data
         </h3>
         <p className="text-gray-600 dark:text-gray-400 mb-4">
           Restore your data from a previously exported JSON file.
         </p>
-        <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors">
+        <button className="px-4 py-2 border border-gray-300 dark:border-gh-dark-border hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors">
           Import Data
         </button>
       </div>

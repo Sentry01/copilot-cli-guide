@@ -112,10 +112,10 @@ function CommandDetailView({ commandName, onBack, onTryIt }) {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Flags & Options
           </h2>
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-white dark:bg-gh-dark-surface rounded-lg border border-gray-200 dark:border-gh-dark-border overflow-hidden">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-50 dark:bg-gray-900">
+                <tr className="bg-gray-50 dark:bg-gh-dark-bg">
                   <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300">
                     Flag
                   </th>
@@ -153,7 +153,7 @@ function CommandDetailView({ commandName, onBack, onTryIt }) {
             {examples.map((example, idx) => (
               <div
                 key={idx}
-                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
+                className="bg-white dark:bg-gh-dark-surface rounded-lg border border-gray-200 dark:border-gh-dark-border p-4"
               >
                 <p className="text-gray-600 dark:text-gray-300 mb-3">
                   {example.description}
@@ -192,7 +192,7 @@ function CommandDetailView({ commandName, onBack, onTryIt }) {
     {/* Sidebar - Related Commands */}
     {relatedCommands.length > 0 && (
       <aside className="w-80 flex-shrink-0">
-        <div className="sticky top-8 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+        <div className="sticky top-8 bg-white dark:bg-gh-dark-surface rounded-lg border border-gray-200 dark:border-gh-dark-border p-6">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -204,7 +204,7 @@ function CommandDetailView({ commandName, onBack, onTryIt }) {
               <button
                 key={idx}
                 onClick={() => handleRelatedCommandClick(relatedCmd.name)}
-                className="w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
+                className="w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gh-dark-border hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
               >
                 <div className="font-mono text-sm font-semibold text-blue-600 dark:text-blue-400 mb-1 group-hover:underline">
                   {relatedCmd.name}

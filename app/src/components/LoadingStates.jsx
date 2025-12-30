@@ -11,7 +11,7 @@ export function LoadingSpinner({ size = 'md', className = '' }) {
   return (
     <div className={`inline-block ${className}`}>
       <div
-        className={`${sizeClasses[size]} animate-spin rounded-full border-4 border-gray-300 dark:border-gray-600 border-t-primary`}
+        className={`${sizeClasses[size]} animate-spin rounded-full border-4 border-gray-300 dark:border-gh-dark-border border-t-primary`}
         role="status"
         aria-label="Loading"
       >
@@ -24,7 +24,7 @@ export function LoadingSpinner({ size = 'md', className = '' }) {
 export function LoadingSkeleton({ className = '', height = 'h-4', width = 'w-full' }) {
   return (
     <div
-      className={`${height} ${width} bg-gray-200 dark:bg-gray-700 rounded animate-pulse ${className}`}
+      className={`${height} ${width} bg-gray-200 dark:bg-gh-dark-surface rounded animate-pulse ${className}`}
       role="status"
       aria-label="Loading content"
     >
@@ -90,7 +90,7 @@ export function CommandsLoadingSkeleton() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {[...Array(9)].map((_, i) => (
-          <div key={i} className="p-6 border border-gray-200 dark:border-gray-700 rounded-lg">
+          <div key={i} className="p-6 border border-gray-200 dark:border-gh-dark-border rounded-lg">
             <LoadingSkeleton height="h-6" width="w-32" className="mb-3" />
             <LoadingSkeleton height="h-4" width="w-full" className="mb-2" />
             <LoadingSkeleton height="h-4" width="w-4/5" />
@@ -111,7 +111,7 @@ export function ExamplesLoadingSkeleton() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+          <div key={i} className="border border-gray-200 dark:border-gh-dark-border rounded-lg p-6">
             <LoadingSkeleton height="h-6" width="w-48" className="mb-4" />
             <LoadingSkeleton height="h-32" width="w-full" className="mb-4" />
             <div className="flex gap-2">
@@ -131,7 +131,7 @@ export function CardLoadingSkeleton({ count = 3 }) {
       {[...Array(count)].map((_, i) => (
         <div
           key={i}
-          className="border border-gray-200 dark:border-gray-700 rounded-lg p-6"
+          className="border border-gray-200 dark:border-gh-dark-border rounded-lg p-6"
         >
           <LoadingSkeleton height="h-6" width="w-3/4" className="mb-4" />
           <LoadingSkeleton height="h-4" width="w-full" className="mb-2" />

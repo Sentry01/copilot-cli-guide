@@ -12,6 +12,11 @@ export default {
         'primary-dark': '#1D4ED8',
         secondary: '#8B5CF6',
         success: '#10B981',
+        // GitHub-style dark mode colors
+        'gh-dark-bg': '#0D1117',
+        'gh-dark-surface': '#161B22',
+        'gh-dark-text': '#C9D1D9',
+        'gh-dark-border': '#30363D',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

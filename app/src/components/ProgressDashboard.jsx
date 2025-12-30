@@ -88,7 +88,7 @@ export default function ProgressDashboard() {
 
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+        <div className="bg-white dark:bg-gh-dark-surface rounded-lg p-6 shadow-md">
           <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
             Lessons Completed
           </div>
@@ -100,7 +100,7 @@ export default function ProgressDashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+        <div className="bg-white dark:bg-gh-dark-surface rounded-lg p-6 shadow-md">
           <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
             Modules Completed
           </div>
@@ -112,7 +112,7 @@ export default function ProgressDashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+        <div className="bg-white dark:bg-gh-dark-surface rounded-lg p-6 shadow-md">
           <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
             Time Spent
           </div>
@@ -124,7 +124,7 @@ export default function ProgressDashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+        <div className="bg-white dark:bg-gh-dark-surface rounded-lg p-6 shadow-md">
           <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
             Overall Progress
           </div>
@@ -162,7 +162,7 @@ export default function ProgressDashboard() {
       </div>
 
       {/* Module Progress Chart */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md mb-8">
+      <div className="bg-white dark:bg-gh-dark-surface rounded-lg p-6 shadow-md mb-8">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
           Progress by Module
         </h2>
@@ -177,7 +177,7 @@ export default function ProgressDashboard() {
                   {module.completed}/{module.total} ({module.percentage}%)
                 </span>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-gray-200 dark:bg-gh-dark-surface rounded-full h-3 overflow-hidden">
                 <motion.div
                   className="bg-primary h-3 rounded-full"
                   initial={{ width: 0 }}
@@ -191,7 +191,7 @@ export default function ProgressDashboard() {
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md mb-8">
+      <div className="bg-white dark:bg-gh-dark-surface rounded-lg p-6 shadow-md mb-8">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
           Recent Activity
         </h2>
@@ -224,7 +224,7 @@ export default function ProgressDashboard() {
       </div>
 
       {/* Achievements Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+      <div className="bg-white dark:bg-gh-dark-surface rounded-lg p-6 shadow-md">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
           Achievements
         </h2>
@@ -237,7 +237,7 @@ export default function ProgressDashboard() {
                 className={`relative p-4 rounded-lg border-2 transition-all ${
                   isUnlocked
                     ? 'border-primary bg-primary/5 dark:bg-primary/10'
-                    : 'border-gray-300 dark:border-gray-700 opacity-50 grayscale'
+                    : 'border-gray-300 dark:border-gh-dark-border opacity-50 grayscale'
                 }`}
                 title={achievement.description}
               >
@@ -268,7 +268,7 @@ export default function ProgressDashboard() {
             No achievements available yet.
           </div>
         )}
-        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gh-dark-border">
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-600 dark:text-gray-300">
               Progress
@@ -277,7 +277,7 @@ export default function ProgressDashboard() {
               {unlockedAchievements.size} / {achievements.length} unlocked
             </span>
           </div>
-          <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+          <div className="mt-2 w-full bg-gray-200 dark:bg-gh-dark-surface rounded-full h-2 overflow-hidden">
             <motion.div
               className="bg-primary h-2 rounded-full"
               initial={{ width: 0 }}

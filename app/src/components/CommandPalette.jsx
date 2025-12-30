@@ -233,9 +233,9 @@ export default function CommandPalette({ isOpen, onClose, onNavigate, onOpenSett
 
       {/* Modal */}
       <div className="flex min-h-screen items-start justify-center p-4 pt-[10vh]">
-        <div className="relative w-full max-w-2xl bg-white dark:bg-gray-800 rounded-lg shadow-2xl">
+        <div className="relative w-full max-w-2xl bg-white dark:bg-gh-dark-surface rounded-lg shadow-2xl">
           {/* Search Input */}
-          <div className="border-b border-gray-200 dark:border-gray-700 p-4">
+          <div className="border-b border-gray-200 dark:border-gh-dark-border p-4">
             <div className="flex items-center gap-3">
               <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -247,10 +247,10 @@ export default function CommandPalette({ isOpen, onClose, onNavigate, onOpenSett
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search commands, lessons, or actions..."
-                className="flex-1 bg-transparent border-none outline-none text-lg text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+                className="flex-1 bg-transparent border-none outline-none text-lg text-gray-900 dark:text-gh-dark-text placeholder-gray-400 dark:placeholder-gray-500"
                 aria-label="Command palette search"
               />
-              <kbd className="hidden sm:inline-block px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded">
+              <kbd className="hidden sm:inline-block px-2 py-1 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gh-dark-surface rounded">
                 ESC
               </kbd>
             </div>
@@ -286,7 +286,7 @@ export default function CommandPalette({ isOpen, onClose, onNavigate, onOpenSett
                       {getIcon(result)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-gray-900 dark:text-gray-100 truncate">
+                      <div className="font-medium text-gray-900 dark:text-gh-dark-text truncate">
                         {result.name || result.title}
                       </div>
                       {(result.description || result.module_name) && (
@@ -305,21 +305,21 @@ export default function CommandPalette({ isOpen, onClose, onNavigate, onOpenSett
           </div>
 
           {/* Footer */}
-          <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-3 bg-gray-50 dark:bg-gray-900 rounded-b-lg">
+          <div className="border-t border-gray-200 dark:border-gh-dark-border px-4 py-3 bg-gray-50 dark:bg-gh-dark-bg rounded-b-lg">
             <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1">
-                  <kbd className="px-2 py-1 bg-white dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">↑</kbd>
-                  <kbd className="px-2 py-1 bg-white dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">↓</kbd>
+                  <kbd className="px-2 py-1 bg-white dark:bg-gh-dark-surface rounded border border-gray-300 dark:border-gh-dark-border">↑</kbd>
+                  <kbd className="px-2 py-1 bg-white dark:bg-gh-dark-surface rounded border border-gray-300 dark:border-gh-dark-border">↓</kbd>
                   <span>Navigate</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <kbd className="px-2 py-1 bg-white dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">↵</kbd>
+                  <kbd className="px-2 py-1 bg-white dark:bg-gh-dark-surface rounded border border-gray-300 dark:border-gh-dark-border">↵</kbd>
                   <span>Select</span>
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <kbd className="px-2 py-1 bg-white dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600">ESC</kbd>
+                <kbd className="px-2 py-1 bg-white dark:bg-gh-dark-surface rounded border border-gray-300 dark:border-gh-dark-border">ESC</kbd>
                 <span>Close</span>
               </div>
             </div>

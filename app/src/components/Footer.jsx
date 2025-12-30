@@ -4,7 +4,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
+    <footer className="bg-gray-50 dark:bg-gh-dark-surface border-t border-gray-200 dark:border-gh-dark-border mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* About Section */}
@@ -154,7 +154,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar with copyright */}
-        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-center">
+        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gh-dark-border flex flex-col sm:flex-row justify-between items-center">
           <div className="text-sm text-gray-500 dark:text-gray-400 mb-4 sm:mb-0">
             <p>
               © {currentYear} GitHub Copilot CLI Guide. Built with React + Vite.

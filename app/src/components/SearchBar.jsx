@@ -118,7 +118,7 @@ export default function SearchBar({ onNavigate }) {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => query && results.length > 0 && setIsOpen(true)}
           placeholder="Search lessons, commands..."
-          className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary md:text-sm lg:text-base"
+          className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 dark:border-gh-dark-border bg-white dark:bg-gh-dark-surface text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary md:text-sm lg:text-base"
           aria-label="Search lessons, commands, and examples"
           role="searchbox"
           aria-autocomplete="list"
@@ -144,7 +144,7 @@ export default function SearchBar({ onNavigate }) {
       {isOpen && results.length > 0 && (
         <div 
           id="search-results"
-          className="absolute z-50 w-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-96 overflow-y-auto"
+          className="absolute z-50 w-full mt-2 bg-white dark:bg-gh-dark-surface rounded-lg shadow-xl border border-gray-200 dark:border-gh-dark-border max-h-96 overflow-y-auto"
           role="listbox"
         >
           <div className="p-2">
@@ -164,7 +164,7 @@ export default function SearchBar({ onNavigate }) {
                     <span className="font-semibold text-gray-900 dark:text-white">
                       {highlightMatch(result.title || result.name, query)}
                     </span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gh-dark-surface text-gray-600 dark:text-gray-400">
                       {getTypeLabel(result.type)}
                     </span>
                   </div>

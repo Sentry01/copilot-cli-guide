@@ -101,7 +101,7 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
       
       {/* Sidebar */}
       <aside className={`
-        bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 
+        bg-gray-50 dark:bg-gh-dark-bg border-r border-gray-200 dark:border-gh-dark-border 
         transition-all duration-300 flex flex-col
         ${isCollapsed ? 'w-16' : 'w-64 md:w-56 lg:w-64'}
         
@@ -110,7 +110,7 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         {/* Logo and toggle */}
-        <div className="h-16 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4">
+        <div className="h-16 border-b border-gray-200 dark:border-gh-dark-border flex items-center justify-between px-4">
           {!isCollapsed && (
             <div className="font-bold text-lg text-gray-900 dark:text-white">
               Copilot CLI
@@ -252,7 +252,7 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
 
       {/* Quick links */}
       {!isCollapsed && (
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-4 border-t border-gray-200 dark:border-gh-dark-border">
           <div className="space-y-2">
             <a 
               href="#" 

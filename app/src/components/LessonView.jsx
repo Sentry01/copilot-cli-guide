@@ -29,7 +29,7 @@ function CodeBlock({ node: _node, inline: _inline, className, children, ...props
 
   if (isInline) {
     return (
-      <code style={{ display: 'inline' }} className="bg-gray-100 dark:bg-gray-800 text-primary dark:text-blue-400 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
+      <code style={{ display: 'inline' }} className="bg-gray-100 dark:bg-gh-dark-surface text-primary dark:text-blue-400 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
         {children}
       </code>
     );
@@ -387,7 +387,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
       </div>
 
       {/* Lesson footer with navigation */}
-      <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gh-dark-border">
         <div className="flex items-center justify-between">
           <button 
             onClick={() => prevLesson && onNavigateToLesson && onNavigateToLesson(prevLesson.id)}

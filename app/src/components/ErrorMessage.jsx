@@ -9,7 +9,7 @@ export default function ErrorMessage({
 }) {
   return (
     <div className="flex items-center justify-center min-h-[400px] px-4">
-      <div className="max-w-md w-full bg-white dark:bg-gray-800 border border-red-200 dark:border-red-800 rounded-lg shadow-lg p-6">
+      <div className="max-w-md w-full bg-white dark:bg-gh-dark-surface border border-red-200 dark:border-red-800 rounded-lg shadow-lg p-6">
         {/* Error Icon */}
         <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900">
           <svg 
@@ -39,7 +39,7 @@ export default function ErrorMessage({
 
         {/* Details (if provided) */}
         {details && (
-          <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
+          <div className="mt-3 p-3 bg-gray-50 dark:bg-gh-dark-bg rounded border border-gray-200 dark:border-gh-dark-border">
             <p className="text-xs font-mono text-gray-600 dark:text-gray-400">
               {details}
             </p>
@@ -58,7 +58,7 @@ export default function ErrorMessage({
           )}
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium"
+            className="px-4 py-2 bg-gray-200 dark:bg-gh-dark-surface text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium"
           >
             Reload Page
           </button>

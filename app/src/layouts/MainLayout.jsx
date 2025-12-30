@@ -7,7 +7,7 @@ export default function MainLayout({ children, onLessonSelect, onViewChange, cur
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col">
+    <div className="min-h-screen bg-white dark:bg-gh-dark-bg flex flex-col">
       {/* Skip to main content link for keyboard navigation */}
       <a 
         href="#main-content" 

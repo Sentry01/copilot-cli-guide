@@ -95,9 +95,9 @@ export default function Quiz({ lessonId, userId }) {
     return (
       <div className="bg-surface-light dark:bg-surface-dark rounded-lg p-6">
         <div className="animate-pulse">
-          <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
-          <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full mb-2"></div>
-          <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full mb-2"></div>
+          <div className="h-6 bg-gray-300 dark:bg-gh-dark-surface rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-gray-300 dark:bg-gh-dark-surface rounded w-full mb-2"></div>
+          <div className="h-4 bg-gray-300 dark:bg-gh-dark-surface rounded w-full mb-2"></div>
         </div>
       </div>
     );
@@ -165,7 +165,7 @@ export default function Quiz({ lessonId, userId }) {
           <span>Question {currentQuestionIndex + 1} of {questions.length}</span>
           <span>{score.correct} / {score.total} correct</span>
         </div>
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+        <div className="w-full bg-gray-200 dark:bg-gh-dark-surface rounded-full h-2">
           <div 
             className="bg-primary h-2 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
@@ -193,13 +193,13 @@ export default function Quiz({ lessonId, userId }) {
             } else if (isWrong) {
               buttonClass += 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-100';
             } else {
-              buttonClass += 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-text-light dark:text-text-dark opacity-50';
+              buttonClass += 'border-gray-300 dark:border-gh-dark-border bg-white dark:bg-gh-dark-surface text-text-light dark:text-text-dark opacity-50';
             }
           } else {
             if (isSelected) {
               buttonClass += 'border-primary bg-blue-50 dark:bg-blue-900/20 text-text-light dark:text-text-dark';
             } else {
-              buttonClass += 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-text-light dark:text-text-dark hover:border-primary hover:bg-blue-50 dark:hover:bg-blue-900/10';
+              buttonClass += 'border-gray-300 dark:border-gh-dark-border bg-white dark:bg-gh-dark-surface text-text-light dark:text-text-dark hover:border-primary hover:bg-blue-50 dark:hover:bg-blue-900/10';
             }
           }
 

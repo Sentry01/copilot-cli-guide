@@ -25,7 +25,7 @@ export default function NotFound() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gh-dark-bg text-gray-900 dark:text-gh-dark-text">
       <div className="text-center px-6 max-w-2xl">
         {/* 404 Icon */}
         <div className="mb-8">
@@ -70,14 +70,14 @@ export default function NotFound() {
 
           <button
             onClick={() => navigate(-1)}
-            className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+            className="px-6 py-3 border-2 border-gray-300 dark:border-gh-dark-border text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
           >
             Go Back
           </button>
         </div>
 
         {/* Helpful Links */}
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gh-dark-border">
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
             Here are some helpful links:
           </p>

@@ -19,7 +19,7 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
   }, []);
 
   return (
-    <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center px-4 md:px-4 lg:px-6">
+    <header className="bg-white dark:bg-gh-dark-surface border-b border-gray-200 dark:border-gh-dark-border h-16 flex items-center px-4 md:px-4 lg:px-6">
       <div className="flex-1 flex items-center justify-between">
         {/* Mobile hamburger menu */}
         <button
@@ -72,9 +72,9 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
             </button>
             
             {isUserMenuOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50">
+              <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white dark:bg-gh-dark-surface ring-1 ring-black ring-opacity-5 z-50">
                 <div className="py-1">
-                  <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                  <div className="px-4 py-3 border-b border-gray-200 dark:border-gh-dark-border">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">User</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">user@example.com</p>
                   </div>
@@ -127,7 +127,7 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
                     Export Data
                   </button>
                   
-                  <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                  <div className="border-t border-gray-200 dark:border-gh-dark-border my-1"></div>
                   
                   <button className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

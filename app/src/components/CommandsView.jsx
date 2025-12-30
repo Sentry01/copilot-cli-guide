@@ -122,7 +122,7 @@ function CommandsView({ onNavigateToTerminal }) {
             placeholder="Search commands..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-3 pr-10 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="w-full px-4 py-3 pr-10 rounded-lg border border-gray-300 dark:border-gh-dark-border bg-white dark:bg-gh-dark-surface text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
           />
           <svg
             className="absolute right-3 top-3.5 w-5 h-5 text-gray-400"
@@ -154,7 +154,7 @@ function CommandsView({ onNavigateToTerminal }) {
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 selectedCategory === category
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  : 'bg-gray-100 dark:bg-gh-dark-surface text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
               {category === 'all' ? 'All Commands' : category}
@@ -217,7 +217,7 @@ function CommandCard({ command, onViewDetail }) {
 
   return (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-shadow cursor-pointer"
+      className="bg-white dark:bg-gh-dark-surface rounded-lg border border-gray-200 dark:border-gh-dark-border p-6 hover:shadow-lg transition-shadow cursor-pointer"
       onClick={onViewDetail}
     >
       {/* Command Name */}
@@ -262,7 +262,7 @@ function CommandCard({ command, onViewDetail }) {
           {showExamples && (
             <div className="mt-3 space-y-3">
               {examples.map((example, idx) => (
-                <div key={idx} className="bg-gray-50 dark:bg-gray-900 rounded-md p-3">
+                <div key={idx} className="bg-gray-50 dark:bg-gh-dark-bg rounded-md p-3">
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                     {example.description}
                   </p>
