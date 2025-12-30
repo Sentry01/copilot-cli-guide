@@ -20,7 +20,7 @@ const NotFound = lazy(() => import('./components/NotFound'))
 function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [currentLessonId, setCurrentLessonId] = useState(3);
+  const [currentLessonId, setCurrentLessonId] = useState(1); // Default to first lesson: "What is Copilot CLI?"
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
 
