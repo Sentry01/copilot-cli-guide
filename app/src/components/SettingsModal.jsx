@@ -40,14 +40,14 @@ export default function SettingsModal({ isOpen, onClose }) {
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-40"
         onClick={onClose}
       ></div>
 
       {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-4">
+      <div className="flex min-h-full items-center justify-center p-4 z-50">
         <div 
-          className="relative bg-white dark:bg-gh-dark-surface rounded-lg shadow-xl max-w-3xl w-full"
+          className="relative glass dark:glass-dark rounded-lg shadow-glass dark:shadow-glass-dark max-w-3xl w-full z-50"
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
