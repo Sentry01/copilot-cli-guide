@@ -159,15 +159,11 @@ export default function Quiz({ lessonId, userId }) {
     );
   }
 
-  // Debug logging
-  console.log('Quiz render:', { questionsLength: questions.length, currentQuestionIndex, isLoading });
-  
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   // Guard against undefined currentQuestion
   if (!currentQuestion || !currentQuestion.options) {
-    console.log('No current question or options, showing placeholder');
     return (
       <div className="bg-surface-light dark:bg-surface-dark rounded-lg p-6 text-center">
         <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
