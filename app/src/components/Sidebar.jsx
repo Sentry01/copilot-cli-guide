@@ -151,7 +151,112 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
           </button>
         </div>
 
-      {/* Navigation */}
+      {/* Quick links - moved to top for visibility */}
+      <div className="p-4 border-b border-gray-200 dark:border-gh-dark-border">
+        {!isCollapsed ? (
+          <div className="space-y-1">
+            <a 
+              href="#" 
+              onClick={handleHomeClick}
+              className="block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
+            >
+              🏠 Home
+            </a>
+            <a 
+              href="#" 
+              onClick={handleCommandsClick}
+              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
+                currentView === 'commands' 
+                  ? 'bg-primary text-white' 
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              📚 Commands
+            </a>
+            <a 
+              href="#" 
+              onClick={handleExamplesClick}
+              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
+                currentView === 'examples' 
+                  ? 'bg-primary text-white' 
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              💡 Examples
+            </a>
+            <a 
+              href="#" 
+              onClick={handleBookmarksClick}
+              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
+                currentView === 'bookmarks' 
+                  ? 'bg-primary text-white' 
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              🔖 Bookmarks
+            </a>
+            <a 
+              href="#" 
+              onClick={handleProgressClick}
+              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
+                currentView === 'progress' 
+                  ? 'bg-primary text-white' 
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              📊 Progress
+            </a>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center space-y-2">
+            <button 
+              onClick={handleHomeClick}
+              className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg"
+              title="Home"
+            >
+              🏠
+            </button>
+            <button 
+              onClick={handleCommandsClick}
+              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
+                currentView === 'commands' ? 'bg-primary/10' : ''
+              }`}
+              title="Commands"
+            >
+              📚
+            </button>
+            <button 
+              onClick={handleExamplesClick}
+              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
+                currentView === 'examples' ? 'bg-primary/10' : ''
+              }`}
+              title="Examples"
+            >
+              💡
+            </button>
+            <button 
+              onClick={handleBookmarksClick}
+              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
+                currentView === 'bookmarks' ? 'bg-primary/10' : ''
+              }`}
+              title="Bookmarks"
+            >
+              🔖
+            </button>
+            <button 
+              onClick={handleProgressClick}
+              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
+                currentView === 'progress' ? 'bg-primary/10' : ''
+              }`}
+              title="Progress"
+            >
+              📊
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Course Modules Navigation */}
       <nav className="flex-1 overflow-y-auto p-4">
         {!isCollapsed ? (
           <div className="space-y-2">
@@ -259,111 +364,6 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
           </div>
         )}
       </nav>
-
-      {/* Quick links */}
-      <div className="p-4 border-t border-gray-200 dark:border-gh-dark-border">
-        {!isCollapsed ? (
-          <div className="space-y-2">
-            <a 
-              href="#" 
-              onClick={handleHomeClick}
-              className="block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
-            >
-              🏠 Home
-            </a>
-            <a 
-              href="#" 
-              onClick={handleCommandsClick}
-              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
-                currentView === 'commands' 
-                  ? 'bg-primary text-white' 
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              📚 Commands
-            </a>
-            <a 
-              href="#" 
-              onClick={handleExamplesClick}
-              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
-                currentView === 'examples' 
-                  ? 'bg-primary text-white' 
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              💡 Examples
-            </a>
-            <a 
-              href="#" 
-              onClick={handleBookmarksClick}
-              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
-                currentView === 'bookmarks' 
-                  ? 'bg-primary text-white' 
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              🔖 Bookmarks
-            </a>
-            <a 
-              href="#" 
-              onClick={handleProgressClick}
-              className={`block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg ${
-                currentView === 'progress' 
-                  ? 'bg-primary text-white' 
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              📊 Progress
-            </a>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center space-y-4">
-            <button 
-              onClick={handleHomeClick}
-              className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg"
-              title="Home"
-            >
-              🏠
-            </button>
-            <button 
-              onClick={handleCommandsClick}
-              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
-                currentView === 'commands' ? 'bg-primary/10' : ''
-              }`}
-              title="Commands"
-            >
-              📚
-            </button>
-            <button 
-              onClick={handleExamplesClick}
-              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
-                currentView === 'examples' ? 'bg-primary/10' : ''
-              }`}
-              title="Examples"
-            >
-              💡
-            </button>
-            <button 
-              onClick={handleBookmarksClick}
-              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
-                currentView === 'bookmarks' ? 'bg-primary/10' : ''
-              }`}
-              title="Bookmarks"
-            >
-              🔖
-            </button>
-            <button 
-              onClick={handleProgressClick}
-              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
-                currentView === 'progress' ? 'bg-primary/10' : ''
-              }`}
-              title="Progress"
-            >
-              📊
-            </button>
-          </div>
-        )}
-      </div>
     </aside>
     </>
   );

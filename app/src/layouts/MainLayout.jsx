@@ -32,7 +32,6 @@ export default function MainLayout({ children, onLessonSelect, onViewChange, cur
         onLessonSelect={onLessonSelect}
         onShowKeyboardShortcuts={onShowKeyboardShortcuts}
         onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        onViewChange={onViewChange}
       />
       
       {/* Main content area */}
