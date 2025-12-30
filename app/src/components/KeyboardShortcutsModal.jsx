@@ -25,7 +25,7 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }) {
       category: 'Navigation',
       items: [
         { keys: ['Cmd', 'K'], description: 'Open command palette' },
-        { keys: ['/'], description: 'Focus search bar' },
+        { keys: ['\\'], description: 'Focus search bar' },
         { keys: ['Esc'], description: 'Close modals / Clear search' },
         { keys: ['?'], description: 'Show keyboard shortcuts' },
         { keys: ['g', 'h'], description: 'Go to home' },
