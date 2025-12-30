@@ -11,7 +11,7 @@ function CommandDetailView({ commandName, onBack, onTryIt }) {
   const fetchCommandDetail = async () => {
     try {
       const encodedName = encodeURIComponent(commandName);
-      const response = await fetch(`http://localhost:3000/api/commands/${encodedName}`);
+      const response = await fetch(`/api/commands?name=${encodedName}`);
       const data = await response.json();
       setCommand(data);
       setLoading(false);

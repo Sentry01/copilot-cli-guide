@@ -19,10 +19,10 @@ export default function ProgressDashboard() {
   useEffect(() => {
     // Fetch all modules, lessons, and achievements
     Promise.all([
-      fetch('http://localhost:3000/api/modules').then(res => res.json()),
-      fetch('http://localhost:3000/api/lessons').then(res => res.json()),
-      fetch('http://localhost:3000/api/achievements').then(res => res.json()),
-      fetch('http://localhost:3000/api/achievements/user', {
+      fetch('/api/modules').then(res => res.json()),
+      fetch('/api/lessons').then(res => res.json()),
+      fetch('/api/achievements').then(res => res.json()),
+      fetch('/api/achievements/user', {
         headers: { 'x-session-id': sessionId }
       }).then(res => res.json()),
     ]).then(([modulesData, lessonsData, achievementsData, unlockedData]) => {

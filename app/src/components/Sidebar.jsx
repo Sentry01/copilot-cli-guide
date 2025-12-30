@@ -50,13 +50,13 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
 
   useEffect(() => {
     // Fetch modules
-    fetch('http://localhost:3000/api/modules')
+    fetch('/api/modules')
       .then(res => res.json())
       .then(data => {
         setModules(data);
         // Fetch lessons for each module
         data.forEach(module => {
-          fetch(`http://localhost:3000/api/lessons?module_id=${module.id}`)
+          fetch(`/api/lessons?module_id=${module.id}`)
             .then(res => res.json())
             .then(lessonData => {
               setLessons(prev => ({ ...prev, [module.id]: lessonData }));

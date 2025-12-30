@@ -23,7 +23,7 @@ function CommandsView({ onNavigateToTerminal }) {
     
     try {
       const [response] = await Promise.all([
-        fetch('http://localhost:3000/api/commands'),
+        fetch('/api/commands'),
         delay(LOADING_DELAY)
       ]);
 

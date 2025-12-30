@@ -18,7 +18,7 @@ export default function Quiz({ lessonId, userId }) {
   const fetchQuizQuestions = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`http://localhost:3000/api/lessons/${lessonId}/quiz`);
+      const response = await fetch(`/api/lessons?lesson_id=${lessonId}&quiz=true`);
       if (response.ok) {
         const data = await response.json();
         setQuestions(data);
@@ -45,7 +45,7 @@ export default function Quiz({ lessonId, userId }) {
     const currentQuestion = questions[currentQuestionIndex];
 
     try {
-      const response = await fetch('http://localhost:3000/api/quiz/submit', {
+      const response = await fetch('/api/quiz', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

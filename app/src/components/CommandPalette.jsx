@@ -65,7 +65,7 @@ export default function CommandPalette({ isOpen, onClose, onNavigate, onOpenSett
 
     setLoading(true);
     debounceTimer.current = setTimeout(() => {
-      fetch(`http://localhost:3000/api/search?q=${encodeURIComponent(query)}`)
+      fetch(`/api/search?q=${encodeURIComponent(query)}`)
         .then(res => res.json())
         .then(data => {
           const searchResults = data.results || [];

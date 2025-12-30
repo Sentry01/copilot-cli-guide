@@ -22,7 +22,7 @@ function ExamplesView() {
     
     try {
       const [response] = await Promise.all([
-        fetch('http://localhost:3000/api/examples'),
+        fetch('/api/examples'),
         delay(LOADING_DELAY)
       ]);
 

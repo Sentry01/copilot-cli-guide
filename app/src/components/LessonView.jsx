@@ -93,7 +93,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
     
     try {
       const [response] = await Promise.all([
-        fetch(`http://localhost:3000/api/lessons/${lessonId}`),
+        fetch(`/api/lessons?lesson_id=${lessonId}`),
         delay(LOADING_DELAY)
       ]);
 
@@ -128,7 +128,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
 
   // Fetch all lessons to determine next/previous
   useEffect(() => {
-    fetch('http://localhost:3000/api/lessons')
+    fetch('/api/lessons')
       .then(res => res.json())
       .then(data => {
         // Sort by module_id then order_index
@@ -160,7 +160,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
   useEffect(() => {
     if (!lessonId || !sessionId) return;
 
-    fetch(`http://localhost:3000/api/bookmarks/${sessionId}`)
+    fetch(`/api/bookmarks?session_id=${sessionId}`)
       .then(res => res.json())
       .then(data => {
         const bookmarked = data.bookmarks?.some(b => b.lesson_id === parseInt(lessonId));
@@ -177,13 +177,13 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
     try {
       if (isBookmarked) {
         // Remove bookmark
-        await fetch(`http://localhost:3000/api/bookmarks/${sessionId}/lesson/${lessonId}`, {
+        await fetch(`/api/bookmarks?session_id=${sessionId}&lesson_id=${lessonId}`, {
           method: 'DELETE',
         });
         setIsBookmarked(false);
       } else {
         // Add bookmark
-        await fetch(`http://localhost:3000/api/bookmarks/${sessionId}/lesson/${lessonId}`, {
+        await fetch(`/api/bookmarks?session_id=${sessionId}&lesson_id=${lessonId}`, {
           method: 'POST',
         });
         setIsBookmarked(true);

@@ -19,7 +19,7 @@ export function UserProvider({ children }) {
         setUser(userData);
         
         // Fetch user's progress
-        const progressResponse = await fetch(`http://localhost:3000/api/progress/${sid}`);
+        const progressResponse = await fetch(`/api/progress?session_id=${sid}`);
         if (progressResponse.ok) {
           const progress = await progressResponse.json();
           const lessonIds = progress.map(p => p.lesson_id);
@@ -40,7 +40,7 @@ export function UserProvider({ children }) {
     
     try {
       const response = await fetch(
-        `http://localhost:3000/api/progress/${sessionId}/lesson/${lessonId}`,
+        `/api/progress?session_id=${sessionId}&lesson_id=${lessonId}`,
         { method: 'POST' }
       );
       
@@ -50,7 +50,7 @@ export function UserProvider({ children }) {
         // Check for newly unlocked achievements
         try {
           const achievementResponse = await fetch(
-            'http://localhost:3000/api/achievements/check',
+            '/api/achievements?action=check',
             {
               method: 'POST',
               headers: {
@@ -89,7 +89,7 @@ export function UserProvider({ children }) {
     
     try {
       const response = await fetch(
-        `http://localhost:3000/api/progress/${sessionId}/lesson/${lessonId}`,
+        `/api/progress?session_id=${sessionId}&lesson_id=${lessonId}`,
         { method: 'DELETE' }
       );
       

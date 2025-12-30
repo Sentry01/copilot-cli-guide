@@ -19,7 +19,7 @@ export default function BookmarksView({ onLessonSelect }) {
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:3000/api/bookmarks/${sessionId}`);
+      const response = await fetch(`/api/bookmarks?session_id=${sessionId}`);
       
       if (!response.ok) {
         throw new Error('FETCH_ERROR');
@@ -46,7 +46,7 @@ export default function BookmarksView({ onLessonSelect }) {
 
   const handleUpdateNotes = async (bookmarkId, notes) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/bookmarks/${bookmarkId}/notes`, {
+      const response = await fetch(`/api/bookmarks?id=${bookmarkId}&action=notes`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notes })
