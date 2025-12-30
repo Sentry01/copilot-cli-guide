@@ -1036,7 +1036,59 @@ app.get('/api/examples', (req, res) => {
 
 // User/Session Management
 
-// Get or create user session
+// Get or create user session (both /api/user and /api/user/session for compatibility)
+app.post('/api/user', (req, res) => {
+  const { session_id } = req.body;
+  
+  if (!session_id) {
+    return res.status(400).json({ error: 'session_id required' });
+  }
+  
+  // Check if user exists
+  db.get(
+    'SELECT * FROM users WHERE session_id = ?',
+    [session_id],
+    (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      if (user) {
+        // User exists, return it with parsed preferences
+        return res.json({
+          ...user,
+          preferences: JSON.parse(user.preferences || '{}')
+        });
+      }
+      
+      // Create new user with default preferences
+      const defaultPreferences = {
+        theme: 'light',
+        fontSize: 'medium',
+        codeTheme: 'vs-dark'
+      };
+      
+      db.run(
+        'INSERT INTO users (session_id, preferences) VALUES (?, ?)',
+        [session_id, JSON.stringify(defaultPreferences)],
+        function(err) {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          
+          // Return newly created user
+          res.json({
+            id: this.lastID,
+            session_id,
+            preferences: defaultPreferences,
+            created_at: new Date().toISOString()
+          });
+        }
+      );
+    }
+  );
+});
+
 app.post('/api/user/session', (req, res) => {
   const { session_id } = req.body;
   
@@ -1374,6 +1426,41 @@ app.delete('/api/progress/:session_id/lesson/:lesson_id', (req, res) => {
 });
 
 // Get user bookmarks
+// Get bookmarks with query parameter (for frontend compatibility)
+app.get('/api/bookmarks', (req, res) => {
+  const sessionId = req.query.session_id;
+  
+  if (!sessionId) {
+    return res.status(400).json({ error: 'session_id query parameter required' });
+  }
+  
+  db.get(
+    'SELECT id FROM users WHERE session_id = ?',
+    [sessionId],
+    (err, user) => {
+      if (err || !user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      
+      db.all(
+        `SELECT b.*, l.title, l.duration, l.difficulty, m.title as module_name, b.resource_id as lesson_id
+         FROM bookmarks b
+         JOIN lessons l ON b.resource_id = l.id AND b.resource_type = 'lesson'
+         JOIN modules m ON l.module_id = m.id
+         WHERE b.user_id = ?
+         ORDER BY b.created_at DESC`,
+        [user.id],
+        (err, bookmarks) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json({ bookmarks });
+        }
+      );
+    }
+  );
+});
+
 app.get('/api/bookmarks/:session_id', (req, res) => {
   db.get(
     'SELECT id FROM users WHERE session_id = ?',

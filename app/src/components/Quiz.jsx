@@ -18,11 +18,16 @@ export default function Quiz({ lessonId, userId }) {
   const fetchQuizQuestions = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/lessons?lesson_id=${lessonId}&quiz=true`);
+      const response = await fetch(`/api/lessons/${lessonId}/quiz`);
       if (response.ok) {
         const data = await response.json();
-        setQuestions(data);
-        if (data.length === 0) {
+        // Parse options if they're stored as JSON string
+        const parsedData = data.map(q => ({
+          ...q,
+          options: typeof q.options === 'string' ? JSON.parse(q.options) : q.options
+        }));
+        setQuestions(parsedData);
+        if (parsedData.length === 0) {
           setQuizCompleted(true);
         }
       }
@@ -45,7 +50,7 @@ export default function Quiz({ lessonId, userId }) {
     const currentQuestion = questions[currentQuestionIndex];
 
     try {
-      const response = await fetch('/api/quiz', {
+      const response = await fetch('/api/quiz/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -154,8 +159,22 @@ export default function Quiz({ lessonId, userId }) {
     );
   }
 
+  // Debug logging
+  console.log('Quiz render:', { questionsLength: questions.length, currentQuestionIndex, isLoading });
+  
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+  // Guard against undefined currentQuestion
+  if (!currentQuestion || !currentQuestion.options) {
+    console.log('No current question or options, showing placeholder');
+    return (
+      <div className="bg-surface-light dark:bg-surface-dark rounded-lg p-6 text-center">
+        <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+        <p className="text-text-light dark:text-text-dark">No quiz available for this lesson yet.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-surface-light dark:bg-surface-dark rounded-lg p-6">
