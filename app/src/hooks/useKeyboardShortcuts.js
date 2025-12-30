@@ -6,8 +6,8 @@ export default function useKeyboardShortcuts(handlers) {
     if (event.target.tagName === 'INPUT' || 
         event.target.tagName === 'TEXTAREA' ||
         event.target.isContentEditable) {
-      // Allow / to still work for search focus
-      if (event.key !== '/') {
+      // Allow \ to still work for search focus
+      if (event.key !== '\\') {
         return;
       }
     }
@@ -51,7 +51,7 @@ export default function useKeyboardShortcuts(handlers) {
           event.preventDefault();
           handlers.onShowKeyboardShortcuts?.();
           break;
-        case '/':
+        case '\\':
           event.preventDefault();
           handlers.onFocusSearch?.();
           break;
