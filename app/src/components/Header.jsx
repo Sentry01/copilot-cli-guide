@@ -19,12 +19,12 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
   }, []);
 
   return (
-    <header className="bg-white dark:bg-gh-dark-surface border-b border-gray-200 dark:border-gh-dark-border h-16 flex items-center px-4 md:px-4 lg:px-6">
+    <header className="glass dark:glass-dark border-b border-gray-200/50 dark:border-gh-dark-border/50 shadow-sm h-16 flex items-center px-4 md:px-4 lg:px-6 sticky top-0 z-40">
       <div className="flex-1 flex items-center justify-between">
         {/* Mobile hamburger menu */}
         <button
           onClick={onToggleMobileMenu}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 md:hidden mr-4"
+          className="p-2 rounded-lg hover:bg-white/60 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 md:hidden mr-4 transition-all duration-200"
           aria-label="Toggle mobile menu"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
           {/* Keyboard Shortcuts Button */}
           <button 
             onClick={onShowKeyboardShortcuts}
-            className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors duration-200"
             title="Keyboard Shortcuts (Press ?)"
             aria-label="Show keyboard shortcuts"
           >
@@ -51,7 +51,7 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
 
           <button 
             onClick={() => setIsSettingsOpen(true)}
-            className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors duration-200"
             aria-label="Open settings"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -63,7 +63,7 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-              className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-semibold hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
               aria-label="User menu"
               aria-expanded={isUserMenuOpen}
               aria-haspopup="true"
@@ -72,11 +72,11 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
             </button>
             
             {isUserMenuOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white dark:bg-gh-dark-surface ring-1 ring-black ring-opacity-5 z-50">
+              <div className="absolute right-0 mt-2 w-56 rounded-xl glass dark:glass-dark shadow-glass dark:shadow-glass-dark ring-1 ring-black/5 dark:ring-white/10 z-50 overflow-hidden">
                 <div className="py-1">
-                  <div className="px-4 py-3 border-b border-gray-200 dark:border-gh-dark-border">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">User</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">user@example.com</p>
+                  <div className="px-4 py-3 border-b border-gray-200/50 dark:border-gh-dark-border/50">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gh-dark-text">User</p>
+                    <p className="text-xs text-gray-500 dark:text-gh-dark-text-secondary">user@example.com</p>
                   </div>
                   
                   <button 
@@ -84,7 +84,7 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
                       setIsSettingsOpen(true);
                       setIsUserMenuOpen(false);
                     }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gh-dark-text hover:bg-white/60 dark:hover:bg-white/10 flex items-center gap-2 transition-colors duration-150"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />

@@ -115,7 +115,8 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, cur
       
       {/* Sidebar */}
       <aside className={`
-        bg-gray-50 dark:bg-gh-dark-bg border-r border-gray-200 dark:border-gh-dark-border 
+        glass-strong dark:glass-strong-dark border-r border-gray-200/50 dark:border-gh-dark-border/50
+        shadow-elevated dark:shadow-elevated-dark
         transition-all duration-300 flex flex-col
         ${isCollapsed ? 'w-16' : 'w-64 md:w-56 lg:w-64'}
         
@@ -124,18 +125,18 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, cur
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         {/* Logo and toggle */}
-        <div className="h-16 border-b border-gray-200 dark:border-gh-dark-border flex items-center justify-between px-4">
+        <div className="h-16 border-b border-gray-200/50 dark:border-gh-dark-border/50 flex items-center justify-between px-4">
           {!isCollapsed && (
             <button
               onClick={handleHomeClick}
-              className="font-bold text-lg text-gray-900 dark:text-white hover:text-primary transition-colors text-left"
+              className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hover:from-primary-light hover:to-purple-400 transition-all duration-200 text-left"
             >
               Copilot CLI
             </button>
           )}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hidden md:block"
+            className="p-2 rounded-lg hover:bg-white/50 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition-all duration-200 hidden md:block"
             aria-label="Toggle sidebar"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -149,7 +150,7 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, cur
           {/* Mobile close button */}
           <button
             onClick={onCloseMobileMenu}
-            className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 md:hidden"
+            className="p-2 rounded-lg hover:bg-white/50 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition-all duration-200 md:hidden"
             aria-label="Close menu"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
