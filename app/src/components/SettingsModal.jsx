@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useTheme } from '../contexts/ThemeContext';
 
 export default function SettingsModal({ isOpen, onClose }) {
@@ -36,18 +37,20 @@ export default function SettingsModal({ isOpen, onClose }) {
     { id: 'data', name: 'Data', icon: '💾' }
   ];
 
-  return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+  // Use Portal to render modal outside header's stacking context
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] overflow-y-auto">
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-40"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
+        aria-hidden="true"
       ></div>
 
-      {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-4 z-50">
+      {/* Modal Container */}
+      <div className="fixed inset-0 flex items-center justify-center p-4">
         <div 
-          className="relative glass dark:glass-dark rounded-lg shadow-glass dark:shadow-glass-dark max-w-3xl w-full z-50"
+          className="relative bg-white dark:bg-gh-dark-surface rounded-xl shadow-2xl max-w-3xl w-full border border-gray-200/50 dark:border-gh-dark-border"
           onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
@@ -97,7 +100,8 @@ export default function SettingsModal({ isOpen, onClose }) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
