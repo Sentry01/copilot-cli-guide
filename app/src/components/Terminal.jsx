@@ -19,9 +19,9 @@ export default function Terminal({ scenarioId, onCommand }) {
     }
   }, [output, typedText]);
 
-  // Focus input on mount
+  // Focus input on mount (without scrolling to it)
   useEffect(() => {
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
   }, []);
 
   // Typing animation effect

@@ -84,9 +84,12 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
 
   const isComplete = lessonId ? isLessonComplete(lessonId) : false;
 
-  // Scroll to top when lesson changes
+  // Scroll to top when lesson changes or on initial mount
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    // Use requestAnimationFrame to ensure scroll happens after render
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+    });
   }, [lessonId]);
 
   // Fetch lesson data

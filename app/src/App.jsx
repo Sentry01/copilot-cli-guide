@@ -8,6 +8,7 @@ import useKeyboardShortcuts from './hooks/useKeyboardShortcuts'
 import AchievementNotification from './components/AchievementNotification'
 
 // Lazy load route components
+const LandingPage = lazy(() => import('./components/LandingPage'))
 const LessonView = lazy(() => import('./components/LessonView'))
 const ProgressDashboard = lazy(() => import('./components/ProgressDashboard'))
 const BookmarksView = lazy(() => import('./components/BookmarksView'))
@@ -24,9 +25,19 @@ function AppContent() {
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
 
+  // Scroll to top on initial mount and disable browser scroll restoration
+  useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
   // Determine current view from URL
   const getCurrentView = () => {
     const path = location.pathname;
+    if (path === '/') return 'landing';
+    if (path === '/learn') return 'lesson';
     if (path === '/progress') return 'progress';
     if (path === '/bookmarks') return 'bookmarks';
     if (path === '/commands') return 'commands';
@@ -38,13 +49,13 @@ function AppContent() {
 
   const handleLessonSelect = (lessonId) => {
     setCurrentLessonId(lessonId);
-    navigate('/');
+    navigate('/learn');
   };
 
   const handleNavigate = (target) => {
     if (typeof target === 'number') {
       setCurrentLessonId(target);
-      navigate('/');
+      navigate('/learn');
     } else if (typeof target === 'string') {
       navigate(`/${target}`);
     }
@@ -84,6 +95,16 @@ function AppContent() {
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <LandingPage />
+              </motion.div>
+            } />
+            <Route path="/learn" element={
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}

@@ -9,6 +9,13 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
   const [lessons, setLessons] = useState({});
   const { completedLessons } = useUser();
 
+  const handleHomeClick = (e) => {
+    e.preventDefault();
+    if (onViewChange) {
+      onViewChange('');
+    }
+  };
+
   const handleProgressClick = (e) => {
     e.preventDefault();
     if (onViewChange) {
@@ -112,9 +119,12 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
         {/* Logo and toggle */}
         <div className="h-16 border-b border-gray-200 dark:border-gh-dark-border flex items-center justify-between px-4">
           {!isCollapsed && (
-            <div className="font-bold text-lg text-gray-900 dark:text-white">
+            <button
+              onClick={handleHomeClick}
+              className="font-bold text-lg text-gray-900 dark:text-white hover:text-primary transition-colors text-left"
+            >
               Copilot CLI
-            </div>
+            </button>
           )}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -236,11 +246,11 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
             })}
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-4 flex flex-col items-center">
             {modules.map((module) => (
               <div
                 key={module.id}
-                className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-semibold text-sm"
+                className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-semibold text-sm cursor-help"
                 title={module.title}
               >
                 {module.title[0]}
@@ -251,9 +261,16 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
       </nav>
 
       {/* Quick links */}
-      {!isCollapsed && (
-        <div className="p-4 border-t border-gray-200 dark:border-gh-dark-border">
+      <div className="p-4 border-t border-gray-200 dark:border-gh-dark-border">
+        {!isCollapsed ? (
           <div className="space-y-2">
+            <a 
+              href="#" 
+              onClick={handleHomeClick}
+              className="block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
+            >
+              🏠 Home
+            </a>
             <a 
               href="#" 
               onClick={handleCommandsClick}
@@ -299,8 +316,54 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
               📊 Progress
             </a>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="flex flex-col items-center space-y-4">
+            <button 
+              onClick={handleHomeClick}
+              className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg"
+              title="Home"
+            >
+              🏠
+            </button>
+            <button 
+              onClick={handleCommandsClick}
+              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
+                currentView === 'commands' ? 'bg-primary/10' : ''
+              }`}
+              title="Commands"
+            >
+              📚
+            </button>
+            <button 
+              onClick={handleExamplesClick}
+              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
+                currentView === 'examples' ? 'bg-primary/10' : ''
+              }`}
+              title="Examples"
+            >
+              💡
+            </button>
+            <button 
+              onClick={handleBookmarksClick}
+              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
+                currentView === 'bookmarks' ? 'bg-primary/10' : ''
+              }`}
+              title="Bookmarks"
+            >
+              🔖
+            </button>
+            <button 
+              onClick={handleProgressClick}
+              className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${
+                currentView === 'progress' ? 'bg-primary/10' : ''
+              }`}
+              title="Progress"
+            >
+              📊
+            </button>
+          </div>
+        )}
+      </div>
     </aside>
     </>
   );
