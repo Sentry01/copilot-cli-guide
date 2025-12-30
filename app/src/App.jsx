@@ -85,6 +85,7 @@ function AppContent() {
       onLessonSelect={handleLessonSelect}
       onViewChange={(view) => navigate(`/${view}`)}
       currentView={currentView}
+      currentLessonId={currentLessonId}
       onShowKeyboardShortcuts={() => setShowKeyboardShortcuts(true)}
     >
       <Suspense fallback={

@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 
-export default function MainLayout({ children, onLessonSelect, onViewChange, currentView, onShowKeyboardShortcuts }) {
+export default function MainLayout({ children, onLessonSelect, onViewChange, currentView, currentLessonId, onShowKeyboardShortcuts }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // If on landing page, render only the children (landing page content)
@@ -41,6 +41,7 @@ export default function MainLayout({ children, onLessonSelect, onViewChange, cur
           onLessonSelect={onLessonSelect} 
           onViewChange={onViewChange}
           currentView={currentView}
+          currentLessonId={currentLessonId}
           isMobileMenuOpen={isMobileMenuOpen}
           onCloseMobileMenu={() => setIsMobileMenuOpen(false)}
         />

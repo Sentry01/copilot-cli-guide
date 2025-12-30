@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 
-export default function Sidebar({ onLessonSelect, onViewChange, currentView, isMobileMenuOpen, onCloseMobileMenu }) {
+export default function Sidebar({ onLessonSelect, onViewChange, currentView, currentLessonId, isMobileMenuOpen, onCloseMobileMenu }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedModuleId, setExpandedModuleId] = useState(1);
-  const [activeLessonId, setActiveLessonId] = useState(3);
+  const [activeLessonId, setActiveLessonId] = useState(currentLessonId || 1);
   const [modules, setModules] = useState([]);
   const [lessons, setLessons] = useState({});
   const { completedLessons } = useUser();
@@ -54,6 +54,13 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, isM
       onCloseMobileMenu();
     }
   };
+
+  // Sync activeLessonId when currentLessonId prop changes
+  useEffect(() => {
+    if (currentLessonId !== undefined && currentLessonId !== activeLessonId) {
+      setActiveLessonId(currentLessonId);
+    }
+  }, [currentLessonId]);
 
   useEffect(() => {
     // Fetch modules
