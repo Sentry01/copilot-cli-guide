@@ -1,5 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import { UserProvider } from './contexts/UserContext'
 import { ThemeProvider } from './contexts/ThemeContext'
 import MainLayout from './layouts/MainLayout'
@@ -80,27 +81,77 @@ function AppContent() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
         </div>
       }>
-        <Routes>
-          <Route path="/" element={
-            <LessonView 
-              lessonId={currentLessonId} 
-              onNavigateToLesson={handleLessonSelect}
-            />
-          } />
-          <Route path="/progress" element={<ProgressDashboard />} />
-          <Route path="/bookmarks" element={
-            <BookmarksView onLessonSelect={handleLessonSelect} />
-          } />
-          <Route path="/commands" element={
-            <CommandsView 
-              onNavigateToTerminal={(commandName) => {
-                handleLessonSelect(2);
-              }}
-            />
-          } />
-          <Route path="/examples" element={<ExamplesView />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              >
+                <LessonView 
+                  lessonId={currentLessonId} 
+                  onNavigateToLesson={handleLessonSelect}
+                />
+              </motion.div>
+            } />
+            <Route path="/progress" element={
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              >
+                <ProgressDashboard />
+              </motion.div>
+            } />
+            <Route path="/bookmarks" element={
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              >
+                <BookmarksView onLessonSelect={handleLessonSelect} />
+              </motion.div>
+            } />
+            <Route path="/commands" element={
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              >
+                <CommandsView 
+                  onNavigateToTerminal={(commandName) => {
+                    handleLessonSelect(2);
+                  }}
+                />
+              </motion.div>
+            } />
+            <Route path="/examples" element={
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              >
+                <ExamplesView />
+              </motion.div>
+            } />
+            <Route path="*" element={
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              >
+                <NotFound />
+              </motion.div>
+            } />
+          </Routes>
+        </AnimatePresence>
       </Suspense>
 
       {/* Keyboard Shortcuts Modal */}

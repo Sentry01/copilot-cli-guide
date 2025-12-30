@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useUser } from '../contexts/UserContext';
 
 export default function ProgressDashboard() {
@@ -176,11 +177,13 @@ export default function ProgressDashboard() {
                   {module.completed}/{module.total} ({module.percentage}%)
                 </span>
               </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-                <div
-                  className="bg-primary h-3 rounded-full transition-all duration-300"
-                  style={{ width: `${module.percentage}%` }}
-                ></div>
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                <motion.div
+                  className="bg-primary h-3 rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${module.percentage}%` }}
+                  transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
+                />
               </div>
             </div>
           ))}
@@ -274,13 +277,15 @@ export default function ProgressDashboard() {
               {unlockedAchievements.size} / {achievements.length} unlocked
             </span>
           </div>
-          <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-            <div
-              className="bg-primary h-2 rounded-full transition-all duration-300"
-              style={{
+          <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+            <motion.div
+              className="bg-primary h-2 rounded-full"
+              initial={{ width: 0 }}
+              animate={{
                 width: `${achievements.length > 0 ? (unlockedAchievements.size / achievements.length) * 100 : 0}%`
               }}
-            ></div>
+              transition={{ duration: 0.8, ease: 'easeOut', delay: 0.4 }}
+            />
           </div>
         </div>
       </div>
