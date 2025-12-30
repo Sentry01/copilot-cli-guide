@@ -84,6 +84,11 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
 
   const isComplete = lessonId ? isLessonComplete(lessonId) : false;
 
+  // Scroll to top when lesson changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [lessonId]);
+
   // Fetch lesson data
   const fetchLesson = async () => {
     if (!lessonId) return;
