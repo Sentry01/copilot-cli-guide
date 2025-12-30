@@ -1943,7 +1943,7 @@ function checkAchievement(userId, achievement, callback) {
       if (criteria === 'complete_lesson_1') {
         // Check if user has completed at least 1 lesson
         db.get(
-          'SELECT COUNT(*) as count FROM progress WHERE user_id = ? AND completed = 1',
+          'SELECT COUNT(*) as count FROM progress WHERE user_id = ?',
           [userId],
           (err, result) => {
             if (!err && result.count >= 1) {
@@ -1955,7 +1955,7 @@ function checkAchievement(userId, achievement, callback) {
         );
       } else if (criteria === 'complete_lesson_5') {
         db.get(
-          'SELECT COUNT(*) as count FROM progress WHERE user_id = ? AND completed = 1',
+          'SELECT COUNT(*) as count FROM progress WHERE user_id = ?',
           [userId],
           (err, result) => {
             if (!err && result.count >= 5) {
@@ -1967,7 +1967,7 @@ function checkAchievement(userId, achievement, callback) {
         );
       } else if (criteria === 'complete_lesson_10') {
         db.get(
-          'SELECT COUNT(*) as count FROM progress WHERE user_id = ? AND completed = 1',
+          'SELECT COUNT(*) as count FROM progress WHERE user_id = ?',
           [userId],
           (err, result) => {
             if (!err && result.count >= 10) {
@@ -1984,7 +1984,7 @@ function checkAchievement(userId, achievement, callback) {
             (SELECT COUNT(*) FROM lessons WHERE module_id = m.id) as total_lessons,
             (SELECT COUNT(*) FROM progress p 
              JOIN lessons l ON p.lesson_id = l.id 
-             WHERE l.module_id = m.id AND p.user_id = ? AND p.completed = 1) as completed_lessons
+             WHERE l.module_id = m.id AND p.user_id = ?) as completed_lessons
           FROM modules m`,
           [userId],
           (err, modules) => {
@@ -2017,7 +2017,7 @@ function checkAchievement(userId, achievement, callback) {
         db.get(
           `SELECT 
             (SELECT COUNT(*) FROM lessons) as total,
-            (SELECT COUNT(*) FROM progress WHERE user_id = ? AND completed = 1) as completed`,
+            (SELECT COUNT(*) FROM progress WHERE user_id = ?) as completed`,
           [userId],
           (err, result) => {
             if (!err && result.total > 0 && result.completed === result.total) {
