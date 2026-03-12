@@ -268,7 +268,7 @@ export const commands = [
       { description: 'Logging options', command: 'copilot help logging' },
       { description: 'Tool permissions', command: 'copilot help permissions' }
     ],
-    related_commands: ['copilot', '/agent', '/mcp']
+    related_commands: ['copilot', '/agent', '/mcp add']
   },
   {
     id: 3,
@@ -358,7 +358,7 @@ export const commands = [
     examples: [
       { description: 'Show available agents', command: '/agent' }
     ],
-    related_commands: ['/add-dir', '/cwd', '/mcp']
+    related_commands: ['/add-dir', '/cwd', '/mcp add']
   },
   {
     id: 11,

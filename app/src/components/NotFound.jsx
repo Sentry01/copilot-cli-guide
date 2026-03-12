@@ -1,28 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 export default function NotFound() {
-  let navigate;
-  
-  try {
-    navigate = useNavigate();
-  } catch (e) {
-    // Fallback if hooks aren't available
-    navigate = (path) => {
-      if (typeof path === 'number') {
-        window.history.go(path);
-      } else {
-        window.location.href = path;
-      }
-    };
-  }
-
-  const handleGoHome = () => {
-    navigate('/');
-  };
-
-  const handleGoBack = () => {
-    window.history.back();
-  };
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gh-dark-bg text-gray-900 dark:text-gh-dark-text">

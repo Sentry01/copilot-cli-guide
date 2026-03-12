@@ -21,8 +21,6 @@ export default function SearchBar({ onNavigate }) {
 
   useEffect(() => {
     if (query.trim().length === 0) {
-      setResults([]);
-      setIsOpen(false);
       return;
     }
 
@@ -31,7 +29,6 @@ export default function SearchBar({ onNavigate }) {
       clearTimeout(debounceTimer.current);
     }
 
-    setLoading(true);
     debounceTimer.current = setTimeout(() => {
       fetch(`/api/search?q=${encodeURIComponent(query)}`)
         .then(res => res.json())
@@ -115,7 +112,15 @@ export default function SearchBar({ onNavigate }) {
         <input
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            if (e.target.value.trim().length === 0) {
+              setResults([]);
+              setIsOpen(false);
+            } else {
+              setLoading(true);
+            }
+          }}
           onFocus={() => query && results.length > 0 && setIsOpen(true)}
           placeholder="Search lessons, commands..."
           className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-300 dark:border-gh-dark-border bg-white dark:bg-gh-dark-surface text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary md:text-sm lg:text-base"

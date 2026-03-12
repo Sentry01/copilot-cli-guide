@@ -2025,7 +2025,6 @@ function checkAchievement(userId, achievement, callback) {
       }
       
       // Check criteria
-      let shouldUnlock = false;
       
       if (criteria === 'complete_lesson_1') {
         // Check if user has completed at least 1 lesson

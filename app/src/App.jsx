@@ -1,11 +1,13 @@
 import { useState, useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+// eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from 'framer-motion'
 import { UserProvider } from './contexts/UserContext'
 import { ThemeProvider } from './contexts/ThemeContext'
 import MainLayout from './layouts/MainLayout'
 import useKeyboardShortcuts from './hooks/useKeyboardShortcuts'
 import AchievementNotification from './components/AchievementNotification'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Lazy load route components
 const LandingPage = lazy(() => import('./components/LandingPage'))
@@ -93,6 +95,7 @@ function AppContent() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
         </div>
       }>
+        <ErrorBoundary>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={
@@ -146,7 +149,7 @@ function AppContent() {
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
               >
                 <CommandsView 
-                  onNavigateToTerminal={(commandName) => {
+                  onNavigateToTerminal={() => {
                     handleLessonSelect(2);
                   }}
                 />
@@ -174,6 +177,7 @@ function AppContent() {
             } />
           </Routes>
         </AnimatePresence>
+        </ErrorBoundary>
       </Suspense>
 
       {/* Keyboard Shortcuts Modal */}

@@ -1,5 +1,5 @@
 // Vercel Serverless Function - User Management
-import { getOrCreateUser, modules, lessons, commands, examples } from './_data.js';
+import { getOrCreateUser } from './_data.js';
 
 export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

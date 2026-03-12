@@ -19,7 +19,7 @@ export function UserProvider({ children }) {
         setUser(userData);
         
         // Fetch user's progress
-        const progressResponse = await fetch(`/api/progress?session_id=${sid}`);
+        const progressResponse = await fetch(`/api/progress/${sid}`);
         if (progressResponse.ok) {
           const progress = await progressResponse.json();
           const lessonIds = progress.map(p => p.lesson_id);
@@ -40,7 +40,7 @@ export function UserProvider({ children }) {
     
     try {
       const response = await fetch(
-        `/api/progress?session_id=${sessionId}&lesson_id=${lessonId}`,
+        `/api/progress/${sessionId}/lesson/${lessonId}`,
         { method: 'POST' }
       );
       
@@ -50,7 +50,7 @@ export function UserProvider({ children }) {
         // Check for newly unlocked achievements
         try {
           const achievementResponse = await fetch(
-            '/api/achievements?action=check',
+            '/api/achievements/check',
             {
               method: 'POST',
               headers: {
@@ -89,7 +89,7 @@ export function UserProvider({ children }) {
     
     try {
       const response = await fetch(
-        `/api/progress?session_id=${sessionId}&lesson_id=${lessonId}`,
+        `/api/progress/${sessionId}/lesson/${lessonId}`,
         { method: 'DELETE' }
       );
       
@@ -128,6 +128,7 @@ export function UserProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useUser() {
   const context = useContext(UserContext);
   if (!context) {

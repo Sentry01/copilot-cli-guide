@@ -1,5 +1,5 @@
 // Vercel Serverless Function - Progress Tracking
-import { getOrCreateUser } from './_data.js';
+import { getOrCreateUser } from '../_data.js';
 
 export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');

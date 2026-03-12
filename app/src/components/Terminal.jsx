@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-export default function Terminal({ scenarioId, onCommand }) {
+export default function Terminal({ onCommand }) {
   const [output, setOutput] = useState([]);
   const [input, setInput] = useState('');
   const [history, setHistory] = useState([]);
@@ -29,10 +29,7 @@ export default function Terminal({ scenarioId, onCommand }) {
     if (typingIndex === -1 || typingIndex >= output.length) return;
     
     const currentLine = output[typingIndex];
-    if (currentLine.type !== 'output') {
-      setTypingIndex(-1);
-      return;
-    }
+    // Removed redundant check for type !== 'output' to avoid synchronous setState warning
 
     const fullText = currentLine.text;
     if (typedText.length < fullText.length) {
@@ -41,8 +38,10 @@ export default function Terminal({ scenarioId, onCommand }) {
       }, 20); // 20ms per character for natural typing speed
     } else {
       // Typing complete
-      setTypingIndex(-1);
-      setTypedText('');
+      setTimeout(() => {
+        setTypingIndex(-1);
+        setTypedText('');
+      }, 0);
     }
 
     return () => {

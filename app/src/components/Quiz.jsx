@@ -12,31 +12,31 @@ export default function Quiz({ lessonId, userId }) {
   const [quizCompleted, setQuizCompleted] = useState(false);
 
   useEffect(() => {
+    const fetchQuizQuestions = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/lessons?lesson_id=${lessonId}&quiz=true`);
+        if (response.ok) {
+          const data = await response.json();
+          // Parse options if they're stored as JSON string
+          const parsedData = data.map(q => ({
+            ...q,
+            options: typeof q.options === 'string' ? JSON.parse(q.options) : q.options
+          }));
+          setQuestions(parsedData);
+          if (parsedData.length === 0) {
+            setQuizCompleted(true);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching quiz questions:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchQuizQuestions();
   }, [lessonId]);
-
-  const fetchQuizQuestions = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(`/api/lessons?lesson_id=${lessonId}&quiz=true`);
-      if (response.ok) {
-        const data = await response.json();
-        // Parse options if they're stored as JSON string
-        const parsedData = data.map(q => ({
-          ...q,
-          options: typeof q.options === 'string' ? JSON.parse(q.options) : q.options
-        }));
-        setQuestions(parsedData);
-        if (parsedData.length === 0) {
-          setQuizCompleted(true);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching quiz questions:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleAnswerSelect = (answerIndex) => {
     if (!showFeedback) {

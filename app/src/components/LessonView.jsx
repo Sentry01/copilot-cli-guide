@@ -168,8 +168,11 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
   useEffect(() => {
     if (!lessonId || !sessionId) return;
 
-    fetch(`/api/bookmarks?session_id=${sessionId}`)
-      .then(res => res.json())
+    fetch(`/api/bookmarks/${sessionId}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch bookmarks');
+        return res.json();
+      })
       .then(data => {
         const bookmarked = data.bookmarks?.some(b => b.lesson_id === parseInt(lessonId));
         setIsBookmarked(bookmarked);
@@ -185,13 +188,13 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
     try {
       if (isBookmarked) {
         // Remove bookmark
-        await fetch(`/api/bookmarks?session_id=${sessionId}&lesson_id=${lessonId}`, {
+        await fetch(`/api/bookmarks/${sessionId}/lesson/${lessonId}`, {
           method: 'DELETE',
         });
         setIsBookmarked(false);
       } else {
         // Add bookmark
-        await fetch(`/api/bookmarks?session_id=${sessionId}&lesson_id=${lessonId}`, {
+        await fetch(`/api/bookmarks/${sessionId}/lesson/${lessonId}`, {
           method: 'POST',
         });
         setIsBookmarked(true);

@@ -75,6 +75,7 @@ function CommandsView({ onNavigateToTerminal }) {
       <CommandDetailView
         commandName={selectedCommand}
         onBack={() => setSelectedCommand(null)}
+        onSelectCommand={setSelectedCommand}
         onTryIt={() => {
           if (onNavigateToTerminal) {
             onNavigateToTerminal(selectedCommand);
@@ -213,7 +214,20 @@ function CommandsView({ onNavigateToTerminal }) {
 
 function CommandCard({ command, onViewDetail }) {
   const [showExamples, setShowExamples] = useState(false);
-  const examples = command.examples ? JSON.parse(command.examples) : [];
+  
+  const safeParseJSON = (data) => {
+    if (Array.isArray(data)) return data;
+    if (typeof data !== 'string') return [];
+    try {
+      const parsed = JSON.parse(data);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.warn('Failed to parse JSON:', e);
+      return [];
+    }
+  };
+
+  const examples = safeParseJSON(command.examples);
 
   return (
     <div 

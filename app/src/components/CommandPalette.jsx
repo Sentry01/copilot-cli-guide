@@ -1,4 +1,31 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+const getDefaultCommands = () => [
+  { type: 'action', id: 'settings', name: 'Open Settings', description: 'View and change preferences', icon: 'settings' },
+  { type: 'action', id: 'commands', name: 'View Commands', description: 'Browse command reference', icon: 'terminal' },
+  { type: 'action', id: 'examples', name: 'View Examples', description: 'Browse code examples', icon: 'code' },
+  { type: 'action', id: 'bookmarks', name: 'View Bookmarks', description: 'See your saved lessons', icon: 'bookmark' },
+  { type: 'action', id: 'progress', name: 'View Progress', description: 'Check your learning progress', icon: 'chart' },
+];
+
+const getActionCommands = (searchTerm) => {
+  const actions = [
+    { type: 'action', id: 'settings', name: 'Open Settings', description: 'View and change preferences', icon: 'settings', keywords: ['settings', 'preferences', 'config', 'options'] },
+    { type: 'action', id: 'commands', name: 'View Commands', description: 'Browse command reference', icon: 'terminal', keywords: ['commands', 'reference', 'docs'] },
+    { type: 'action', id: 'examples', name: 'View Examples', description: 'Browse code examples', icon: 'code', keywords: ['examples', 'code', 'samples'] },
+    { type: 'action', id: 'bookmarks', name: 'View Bookmarks', description: 'See your saved lessons', icon: 'bookmark', keywords: ['bookmarks', 'saved', 'favorites'] },
+    { type: 'action', id: 'progress', name: 'View Progress', description: 'Check your learning progress', icon: 'chart', keywords: ['progress', 'stats', 'dashboard'] },
+  ];
+
+  if (!searchTerm) return actions;
+
+  const term = searchTerm.toLowerCase();
+  return actions.filter(action => 
+    action.name.toLowerCase().includes(term) ||
+    action.description.toLowerCase().includes(term) ||
+    action.keywords.some(keyword => keyword.includes(term))
+  );
+};
 
 export default function CommandPalette({ isOpen, onClose, onNavigate, onOpenSettings }) {
   const [query, setQuery] = useState('');
@@ -9,14 +36,57 @@ export default function CommandPalette({ isOpen, onClose, onNavigate, onOpenSett
   const debounceTimer = useRef(null);
   const resultsRef = useRef(null);
 
+  const handleSelect = useCallback((result) => {
+    onClose();
+    if (result.type === 'action') {
+      if (result.id === 'settings' && onOpenSettings) {
+        onOpenSettings();
+      } else if (onNavigate) {
+        onNavigate(result.id);
+      }
+    } else if (onNavigate) {
+      onNavigate(result.id, result.type);
+    }
+  }, [onClose, onOpenSettings, onNavigate]);
+
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
       setQuery('');
-      setResults([]);
+      setResults(getDefaultCommands());
       setSelectedIndex(0);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    setLoading(true);
+    
+    if (!query) {
+      setResults(getDefaultCommands());
+      setLoading(false);
+      return;
+    }
+
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+
+    debounceTimer.current = setTimeout(async () => {
+      try {
+        // TODO: Add API search for commands/lessons
+        const actionResults = getActionCommands(query);
+        setResults(actionResults);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }, 300);
+
+    return () => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    };
+  }, [query, isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -27,10 +97,16 @@ export default function CommandPalette({ isOpen, onClose, onNavigate, onOpenSett
         onClose();
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
-        setSelectedIndex((prev) => (prev + 1) % Math.max(results.length, 1));
+        setSelectedIndex((prev) => {
+          const max = Math.max(results.length, 1);
+          return (prev + 1) % max;
+        });
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        setSelectedIndex((prev) => (prev - 1 + results.length) % Math.max(results.length, 1));
+        setSelectedIndex((prev) => {
+          const max = Math.max(results.length, 1);
+          return (prev - 1 + max) % max;
+        });
       } else if (e.key === 'Enter') {
         e.preventDefault();
         if (results[selectedIndex]) {
@@ -41,7 +117,7 @@ export default function CommandPalette({ isOpen, onClose, onNavigate, onOpenSett
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, results, selectedIndex, onClose]);
+  }, [isOpen, results, selectedIndex, onClose, handleSelect]);
 
   useEffect(() => {
     if (selectedIndex >= 0 && resultsRef.current) {
@@ -51,112 +127,6 @@ export default function CommandPalette({ isOpen, onClose, onNavigate, onOpenSett
       }
     }
   }, [selectedIndex]);
-
-  useEffect(() => {
-    if (!query.trim()) {
-      setResults(getDefaultCommands());
-      setSelectedIndex(0);
-      return;
-    }
-
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
-    }
-
-    setLoading(true);
-    debounceTimer.current = setTimeout(() => {
-      fetch(`/api/search?q=${encodeURIComponent(query)}`)
-        .then(res => res.json())
-        .then(data => {
-          const searchResults = data.results || [];
-          const allResults = [
-            ...getActionCommands(query),
-            ...searchResults
-          ];
-          setResults(allResults);
-          setSelectedIndex(0);
-          setLoading(false);
-        })
-        .catch(err => {
-          console.error('Search error:', err);
-          setResults(getActionCommands(query));
-          setLoading(false);
-        });
-    }, 150);
-
-    return () => {
-      if (debounceTimer.current) {
-        clearTimeout(debounceTimer.current);
-      }
-    };
-  }, [query]);
-
-  const getDefaultCommands = () => [
-    { type: 'action', id: 'settings', name: 'Open Settings', description: 'View and change preferences', icon: 'settings' },
-    { type: 'action', id: 'commands', name: 'View Commands', description: 'Browse command reference', icon: 'terminal' },
-    { type: 'action', id: 'examples', name: 'View Examples', description: 'Browse code examples', icon: 'code' },
-    { type: 'action', id: 'bookmarks', name: 'View Bookmarks', description: 'See your saved lessons', icon: 'bookmark' },
-    { type: 'action', id: 'progress', name: 'View Progress', description: 'Check your learning progress', icon: 'chart' },
-  ];
-
-  const getActionCommands = (searchTerm) => {
-    const actions = [
-      { type: 'action', id: 'settings', name: 'Open Settings', description: 'View and change preferences', icon: 'settings', keywords: ['settings', 'preferences', 'config', 'options'] },
-      { type: 'action', id: 'commands', name: 'View Commands', description: 'Browse command reference', icon: 'terminal', keywords: ['commands', 'reference', 'docs'] },
-      { type: 'action', id: 'examples', name: 'View Examples', description: 'Browse code examples', icon: 'code', keywords: ['examples', 'code', 'samples'] },
-      { type: 'action', id: 'bookmarks', name: 'View Bookmarks', description: 'See your saved lessons', icon: 'bookmark', keywords: ['bookmarks', 'saved', 'favorites'] },
-      { type: 'action', id: 'progress', name: 'View Progress', description: 'Check your learning progress', icon: 'chart', keywords: ['progress', 'stats', 'dashboard'] },
-    ];
-
-    if (!searchTerm) return actions;
-
-    const term = searchTerm.toLowerCase();
-    return actions.filter(action => 
-      action.name.toLowerCase().includes(term) ||
-      action.description.toLowerCase().includes(term) ||
-      action.keywords.some(keyword => keyword.includes(term))
-    );
-  };
-
-  const handleSelect = (result) => {
-    if (result.type === 'action') {
-      handleAction(result.id);
-    } else if (result.type === 'lesson' && onNavigate) {
-      onNavigate(result.id);
-      onClose();
-    } else if (result.type === 'command' || result.type === 'example') {
-      // Navigate to respective view
-      handleAction(result.type === 'command' ? 'commands' : 'examples');
-    }
-    setQuery('');
-  };
-
-  const handleAction = (actionId) => {
-    switch (actionId) {
-      case 'settings':
-        onOpenSettings?.();
-        onClose();
-        break;
-      case 'commands':
-        onNavigate?.('commands');
-        onClose();
-        break;
-      case 'examples':
-        onNavigate?.('examples');
-        onClose();
-        break;
-      case 'bookmarks':
-        onNavigate?.('bookmarks');
-        onClose();
-        break;
-      case 'progress':
-        onNavigate?.('progress');
-        onClose();
-        break;
-      default:
-        break;
-    }
-  };
 
   const getIcon = (result) => {
     const iconType = result.icon || result.type;

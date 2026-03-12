@@ -56,11 +56,9 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, cur
   };
 
   // Sync activeLessonId when currentLessonId prop changes
-  useEffect(() => {
-    if (currentLessonId !== undefined && currentLessonId !== activeLessonId) {
-      setActiveLessonId(currentLessonId);
-    }
-  }, [currentLessonId]);
+  if (currentLessonId !== undefined && currentLessonId !== activeLessonId) {
+    setActiveLessonId(currentLessonId);
+  }
 
   useEffect(() => {
     // Fetch modules

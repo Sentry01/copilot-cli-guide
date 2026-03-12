@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { CardLoadingSkeleton } from './LoadingStates';
 import ErrorMessage, { NetworkError } from './ErrorMessage';
@@ -12,14 +12,14 @@ export default function BookmarksView({ onLessonSelect }) {
   const [noteText, setNoteText] = useState('');
   const { sessionId } = useUser();
 
-  const fetchBookmarks = async () => {
+  const fetchBookmarks = useCallback(async () => {
     if (!sessionId) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(`/api/bookmarks?session_id=${sessionId}`);
+      const response = await fetch(`/api/bookmarks/${sessionId}`);
       
       if (!response.ok) {
         throw new Error('FETCH_ERROR');
@@ -38,15 +38,15 @@ export default function BookmarksView({ onLessonSelect }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [sessionId]);
 
   useEffect(() => {
     fetchBookmarks();
-  }, [sessionId]);
+  }, [fetchBookmarks]);
 
   const handleUpdateNotes = async (bookmarkId, notes) => {
     try {
-      const response = await fetch(`/api/bookmarks?id=${bookmarkId}&action=notes`, {
+      const response = await fetch(`/api/bookmarks/${sessionId}/lesson/${bookmarkId}/notes`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notes })

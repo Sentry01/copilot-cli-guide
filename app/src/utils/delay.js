@@ -3,4 +3,4 @@
 export const delay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Configuration
-export const LOADING_DELAY = process.env.NODE_ENV === 'development' ? 800 : 0;
+export const LOADING_DELAY = import.meta.env.MODE === 'development' ? 800 : 0;

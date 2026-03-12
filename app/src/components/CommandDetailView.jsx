@@ -1,25 +1,25 @@
 import { useState, useEffect } from 'react';
 
-function CommandDetailView({ commandName, onBack, onTryIt }) {
+function CommandDetailView({ commandName, onBack, onTryIt, onSelectCommand }) {
   const [command, setCommand] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchCommandDetail = async () => {
+      try {
+        const encodedName = encodeURIComponent(commandName);
+        const response = await fetch(`/api/commands?name=${encodedName}`);
+        const data = await response.json();
+        setCommand(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching command detail:', error);
+        setLoading(false);
+      }
+    };
+
     fetchCommandDetail();
   }, [commandName]);
-
-  const fetchCommandDetail = async () => {
-    try {
-      const encodedName = encodeURIComponent(commandName);
-      const response = await fetch(`/api/commands?name=${encodedName}`);
-      const data = await response.json();
-      setCommand(data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching command detail:', error);
-      setLoading(false);
-    }
-  };
 
   if (loading) {
     return (
@@ -43,8 +43,20 @@ function CommandDetailView({ commandName, onBack, onTryIt }) {
     );
   }
 
-  const flags = command.flags ? JSON.parse(command.flags) : [];
-  const examples = command.examples ? JSON.parse(command.examples) : [];
+  const safeParseJSON = (data) => {
+    if (Array.isArray(data)) return data;
+    if (typeof data !== 'string') return [];
+    try {
+      const parsed = JSON.parse(data);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.warn('Failed to parse JSON:', e);
+      return [];
+    }
+  };
+
+  const flags = safeParseJSON(command.flags);
+  const examples = safeParseJSON(command.examples);
 
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
@@ -53,9 +65,9 @@ function CommandDetailView({ commandName, onBack, onTryIt }) {
   const relatedCommands = command.relatedCommands || [];
 
   const handleRelatedCommandClick = (commandName) => {
-    // Trigger a re-fetch by updating the parent component
-    window.location.hash = `#command-${encodeURIComponent(commandName)}`;
-    window.location.reload();
+    if (onSelectCommand) {
+      onSelectCommand(commandName);
+    }
   };
 
   return (

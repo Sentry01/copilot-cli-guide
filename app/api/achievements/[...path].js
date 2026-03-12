@@ -1,5 +1,5 @@
 // Vercel Serverless Function - Achievements
-import { getOrCreateUser } from './_data.js';
+import { getOrCreateUser } from '../_data.js';
 
 const achievements = [
   { id: 1, title: 'First Steps', description: 'Complete your first lesson', criteria: 'complete_lesson_1', icon: '🎯' },

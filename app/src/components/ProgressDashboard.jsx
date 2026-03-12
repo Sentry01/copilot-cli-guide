@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { useUser } from '../contexts/UserContext';
 
@@ -17,27 +18,41 @@ export default function ProgressDashboard() {
   });
 
   useEffect(() => {
-    // Fetch all modules, lessons, and achievements
+    const safeFetch = async (url, options) => {
+      try {
+        const res = await fetch(url, options);
+        if (!res.ok) return null;
+        return await res.json();
+      } catch {
+        return null;
+      }
+    };
+
     Promise.all([
-      fetch('/api/modules').then(res => res.json()),
-      fetch('/api/lessons').then(res => res.json()),
-      fetch('/api/achievements').then(res => res.json()),
-      fetch('/api/achievements/user', {
+      safeFetch('/api/modules'),
+      safeFetch('/api/lessons'),
+      safeFetch('/api/achievements'),
+      safeFetch('/api/achievements/user', {
         headers: { 'x-session-id': sessionId }
-      }).then(res => res.json()),
+      }),
     ]).then(([modulesData, lessonsData, achievementsData, unlockedData]) => {
-      setModules(modulesData);
-      setLessons(lessonsData);
-      setAchievements(achievementsData);
-      setUnlockedAchievements(new Set(unlockedData.map(a => a.id)));
+      const safeModules = modulesData || [];
+      const safeLessons = lessonsData || [];
+      const safeAchievements = achievementsData || [];
+      const safeUnlocked = unlockedData || [];
+
+      setModules(safeModules);
+      setLessons(safeLessons);
+      setAchievements(safeAchievements);
+      setUnlockedAchievements(new Set(safeUnlocked.map(a => a.id)));
 
       // Calculate statistics
-      const totalLessons = lessonsData.length;
-      const completed = lessonsData.filter(l => completedLessons.has(l.id)).length;
+      const totalLessons = safeLessons.length;
+      const completed = safeLessons.filter(l => completedLessons.has(l.id)).length;
       
       // Calculate completed modules (all lessons in module complete)
-      const completedModules = modulesData.filter(module => {
-        const moduleLessons = lessonsData.filter(l => l.module_id === module.id);
+      const completedModulesCount = safeModules.filter(module => {
+        const moduleLessons = safeLessons.filter(l => l.module_id === module.id);
         return moduleLessons.length > 0 && 
                moduleLessons.every(l => completedLessons.has(l.id));
       }).length;
@@ -48,11 +63,11 @@ export default function ProgressDashboard() {
       setStats({
         totalLessons,
         completedLessons: completed,
-        totalModules: modulesData.length,
-        completedModules,
+        totalModules: safeModules.length,
+        completedModules: completedModulesCount,
         estimatedTimeSpent: timeSpent,
       });
-    }).catch(err => console.error('Error fetching data:', err));
+    });
   }, [completedLessons, sessionId]);
 
   const completionPercentage = stats.totalLessons > 0 
