@@ -9,13 +9,6 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, cur
   const [lessons, setLessons] = useState({});
   const { completedLessons } = useUser();
 
-  const handleHomeClick = (e) => {
-    e.preventDefault();
-    if (onViewChange) {
-      onViewChange('');
-    }
-  };
-
   const handleProgressClick = (e) => {
     e.preventDefault();
     if (onViewChange) {
@@ -125,12 +118,9 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, cur
         {/* Logo and toggle */}
         <div className="h-16 border-b border-gray-200/50 dark:border-gh-dark-border/50 flex items-center justify-between px-4">
           {!isCollapsed && (
-            <button
-              onClick={handleHomeClick}
-              className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hover:from-primary-light hover:to-purple-400 transition-all duration-200 text-left"
-            >
+            <span className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               Copilot CLI
-            </button>
+            </span>
           )}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -161,13 +151,6 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, cur
       <div className="p-4 border-b border-gray-200 dark:border-gh-dark-border">
         {!isCollapsed ? (
           <div className="space-y-1">
-            <a 
-              href="#" 
-              onClick={handleHomeClick}
-              className="block px-3 py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300"
-            >
-              🏠 Home
-            </a>
             <a 
               href="#" 
               onClick={handleCommandsClick}
@@ -215,13 +198,6 @@ export default function Sidebar({ onLessonSelect, onViewChange, currentView, cur
           </div>
         ) : (
           <div className="flex flex-col items-center space-y-2">
-            <button 
-              onClick={handleHomeClick}
-              className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg"
-              title="Home"
-            >
-              🏠
-            </button>
             <button 
               onClick={handleCommandsClick}
               className={`w-8 h-8 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg text-lg ${

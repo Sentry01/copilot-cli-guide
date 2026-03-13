@@ -3,7 +3,6 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import Terminal from './Terminal';
 import Quiz from './Quiz';
 import Breadcrumbs from './Breadcrumbs';
 import { useUser } from '../contexts/UserContext';
@@ -205,46 +204,6 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
     setIsBookmarking(false);
   };
 
-  // Handle terminal commands with simulated responses
-  const handleTerminalCommand = (command) => {
-    const cmd = command.trim().toLowerCase();
-    
-    // Simulate Copilot CLI commands (standalone CLI with interactive mode)
-    if (cmd === 'copilot' || cmd === 'copilot -i') {
-      return `🚀 GitHub Copilot CLI v1.0.0\n\nEntering interactive mode...\n\n> Welcome to Copilot CLI!\n> Ask me anything about shell commands, or use slash commands:\n>   /help    - Show available commands\n>   /login   - Authenticate with GitHub\n>   /mcp add - Add MCP server integration\n>   /agent   - Create a custom agent\n>\n> Try: "find all javascript files in this project"`;
-    }
-    
-    if (cmd === '/help' || cmd === 'copilot /help') {
-      return `📚 Copilot CLI Help\n\nSlash Commands:\n  /help           Show this help message\n  /login          Authenticate with GitHub\n  /logout         Sign out of GitHub\n  /mcp add        Add MCP server integration\n  /mcp list       List configured MCP servers\n  /agent          Create a custom agent\n  /delegate       Delegate task to an agent\n  /exit           Exit interactive mode\n\nFile References:\n  @path/to/file   Reference a file in your prompt\n\nExamples:\n  "find all TODO comments"\n  "explain @package.json"\n  "how do I compress this folder?"`;
-    }
-    
-    if (cmd === '/login' || cmd === 'copilot /login') {
-      return `🔐 Authentication\n\nOpening browser for GitHub authentication...\n\n✓ Successfully authenticated!\nConnected as: github-user\n\nYou're ready to use Copilot CLI!`;
-    }
-    
-    if (cmd.startsWith('/mcp') || cmd.startsWith('copilot /mcp')) {
-      return `🔧 MCP Server Integration\n\nUsage:\n  /mcp add <server>  - Add a new MCP server\n  /mcp list          - List configured servers\n  /mcp remove        - Remove a server\n\nExample:\n  /mcp add @playwright/mcp-server`;
-    }
-    
-    if (cmd.includes('@') && !cmd.startsWith('/')) {
-      const fileRef = cmd.match(/@[\w/.+-]+/);
-      const file = fileRef ? fileRef[0] : '@file';
-      return `📄 Reading ${file}...\n\n✓ File context added to conversation.\n\nI can see the contents of ${file}. What would you like to know about it?`;
-    }
-    
-    if (cmd === 'clear') {
-      return null; // Terminal will handle clear
-    }
-    
-    // Default response for natural language queries
-    if (cmd.length > 3 && !cmd.startsWith('/')) {
-      return `✨ Copilot Response:\n\nFor "${command}":\n\n  find . -name "*.js" -type f\n\nThis command will:\n- Search current directory and subdirectories\n- Find files matching the pattern\n- Show only files (not directories)\n\n💡 Tip: Use @filepath to include file context in your questions.`;
-    }
-    
-    // Help for unrecognized commands
-    return `Command: ${command}\n\nTry these Copilot CLI commands:\n  copilot           Start interactive mode\n  /help             Show available commands\n  /login            Authenticate with GitHub\n  @file.js          Reference a file in your query`;
-  };
-
   if (loading) {
     return <LessonLoadingSkeleton />;
   }
@@ -375,19 +334,6 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
           {lesson.content}
         </ReactMarkdown>
       </div>
-
-      {/* Interactive Terminal (if lesson has terminal) */}
-      {lesson.has_terminal === 1 && (
-        <div className="mt-8">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            🔧 Try It Yourself
-          </h3>
-          <Terminal 
-            scenarioId={lesson.id}
-            onCommand={(cmd) => handleTerminalCommand(cmd, lesson.id)}
-          />
-        </div>
-      )}
 
       {/* Quiz Section */}
       <div className="mt-12">

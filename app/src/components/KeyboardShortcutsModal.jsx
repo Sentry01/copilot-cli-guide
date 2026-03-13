@@ -55,8 +55,6 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }) {
     {
       category: 'Terminal',
       items: [
-        { keys: ['Cmd', 'Enter'], description: 'Execute command' },
-        { keys: ['Ctrl', 'C'], description: 'Clear terminal' },
         { keys: ['↑'], description: 'Previous command in history' },
         { keys: ['↓'], description: 'Next command in history' },
       ]

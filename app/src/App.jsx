@@ -148,11 +148,7 @@ function AppContent() {
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
               >
-                <CommandsView 
-                  onNavigateToTerminal={() => {
-                    handleLessonSelect(2);
-                  }}
-                />
+                <CommandsView />
               </motion.div>
             } />
             <Route path="/examples" element={

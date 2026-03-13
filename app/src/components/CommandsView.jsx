@@ -4,7 +4,7 @@ import { CommandsLoadingSkeleton } from './LoadingStates';
 import { delay, LOADING_DELAY } from '../utils/delay';
 import ErrorMessage, { NetworkError } from './ErrorMessage';
 
-function CommandsView({ onNavigateToTerminal }) {
+function CommandsView() {
   const [commands, setCommands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -76,11 +76,7 @@ function CommandsView({ onNavigateToTerminal }) {
         commandName={selectedCommand}
         onBack={() => setSelectedCommand(null)}
         onSelectCommand={setSelectedCommand}
-        onTryIt={() => {
-          if (onNavigateToTerminal) {
-            onNavigateToTerminal(selectedCommand);
-          }
-        }}
+        onTryIt={() => {}}
       />
     );
   }
