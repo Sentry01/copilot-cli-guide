@@ -341,7 +341,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
             td: ({node: _node, ...props}) => <td className="px-4 py-3 text-gray-700 dark:text-gray-300" {...props} />,
           }}
         >
-          {lesson.content}
+          {lesson.content.replace(/^#\s+[^\n]+\n*/, '')}
         </ReactMarkdown>
       </div>
 
