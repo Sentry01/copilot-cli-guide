@@ -11,9 +11,12 @@ export default function handler(req, res) {
   }
   
   // Parse URL: /api/bookmarks/[session_id] or /api/bookmarks/[session_id]/lesson/[lesson_id]
-  const urlParts = req.url.split('/').filter(Boolean);
+  const urlParts = req.url.split('?')[0].split('/').filter(Boolean);
   const sessionId = urlParts[2] || req.headers['x-session-id'];
-  const lessonId = urlParts[4] ? parseInt(urlParts[4]) : null;
+  // Support lesson_id from URL path, query param, or request body
+  let lessonId = urlParts[4] ? parseInt(urlParts[4]) : null;
+  if (!lessonId && req.query?.lesson_id) lessonId = parseInt(req.query.lesson_id);
+  if (!lessonId && req.body?.lesson_id) lessonId = parseInt(req.body.lesson_id);
   
   if (!sessionId) {
     return res.status(400).json({ error: 'Session ID required' });

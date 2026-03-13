@@ -187,13 +187,13 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
     try {
       if (isBookmarked) {
         // Remove bookmark
-        await fetch(`/api/bookmarks/${sessionId}/lesson/${lessonId}`, {
+        await fetch(`/api/bookmarks/${sessionId}?lesson_id=${lessonId}`, {
           method: 'DELETE',
         });
         setIsBookmarked(false);
       } else {
         // Add bookmark
-        await fetch(`/api/bookmarks/${sessionId}/lesson/${lessonId}`, {
+        await fetch(`/api/bookmarks/${sessionId}?lesson_id=${lessonId}`, {
           method: 'POST',
         });
         setIsBookmarked(true);

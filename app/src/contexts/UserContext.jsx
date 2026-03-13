@@ -40,7 +40,7 @@ export function UserProvider({ children }) {
     
     try {
       const response = await fetch(
-        `/api/progress/${sessionId}/lesson/${lessonId}`,
+        `/api/progress/${sessionId}?lesson_id=${lessonId}`,
         { method: 'POST' }
       );
       
@@ -89,7 +89,7 @@ export function UserProvider({ children }) {
     
     try {
       const response = await fetch(
-        `/api/progress/${sessionId}/lesson/${lessonId}`,
+        `/api/progress/${sessionId}?lesson_id=${lessonId}`,
         { method: 'DELETE' }
       );
       
