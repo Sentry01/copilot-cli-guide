@@ -60,17 +60,17 @@ const LandingPage = () => {
         >
           <div className="p-6 glass dark:glass-dark rounded-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-glass dark:hover:shadow-glass-dark transition-all duration-300 hover:scale-105 transform">
             <div className="text-blue-500 text-2xl mb-3">📚</div>
-            <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Interactive Lessons</h3>
+            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Interactive Lessons</h2>
             <p className="text-gray-600 dark:text-gray-300 text-sm">Step-by-step guides to master every aspect of the CLI.</p>
           </div>
           <div className="p-6 glass dark:glass-dark rounded-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-glass dark:hover:shadow-glass-dark transition-all duration-300 hover:scale-105 transform">
             <div className="text-purple-500 text-2xl mb-3">⌨️</div>
-            <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Command Reference</h3>
+            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Command Reference</h2>
             <p className="text-gray-600 dark:text-gray-300 text-sm">Comprehensive documentation of all available commands.</p>
           </div>
           <div className="p-6 glass dark:glass-dark rounded-2xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-glass dark:hover:shadow-glass-dark transition-all duration-300 hover:scale-105 transform">
             <div className="text-green-500 text-2xl mb-3">💡</div>
-            <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Real Examples</h3>
+            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Real Examples</h2>
             <p className="text-gray-600 dark:text-gray-300 text-sm">Practical use cases to apply in your daily workflow.</p>
           </div>
         </motion.div>
