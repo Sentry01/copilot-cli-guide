@@ -259,7 +259,7 @@ function DataTab() {
       }
       
       // Fetch all user data from the API
-      const response = await fetch(`/api/user/export?session_id=${sessionId}`, {
+      const response = await fetch(`/api/user?action=export&session_id=${sessionId}`, {
         headers: {
           'X-Session-ID': sessionId
         }
