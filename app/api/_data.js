@@ -15,7 +15,7 @@ export const lessons = [
     id: 1,
     module_id: 1,
     title: 'Essential Slash Commands',
-    content: '# Essential Slash Commands\n\n## Overview\nSlash commands provide direct control over Copilot CLI. Type `/` to see autocomplete suggestions.\n\n## Session Management\n```bash\n/clear          # Clear conversation history\n/compact        # Summarize conversation to reduce context\n/context        # Show context window token usage\n/session        # Show session info and workspace summary\n/resume         # Switch to a different session\n/rename <name>  # Rename current session\n/share          # Share session to markdown or GitHub gist\n/copy           # Copy last response to clipboard\n/exit           # Exit the CLI (also /quit)\n/restart        # Restart CLI, preserving session\n```\n\n## Model & Agent Commands\n```bash\n/model          # Select AI model (Claude, GPT-5, Gemini)\n/model gpt-5    # Switch to specific model\n/fleet          # Enable fleet mode for parallel subagents\n/tasks          # View and manage background tasks\n/agent          # Browse and select custom agents\n/delegate       # Delegate task to cloud coding agent\n```\n\n## Code & Review\n```bash\n/diff           # Review changes with syntax-highlighted diffs\n/review         # Run code review agent on staged/unstaged changes\n/plan           # Create implementation plan before coding\n/research       # Deep research using GitHub search and web\n/init           # Initialize Copilot instructions for repo\n/lsp            # Manage language server configuration\n/ide            # Connect to an IDE workspace\n/terminal-setup # Configure multiline input (shift+enter)\n```\n\n## Permissions\n```bash\n/allow-all      # Enable all permissions (also /yolo)\n/add-dir <path> # Add directory to allowed list\n/list-dirs      # Display all allowed directories\n/cwd <path>     # Change working directory\n/reset-allowed-tools  # Reset allowed tools list\n```\n\n## Authentication & User\n```bash\n/login          # Authenticate with GitHub\n/logout         # Sign out\n/user           # Manage GitHub user list\n```\n\n## Help & Configuration\n```bash\n/help           # Show all commands\n/feedback       # Submit feedback\n/theme          # View/configure terminal theme\n/changelog      # Display version changelog\n/update         # Update CLI to latest version\n/experimental   # Toggle experimental features\n/instructions   # View custom instruction files\n/streamer-mode  # Toggle streamer mode\n/usage          # Display usage metrics\n```\n\n## Plugins & Skills\n```bash\n/plugin install owner/repo  # Install a plugin\n/plugin list                # List installed plugins\n/skills                     # Manage skills\n/mcp add                    # Add MCP server\n/mcp list                   # List MCP servers\n```',
+    content: '# Essential Slash Commands\n\n## Session Management\n\n| Command | Description |\n|---------|-------------|\n| `/clear` or `/new` | Clear conversation history |\n| `/compact` | Summarize context to save tokens |\n| `/context` | View context window usage |\n| `/session` | Show session info and workspace |\n| `/resume` | Switch to a different session |\n| `/rename` | Rename current session |\n| `/share` | Share session to file or gist |\n| `/copy` | Copy last response to clipboard |\n| `/exit` or `/quit` | Exit Copilot CLI |\n| `/restart` | Restart CLI process |\n\n## Code & Review\n\n| Command | Description |\n|---------|-------------|\n| `/diff` | Review all changes with syntax highlighting |\n| `/review` | Run code review agent on changes |\n| `/plan` | Create an implementation plan first |\n| `/undo` | Revert last file change |\n| `/init` | Initialize Copilot instructions for repo |\n| `/research` | Deep research investigation |\n\n## Models & Agents\n\n| Command | Description |\n|---------|-------------|\n| `/model` | Select AI model |\n| `/agent` | Select custom agent |\n| `/fleet` | Launch parallel subagents |\n| `/tasks` | View background tasks |\n| `/delegate` | Delegate to Copilot coding agent |\n\n## Help & Configuration\n\n| Command | Description |\n|---------|-------------|\n| `?` | Quick help overlay |\n| `/help` | Detailed command help |\n| `/changelog` | View recent changes |\n| `/update` | Update CLI version |\n| `/theme` | Set terminal theme |\n| `/instructions` | View custom instructions |\n| `/experimental` | Toggle experimental features |\n| `/user` | Manage GitHub accounts |\n| `/streamer-mode` | Hide sensitive info |\n\n## Permissions\n\n| Command | Description |\n|---------|-------------|\n| `/allow-all` or `/yolo` | Enable all permissions |\n| `/add-dir` | Trust an additional directory |\n| `/cwd` or `/cd` | Change working directory |\n| `/list-dirs` | Show trusted directories |\n| `/reset-allowed-tools` | Reset tool permissions |\n\n## Plugins & Skills\n\n| Command | Description |\n|---------|-------------|\n| `/plugin` | Manage plugins |\n| `/skills` | Manage skills |\n| `/mcp` | Manage MCP servers |\n| `/lsp` | Manage language servers |',
     duration: 8,
     difficulty: 'beginner',
     order_index: 1
@@ -42,7 +42,7 @@ export const lessons = [
     id: 4,
     module_id: 1,
     title: 'MCP Commands',
-    content: '# MCP Commands\n\n## What is MCP?\n\nModel Context Protocol (MCP) extends Copilot CLI with external tools and services.\n\n## Built-in MCP Server\n\nCopilot CLI comes with the **GitHub MCP server** pre-configured, allowing you to:\n- Interact with GitHub.com resources\n- Merge pull requests from CLI\n- Manage issues and discussions\n\n## /mcp add - Add New Server\n\n```bash\n/mcp add\n```\n\n1. Fill in the MCP server details\n2. Use **Tab** to move between fields\n3. Press **Ctrl+S** to save\n\n## /mcp list - View Configured Servers\n\n```bash\n/mcp list\n```\n\n## Configuration File\n\nMCP server configurations are stored in:\n```\n~/.copilot/mcp-config.json\n```\n\nYou can change this location with the `XDG_CONFIG_HOME` environment variable.\n\n## Popular MCP Servers\n\n- **Playwright**: Browser automation and testing\n- **Filesystem**: Enhanced file operations\n- **Database**: Direct database queries\n- **Custom**: Build your own for specific tools',
+    content: '# MCP Commands\n\n## What is MCP?\n\nModel Context Protocol (MCP) extends Copilot CLI with external tools and services.\n\n## Built-in MCP Server\n\nCopilot CLI comes with the **GitHub MCP server** pre-configured, allowing you to:\n- Interact with GitHub.com resources\n- Merge pull requests from CLI\n- Manage issues and discussions\n\n## /mcp Subcommands\n\n### /mcp show — List Servers\n```bash\n/mcp show\n```\nView all configured MCP servers and their status.\n\n### /mcp add — Add New Server\n```bash\n/mcp add\n```\nFill in server details, use **Tab** to navigate fields, **Ctrl+S** to save.\n\n### /mcp edit — Edit Server\n```bash\n/mcp edit server-name\n```\n\n### /mcp delete — Remove Server\n```bash\n/mcp delete server-name\n```\n\n### /mcp disable / enable — Toggle Servers\n```bash\n/mcp disable server-name\n/mcp enable server-name\n```\n\n## Configuration File\n\nMCP server configurations are stored in:\n```\n~/.copilot/mcp-config.json\n```\n\n## Popular MCP Servers\n\n- **Playwright**: Browser automation and testing\n- **Filesystem**: Enhanced file operations\n- **Database**: Direct database queries\n- **Custom**: Build your own for specific tools',
     duration: 10,
     difficulty: 'intermediate',
     order_index: 4
@@ -69,7 +69,7 @@ export const lessons = [
     id: 7,
     module_id: 2,
     title: 'Configuration & Environment',
-    content: '# Configuration & Environment\n\n## Configuration File\n\nAdjust settings in `~/.copilot/config.json` (or location set by `XDG_CONFIG_HOME`).\n\n## Getting Configuration Help\n\n```bash\ncopilot help config\n```\n\n## Environment Variables\n\n```bash\ncopilot help environment\n```\n\nKey environment variables:\n- `GH_TOKEN` / `GITHUB_TOKEN`: Authentication token\n- `XDG_CONFIG_HOME`: Custom config directory\n\n## Logging\n\n```bash\ncopilot help logging\n```\n\nConfigure log levels for debugging.\n\n## Permissions\n\n```bash\ncopilot help permissions\n```\n\nManage tool allow/deny lists.\n\n## Key Config Options\n\n- Model preferences\n- Default MCP servers\n- Trusted directories\n- Tool permissions',
+    content: '# Configuration & Environment\n\n## Configuration Files\n\nCopilot CLI uses three scopes of configuration:\n\n| Scope | Location |\n|-------|----------|\n| User | `~/.copilot/config.json` |\n| Repository | `.github/copilot/settings.json` |\n| Local | `.github/copilot/settings.local.json` |\n\nLocal settings override repository, which override user settings.\n\n## Key Environment Variables\n\n| Variable | Purpose |\n|----------|----------|\n| `COPILOT_MODEL` | Set default AI model |\n| `COPILOT_ALLOW_ALL` | Skip all permission prompts |\n| `COPILOT_AUTO_UPDATE` | Control auto-update behavior |\n| `COPILOT_CUSTOM_INSTRUCTIONS_DIRS` | Additional instruction directories |\n| `COPILOT_SKILLS_DIRS` | Additional skills directories |\n| `COPILOT_EDITOR` | Preferred editor for Ctrl+X,Ctrl+E |\n| `COPILOT_HOME` | Override default config directory |\n| `GH_TOKEN` / `GITHUB_TOKEN` | Authentication token |\n| `COPILOT_GITHUB_TOKEN` | Copilot-specific auth token |\n\n## Hooks System\n\nHooks customize Copilot behavior. Stored in `.github/hooks/*.json`:\n\n### Command Hooks\nRun scripts before/after tool execution:\n```json\n{\n  "hooks": [{\n    "event": "copilot_tool_call",\n    "script": "./scripts/validate.sh",\n    "tools": ["shell"]\n  }]\n}\n```\n\n### Prompt Hooks\nInject context into every prompt:\n```json\n{\n  "hooks": [{\n    "event": "copilot_prompt",\n    "script": "./scripts/inject-context.sh"\n  }]\n}\n```\n\n## Tool Permission Patterns\n\nControl which tools Copilot can use in settings files:\n```json\n{\n  "permissions": {\n    "allow": ["shell(git:*)", "read", "write"],\n    "deny": ["shell(rm:*)"],\n    "ask": ["url"]\n  }\n}\n```\n\nDeny rules always take precedence over allow rules.',
     duration: 8,
     difficulty: 'advanced',
     order_index: 3
@@ -105,7 +105,7 @@ export const lessons = [
     id: 11,
     module_id: 3,
     title: 'Skills',
-    content: '# Skills\n\n## What Are Skills?\n\nSkills enhance Copilot\'s ability to perform specialized tasks with:\n- Custom instructions\n- Scripts\n- Resources\n\n## How Skills Work\n\nSkills are reusable components that agents can leverage for specific capabilities:\n\n- **Code Generation Skills**: Language-specific patterns\n- **Testing Skills**: Test framework conventions\n- **Deployment Skills**: CI/CD workflows\n- **Documentation Skills**: Doc generation patterns\n\n## Skill Benefits\n\n1. **Consistency**: Same approach across projects\n2. **Reusability**: Write once, use everywhere\n3. **Specialization**: Deep expertise in specific areas\n4. **Maintainability**: Update skills centrally\n\n## Learning More\n\nSkills are an advanced feature. For detailed information, see the official GitHub documentation on Agent Skills.',
+    content: '# Skills\n\n## What Are Skills?\n\nSkills enhance Copilot\'s ability to perform specialized tasks. They are reusable instruction sets stored as Markdown files.\n\n## Managing Skills\n\n### /skills list — View Available Skills\n```bash\n/skills list\n```\n\n### /skills info — Skill Details\n```bash\n/skills info skill-name\n```\n\n### /skills add — Add a Skill\n```bash\n/skills add path/to/skill\n```\n\n### /skills remove — Remove a Skill\n```bash\n/skills remove skill-name\n```\n\n### /skills reload — Refresh from Disk\n```bash\n/skills reload\n```\n\n## Skill Storage Locations\n\n| Level | Location |\n|-------|----------|\n| User | `~/.copilot/skills/` |\n| Project | `.github/skills/` |\n\nSet `COPILOT_SKILLS_DIRS` for additional directories.\n\n## Skill File Structure\n\nA skill is a `.md` file with YAML frontmatter:\n```markdown\n---\nname: my-skill\ndescription: "Description of what this skill does"\n---\n\n# Skill Instructions\n\nDetailed instructions for the agent...\n```\n\n## Benefits\n\n1. **Consistency**: Same approach across projects\n2. **Reusability**: Write once, use everywhere\n3. **Specialization**: Deep expertise in specific areas\n4. **Maintainability**: Update skills centrally',
     duration: 6,
     difficulty: 'advanced',
     order_index: 4
@@ -243,7 +243,7 @@ export const commands = [
     id: 1,
     name: 'copilot',
     syntax: 'copilot [options]',
-    description: 'Start Copilot CLI in interactive mode. The default model is Claude Sonnet 4.5. Use /model to switch. GA version 1.0 (March 2026).',
+    description: 'Start Copilot CLI in interactive mode. Default model is Claude Sonnet 4.5. Use /model to switch. GA since February 2026.',
     category: 'Core Commands',
     examples: [
       { description: 'Start interactive mode', command: 'copilot' },
@@ -251,7 +251,10 @@ export const commands = [
       { description: 'Continue last session', command: 'copilot --continue' },
       { description: 'Start with specific agent', command: 'copilot --agent=refactor-agent' },
       { description: 'Show welcome banner', command: 'copilot --banner' },
-      { description: 'Start in experimental mode', command: 'copilot --experimental' }
+      { description: 'Start in experimental mode', command: 'copilot --experimental' },
+      { description: 'Run a single prompt', command: 'copilot -p "explain this error"' },
+      { description: 'Start with specific model', command: 'copilot --model gpt-5' },
+      { description: 'Allow all permissions', command: 'copilot --yolo' }
     ],
     related_commands: ['copilot help', '/login', '/logout']
   },
@@ -307,7 +310,7 @@ export const commands = [
     id: 6,
     name: '/login',
     syntax: '/login',
-    description: 'Authenticate with GitHub to use Copilot CLI',
+    description: 'Authenticate with GitHub to use Copilot CLI. Supports the OAuth device flow. Use copilot login --host HOST for GitHub Enterprise.',
     category: 'Authentication',
     examples: [
       { description: 'Login to GitHub', command: '/login' }
@@ -318,7 +321,7 @@ export const commands = [
     id: 7,
     name: '/logout',
     syntax: '/logout',
-    description: 'Sign out of your GitHub account',
+    description: 'Sign out of your GitHub account and remove stored credentials.',
     category: 'Authentication',
     examples: [
       { description: 'Sign out', command: '/logout' }
@@ -340,8 +343,8 @@ export const commands = [
   {
     id: 9,
     name: '/cwd',
-    syntax: '/cwd <path>',
-    description: 'Change working directory without starting a new session',
+    syntax: '/cwd, /cd [PATH]',
+    description: 'Change working directory or display current directory. Also available as /cd.',
     category: 'Directory Management',
     examples: [
       { description: 'Switch to another project', command: '/cwd ~/other-project' },
@@ -363,8 +366,8 @@ export const commands = [
   {
     id: 11,
     name: '/delegate',
-    syntax: '/delegate <task description>',
-    description: 'Delegate task to Copilot coding agent on GitHub (creates PR)',
+    syntax: '/delegate [PROMPT]',
+    description: 'Delegate changes to a remote repository with an AI-generated pull request. Commits unstaged changes, creates a branch, and opens a draft PR for Copilot coding agent to work on.',
     category: 'Agent Commands',
     examples: [
       { description: 'Delegate test writing', command: '/delegate complete the API integration tests and fix any failing edge cases' },
@@ -374,23 +377,26 @@ export const commands = [
   },
   {
     id: 12,
-    name: '/mcp add',
-    syntax: '/mcp add',
-    description: 'Add an MCP server to extend Copilot CLI capabilities',
+    name: '/mcp',
+    syntax: '/mcp [show|add|edit|delete|disable|enable] [SERVER-NAME]',
+    description: 'Manage MCP server configuration. Subcommands: show (list servers), add (configure new server), edit (modify config), delete (remove server), disable/enable (toggle servers).',
     category: 'MCP Commands',
     examples: [
-      { description: 'Add a new MCP server', command: '/mcp add' }
+      { description: 'Add a new MCP server', command: '/mcp add' },
+      { description: 'Show configured servers', command: '/mcp show' },
+      { description: 'Edit server config', command: '/mcp edit my-server' },
+      { description: 'Disable a server', command: '/mcp disable my-server' }
     ],
     related_commands: []
   },
   {
     id: 13,
-    name: '/mcp list',
-    syntax: '/mcp list',
-    description: 'List all configured MCP servers',
+    name: '/mcp show',
+    syntax: '/mcp show',
+    description: 'List all configured MCP servers and their status. Alias for /mcp show.',
     category: 'MCP Commands',
     examples: [
-      { description: 'View configured servers', command: '/mcp list' }
+      { description: 'View configured servers', command: '/mcp show' }
     ],
     related_commands: []
   },
@@ -471,7 +477,7 @@ export const commands = [
     id: 20,
     name: '/clear',
     syntax: '/clear',
-    description: 'Clear the conversation history and start fresh. Useful when context becomes cluttered or you want to change topics.',
+    description: 'Clear the conversation history and start fresh. Also available as /new. Useful when context becomes cluttered or you want to change topics.',
     category: 'Session Commands',
     examples: [
       { description: 'Clear conversation history', command: '/clear' }
@@ -505,12 +511,15 @@ export const commands = [
   {
     id: 23,
     name: '/session',
-    syntax: '/session [subcommand]',
-    description: 'Show session info and workspace summary including current directory, git branch, and active tools.',
+    syntax: '/session [checkpoints [n]|files|plan|rename NAME]',
+    description: 'Show session information and workspace summary. Subcommands: checkpoints (view session checkpoints), files (list changed files), plan (show session plan), rename (rename session).',
     category: 'Session Commands',
     examples: [
       { description: 'Show current session info', command: '/session' },
-      { description: 'List all sessions', command: '/session list' }
+      { description: 'View session checkpoints', command: '/session checkpoints' },
+      { description: 'List changed files', command: '/session files' },
+      { description: 'Show session plan', command: '/session plan' },
+      { description: 'Rename session', command: '/session rename my-feature' }
     ],
     related_commands: ['/resume', '/rename', '/share']
   },
@@ -541,11 +550,13 @@ export const commands = [
   {
     id: 26,
     name: '/share',
-    syntax: '/share',
-    description: 'Share the current session or research report. Can export to a markdown file or publish as a GitHub gist.',
+    syntax: '/share [file|gist] [PATH]',
+    description: 'Share the current session to a Markdown file or GitHub gist. Specify \'file\' or \'gist\' as the output format.',
     category: 'Session Commands',
     examples: [
-      { description: 'Share session', command: '/share' }
+      { description: 'Share session', command: '/share' },
+      { description: 'Share to file', command: '/share file ./session.md' },
+      { description: 'Share as gist', command: '/share gist' }
     ],
     related_commands: ['/session', '/copy', '/research']
   },
@@ -599,8 +610,8 @@ export const commands = [
   {
     id: 31,
     name: '/fleet',
-    syntax: '/fleet',
-    description: 'Enable fleet mode for parallel subagent execution. Launches multiple specialized agents simultaneously to tackle complex tasks faster.',
+    syntax: '/fleet [PROMPT]',
+    description: 'Enable parallel subagent execution of parts of a task. Launches multiple specialized agents simultaneously for faster complex task completion.',
     category: 'Model & Agent Commands',
     examples: [
       { description: 'Enable fleet mode', command: '/fleet' }
@@ -633,8 +644,8 @@ export const commands = [
   {
     id: 34,
     name: '/review',
-    syntax: '/review',
-    description: 'Run the code review agent to analyze staged or unstaged changes. Provides high-signal feedback on bugs, security issues, and logic errors.',
+    syntax: '/review [PROMPT]',
+    description: 'Run the code review agent to analyze staged or unstaged changes. Provides high-signal feedback on bugs, security issues, and logic errors. Optional prompt for specific focus areas.',
     category: 'Code & Review Commands',
     examples: [
       { description: 'Run code review', command: '/review' }
@@ -655,8 +666,8 @@ export const commands = [
   {
     id: 36,
     name: '/lsp',
-    syntax: '/lsp',
-    description: 'Manage language server configuration. Configure language servers for enhanced code intelligence, diagnostics, and navigation.',
+    syntax: '/lsp [show|test|reload|help] [SERVER-NAME]',
+    description: 'Manage language server configuration. Subcommands: show (list configured servers), test (validate server connection), reload (restart servers), help (LSP documentation).',
     category: 'Code & Review Commands',
     examples: [
       { description: 'Manage LSP config', command: '/lsp' }
@@ -688,8 +699,8 @@ export const commands = [
   {
     id: 39,
     name: '/plan',
-    syntax: '/plan',
-    description: 'Create an implementation plan before coding. Analyzes the task, breaks it into steps, and outlines the approach before making changes.',
+    syntax: '/plan [PROMPT]',
+    description: 'Create an implementation plan before coding. Analyzes the task, outlines steps, and waits for approval before making changes. Can include an optional prompt.',
     category: 'Code & Review Commands',
     examples: [
       { description: 'Create implementation plan', command: '/plan' }
@@ -744,7 +755,7 @@ export const commands = [
   {
     id: 44,
     name: '/theme',
-    syntax: '/theme [theme-name]',
+    syntax: '/theme [show|set|list] [auto|THEME-ID]',
     description: 'View or configure the terminal color theme. Options include GitHub Dark, GitHub Light, and colorblind-accessible variants.',
     category: 'Help & Configuration',
     examples: [
@@ -779,8 +790,8 @@ export const commands = [
   {
     id: 47,
     name: '/experimental',
-    syntax: '/experimental',
-    description: 'Show available experimental features and toggle experimental mode on or off. Enables access to preview features.',
+    syntax: '/experimental [on|off]',
+    description: 'Toggle or explicitly enable/disable experimental features. Use /experimental on or /experimental off for explicit control.',
     category: 'Help & Configuration',
     examples: [
       { description: 'View experimental features', command: '/experimental' }
@@ -812,8 +823,8 @@ export const commands = [
   {
     id: 50,
     name: '/user',
-    syntax: '/user',
-    description: 'Manage the GitHub user list. View and switch between authenticated GitHub accounts.',
+    syntax: '/user [show|list|switch]',
+    description: 'Manage GitHub user accounts. Subcommands: show (display current user), list (all authenticated users), switch (change active user).',
     category: 'Help & Configuration',
     examples: [
       { description: 'Manage users', command: '/user' }
@@ -823,21 +834,23 @@ export const commands = [
   {
     id: 51,
     name: '/plugin',
-    syntax: '/plugin [install|list|remove] [owner/repo]',
-    description: 'Manage plugins and plugin marketplaces. Plugins bundle MCP servers, agents, skills, and hooks for extended functionality.',
+    syntax: '/plugin [marketplace|install|uninstall|update|list] [ARGS...]',
+    description: 'Manage plugins and plugin marketplaces. Plugins bundle MCP servers, agents, skills, and hooks for extended functionality. Subcommands include marketplace (browse available plugins), install, uninstall, update, and list.',
     category: 'Plugin & Skills Commands',
     examples: [
       { description: 'List installed plugins', command: '/plugin list' },
       { description: 'Install a plugin', command: '/plugin install owner/repo' },
-      { description: 'Remove a plugin', command: '/plugin remove owner/repo' }
+      { description: 'Uninstall a plugin', command: '/plugin uninstall owner/repo' },
+      { description: 'Update a plugin', command: '/plugin update owner/repo' },
+      { description: 'Browse marketplace', command: '/plugin marketplace' }
     ],
     related_commands: ['/skills', '/mcp add', '/mcp list']
   },
   {
     id: 52,
     name: '/skills',
-    syntax: '/skills',
-    description: 'Manage skills for enhanced capabilities. Skills provide specialized domain knowledge and workflows that improve task execution.',
+    syntax: '/skills [list|info|add|remove|reload] [ARGS...]',
+    description: 'Manage skills for enhanced capabilities. Subcommands: list (show available skills), info (skill details), add/remove (manage skills), reload (refresh from disk).',
     category: 'Plugin & Skills Commands',
     examples: [
       { description: 'List available skills', command: '/skills' }
@@ -878,6 +891,42 @@ export const commands = [
       { description: 'Toggle reasoning display', command: 'Ctrl+T' }
     ],
     related_commands: ['?', '/model', '/context']
+  },
+  {
+    id: 56,
+    name: '/help',
+    syntax: '/help [COMMAND]',
+    description: 'Show help for interactive slash commands. Without arguments, lists all commands. With a command name, shows detailed usage for that command.',
+    category: 'Help & Configuration',
+    examples: [
+      { description: 'List all commands', command: '/help' },
+      { description: 'Get help for /mcp', command: '/help mcp' },
+      { description: 'Get help for /model', command: '/help model' }
+    ],
+    related_commands: ['?', 'copilot help', '/changelog']
+  },
+  {
+    id: 57,
+    name: 'copilot version',
+    syntax: 'copilot version',
+    description: 'Display the currently installed Copilot CLI version.',
+    category: 'Core Commands',
+    examples: [
+      { description: 'Check installed version', command: 'copilot version' }
+    ],
+    related_commands: ['copilot', '/update', '/changelog']
+  },
+  {
+    id: 58,
+    name: '/undo',
+    syntax: '/undo',
+    description: 'Revert the last file change made by Copilot. Can be called multiple times to undo successive changes.',
+    category: 'Code & Review Commands',
+    examples: [
+      { description: 'Undo last change', command: '/undo' },
+      { description: 'Undo multiple changes', command: '/undo (repeat)' }
+    ],
+    related_commands: ['/diff', '/review', '/plan']
   }
 ];
 
@@ -1321,6 +1370,166 @@ export const examples = [
     category: 'Keyboard Shortcuts',
     difficulty: 'beginner',
     language: 'null'
+  },
+  {
+    id: 56,
+    title: 'Install via Script',
+    code: 'curl -fsSL https://gh.io/copilot-install | bash',
+    category: 'Getting Started',
+    difficulty: 'beginner',
+    language: 'shell'
+  },
+  {
+    id: 57,
+    title: 'Check CLI Version',
+    code: 'copilot version',
+    category: 'Getting Started',
+    difficulty: 'beginner',
+    language: 'shell'
+  },
+  {
+    id: 58,
+    title: 'Initialize Repository',
+    code: '/init',
+    category: 'Getting Started',
+    difficulty: 'beginner',
+    language: 'slash'
+  },
+  {
+    id: 59,
+    title: 'Undo Last Change',
+    code: '/undo',
+    category: 'Code Review',
+    difficulty: 'beginner',
+    language: 'slash'
+  },
+  {
+    id: 60,
+    title: 'Get Command Help',
+    code: '/help mcp',
+    category: 'Help',
+    difficulty: 'beginner',
+    language: 'slash'
+  },
+  {
+    id: 61,
+    title: 'Set Default Model via Environment',
+    code: 'export COPILOT_MODEL=claude-opus-4.6 && copilot',
+    category: 'Configuration',
+    difficulty: 'intermediate',
+    language: 'shell'
+  },
+  {
+    id: 62,
+    title: 'Allow All Permissions',
+    code: 'copilot --yolo',
+    category: 'Configuration',
+    difficulty: 'intermediate',
+    language: 'shell'
+  },
+  {
+    id: 63,
+    title: 'Edit MCP Server Config',
+    code: '/mcp edit my-server',
+    category: 'MCP Integration',
+    difficulty: 'intermediate',
+    language: 'slash'
+  },
+  {
+    id: 64,
+    title: 'Disable MCP Server',
+    code: '/mcp disable playwright',
+    category: 'MCP Integration',
+    difficulty: 'intermediate',
+    language: 'slash'
+  },
+  {
+    id: 65,
+    title: 'Browse Plugin Marketplace',
+    code: '/plugin marketplace',
+    category: 'Plugins & Skills',
+    difficulty: 'intermediate',
+    language: 'slash'
+  },
+  {
+    id: 66,
+    title: 'View Skill Details',
+    code: '/skills info my-skill',
+    category: 'Plugins & Skills',
+    difficulty: 'intermediate',
+    language: 'slash'
+  },
+  {
+    id: 67,
+    title: 'Reload Skills from Disk',
+    code: '/skills reload',
+    category: 'Plugins & Skills',
+    difficulty: 'intermediate',
+    language: 'slash'
+  },
+  {
+    id: 68,
+    title: 'View Session Checkpoints',
+    code: '/session checkpoints',
+    category: 'Session Management',
+    difficulty: 'intermediate',
+    language: 'slash'
+  },
+  {
+    id: 69,
+    title: 'Share Session as Gist',
+    code: '/share gist',
+    category: 'Session Management',
+    difficulty: 'intermediate',
+    language: 'slash'
+  },
+  {
+    id: 70,
+    title: 'Set Theme to Auto',
+    code: '/theme set auto',
+    category: 'Configuration',
+    difficulty: 'beginner',
+    language: 'slash'
+  },
+  {
+    id: 71,
+    title: 'Switch GitHub Account',
+    code: '/user switch',
+    category: 'Configuration',
+    difficulty: 'intermediate',
+    language: 'slash'
+  },
+  {
+    id: 72,
+    title: 'Fleet Deploy for Tests',
+    code: '/fleet run all unit tests and integration tests in parallel',
+    category: 'Delegation',
+    difficulty: 'advanced',
+    language: 'slash'
+  },
+  {
+    id: 73,
+    title: 'Background Task to Cloud',
+    code: '& refactor the database layer to use connection pooling',
+    category: 'Background Delegation',
+    difficulty: 'advanced',
+    language: 'slash'
+  },
+  {
+    id: 74,
+    title: 'LSP Server Status',
+    code: '/lsp show',
+    category: 'Configuration',
+    difficulty: 'intermediate',
+    language: 'slash'
+  },
+  {
+    id: 75,
+    title: 'Compact with Instructions',
+    code: '/compact preserve all code changes and test results',
+    category: 'Session Management',
+    difficulty: 'intermediate',
+    language: 'slash'
   }
 ];
 
