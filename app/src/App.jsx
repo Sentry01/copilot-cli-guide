@@ -204,6 +204,9 @@ function AppContent() {
 
       {/* Achievement Notifications */}
       <AchievementNotification />
+
+      {/* Aria-live region for screen reader announcements */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only" id="status-announcer"></div>
     </MainLayout>
   );
 }

@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '../contexts/ThemeContext';
 
 export default function SettingsModal({ isOpen, onClose }) {
   const [activeTab, setActiveTab] = useState('appearance');
+  const drawerRef = useRef(null);
 
   // Close modal on Escape key
   useEffect(() => {
@@ -16,6 +17,29 @@ export default function SettingsModal({ isOpen, onClose }) {
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
+
+  // Focus trap
+  const handleKeyDown = useCallback((e) => {
+    if (e.key !== 'Tab' || !drawerRef.current) return;
+    const focusable = drawerRef.current.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isOpen && drawerRef.current) {
+      const firstFocusable = drawerRef.current.querySelector('button, [href], input, select');
+      firstFocusable?.focus();
+    }
+  }, [isOpen]);
 
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -50,6 +74,8 @@ export default function SettingsModal({ isOpen, onClose }) {
       {/* Modal Container */}
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <div 
+          ref={drawerRef}
+          onKeyDown={handleKeyDown}
           className="relative bg-white dark:bg-gh-dark-surface rounded-xl shadow-2xl max-w-3xl w-full border border-gray-200/50 dark:border-gh-dark-border"
           onClick={(e) => e.stopPropagation()}
           role="dialog"

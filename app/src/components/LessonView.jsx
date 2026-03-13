@@ -306,7 +306,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
       </div>
 
       {/* Lesson content with markdown rendering */}
-      <div className="max-w-none space-y-2">
+      <div className="lesson-content max-w-none space-y-2">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{

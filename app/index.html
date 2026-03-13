@@ -6,6 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Interactive guide to GitHub Copilot CLI - commands, examples, and tutorials" />
     <title>GitHub Copilot CLI Guide</title>
+    <script>
+      // Prevent white flash: apply dark mode before paint
+      (function() {
+        var t = localStorage.getItem('theme');
+        var d = t === 'dark' || (t === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (d) document.documentElement.classList.add('dark');
+        var fs = localStorage.getItem('fontSize');
+        if (fs) {
+          var m = { small: '14px', medium: '16px', large: '18px', xlarge: '20px' };
+          document.documentElement.style.setProperty('--base-font-size', m[fs] || '16px');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

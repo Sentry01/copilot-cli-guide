@@ -24,7 +24,7 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
         {/* Mobile hamburger menu */}
         <button
           onClick={onToggleMobileMenu}
-          className="p-2 rounded-lg hover:bg-white/60 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 md:hidden mr-4 transition-all duration-200"
+          className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/60 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 md:hidden mr-4 transition-all duration-200"
           aria-label="Toggle mobile menu"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +40,7 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
           {/* Keyboard Shortcuts Button */}
           <button 
             onClick={onShowKeyboardShortcuts}
-            className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors duration-200"
+            className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors duration-200"
             title="Keyboard Shortcuts (Press ?)"
             aria-label="Show keyboard shortcuts"
           >
@@ -51,7 +51,7 @@ export default function Header({ onLessonSelect, onShowKeyboardShortcuts, onTogg
 
           <button 
             onClick={() => setIsSettingsOpen(true)}
-            className="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors duration-200"
+            className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary-light transition-colors duration-200"
             aria-label="Open settings"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
