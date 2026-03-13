@@ -337,7 +337,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
             thead: ({node: _node, ...props}) => <thead className="bg-gray-100 dark:bg-gray-800" {...props} />,
             tbody: ({node: _node, ...props}) => <tbody className="divide-y divide-gray-100 dark:divide-gray-800" {...props} />,
             tr: ({node: _node, ...props}) => <tr className="even:bg-gray-50/50 dark:even:bg-gray-800/30 hover:bg-blue-50/50 dark:hover:bg-gray-700/30 transition-colors" {...props} />,
-            th: ({node: _node, ...props}) => <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider" {...props} />,
+            th: ({node: _node, ...props}) => <th scope="col" className="px-5 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider" {...props} />,
             td: ({node: _node, ...props}) => <td className="px-5 py-3.5 text-gray-700 dark:text-gray-300 align-top" {...props} />,
           }}
         >

@@ -195,9 +195,9 @@ function ExampleCard({ example, isExpanded, onToggle, getDifficultyColor }) {
     >
       {/* Header */}
       <div className="mb-3">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
           {example.title}
-        </h3>
+        </h2>
         <div className="flex gap-2 flex-wrap">
           <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(example.difficulty)}`}>
             {example.difficulty}
