@@ -306,7 +306,7 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
       </div>
 
       {/* Lesson content with markdown rendering */}
-      <div className="prose prose-lg dark:prose-invert max-w-none">
+      <div className="max-w-none space-y-2">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
@@ -329,6 +329,16 @@ export default function LessonView({ lessonId, onNavigateToLesson }) {
             a: ({node: _node, ...props}) => <a className="text-primary hover:underline" {...props} />,
             blockquote: ({node: _node, ...props}) => <blockquote className="border-l-4 border-primary pl-4 italic text-gray-600 dark:text-gray-400 my-4" {...props} />,
             strong: ({node: _node, ...props}) => <strong className="font-bold text-gray-900 dark:text-white" {...props} />,
+            table: ({node: _node, ...props}) => (
+              <div className="overflow-x-auto my-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm" {...props} />
+              </div>
+            ),
+            thead: ({node: _node, ...props}) => <thead className="bg-gray-50 dark:bg-gray-800" {...props} />,
+            tbody: ({node: _node, ...props}) => <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-900" {...props} />,
+            tr: ({node: _node, ...props}) => <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors" {...props} />,
+            th: ({node: _node, ...props}) => <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider whitespace-nowrap" {...props} />,
+            td: ({node: _node, ...props}) => <td className="px-4 py-3 text-gray-700 dark:text-gray-300" {...props} />,
           }}
         >
           {lesson.content}
